@@ -1,3 +1,5 @@
 {
-	"name": "Main"
+	"name": "Main",
+	"rootNamespace": "WingSinger",
+	"references": ["PrimeTween.Runtime", "Cinemachine", "Unity.TextMeshPro", "UnityEngine.UI"]
 }

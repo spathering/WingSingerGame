@@ -1,0 +1,6 @@
+PASS: deterministic route, input, preview, scoring, transition, long frame, timer, finish, frame-rate and invalid settings checks.
+PASS: configurable middle-lane preparation, continuous initial/down/up curves, exact dwell scoring and no points on preparation or curves.
+PASS: saved Prefab guide starts in middle, travels through intermediate positions and draws a continuous path.
+PASS: play-mode Prefab switching, invalid index, camera follow, live movement/scoring, timer and results.
+PASS: restart resets score/time/path/results; no previous level activity.
+SUCCESS: saved scene compiled and play-mode checks passed.
