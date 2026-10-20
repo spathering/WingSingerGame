@@ -1,0 +1,29 @@
+PASS
+Move 0: directional animation observed
+Move 0: destination reached
+Move 0: held lane returns to cruise
+Move 1: directional animation observed
+Move 1: destination reached
+Move 1: held lane returns to cruise
+Move 2: directional animation observed
+Move 2: destination reached
+Move 2: held lane returns to cruise
+Move 3: directional animation observed
+Move 3: destination reached
+Move 3: held lane returns to cruise
+Move 4: directional animation observed
+Move 4: destination reached
+Move 4: held lane returns to cruise
+Move 5: directional animation observed
+Move 5: destination reached
+Move 5: held lane returns to cruise
+No HUD Canvas remains
+No fixed track lines remain
+Glowing guide route remains
+Restart resets movement and animation without UI
+Next level works without UI
+Timer finishes without result UI
+Existing route and scoring checks passed
+Default 0.16s movement: held upper lane uses cruise after arrival.
+Movement sampling used a temporary 0.6s configuration; original settings restored.
+Final clean game view captured.

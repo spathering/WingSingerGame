@@ -165,12 +165,12 @@ namespace WingSinger.Editor {
                         return;
                     }
                     Check(manager.Session.Score > 0, "Runtime follow produced no score");
-                    Check(manager.hud.resultPanel.activeSelf, "Results not shown");
+                    if (manager.hud != null) Check(manager.hud.resultPanel.activeSelf, "Results not shown");
                     Near(manager.Session.PlayTime, 0.8f, "Runtime end duration");
                     File.AppendAllText(Report, "PASS: play-mode Prefab switching, invalid index, camera follow, live movement/scoring, timer and results.\n");
                     manager.Restart();
                     Near(manager.Session.Score, 0, "Restart score reset"); Near(manager.Session.PlayTime, 0, "Restart timer reset");
-                    Check(!manager.hud.resultPanel.activeSelf, "Restart results still visible");
+                    if (manager.hud != null) Check(!manager.hud.resultPanel.activeSelf, "Restart results still visible");
                     Check(manager.CurrentLevel.routeCore.positionCount <= 1, "Old route survived restart");
                     manager.CurrentLevel.settings = original; manager.Restart(); manual.Submit(BreathLane.Upper);
                     stage = 2; started = EditorApplication.timeSinceStartup; break;
@@ -223,24 +223,7 @@ namespace WingSinger.Editor {
         }
 
         static void Capture(string path) {
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
-            var camera = Camera.main;
-            var canvas = manager.hud.GetComponent<Canvas>();
-            var renderTexture = new RenderTexture(1600, 900, 24, RenderTextureFormat.ARGB32);
-            var previous = RenderTexture.active;
-            try {
-                canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = camera; canvas.planeDistance = 1;
-                Canvas.ForceUpdateCanvases();
-                var request = new UniversalRenderPipeline.SingleCameraRequest { destination = renderTexture };
-                RenderPipeline.SubmitRenderRequest(camera, request);
-                RenderTexture.active = renderTexture;
-                var image = new Texture2D(1600, 900, TextureFormat.RGB24, false);
-                image.ReadPixels(new Rect(0, 0, 1600, 900), 0, 0); image.Apply();
-                File.WriteAllBytes(path, image.EncodeToPNG()); UnityEngine.Object.Destroy(image);
-            } finally {
-                RenderTexture.active = previous; canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                renderTexture.Release(); UnityEngine.Object.Destroy(renderTexture);
-            }
+            BreathArtSetup.Capture(path);
         }
     }
 }

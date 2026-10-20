@@ -1,0 +1,47 @@
+PASS
+Reset uses cruise frame zero
+Upper transition sampled midway
+Release reverses from current pose
+Upper-to-lower passes neutral
+Lower transition selected
+Held lower uses descend loop
+Held pose advances animation frames
+Held upper uses rise loop
+Finished returns to cruise; preview is never selected
+01_Cruise_5s preserves timing and loops
+02_Rise_5s preserves timing and loops
+03_Descend_5s preserves timing and loops
+05_Cruise_to_Rise clamps final frame
+04_Cruise_to_Descend clamps final frame
+Background phase repeats after 1 periods
+Background phase repeats after 10 periods
+Background phase repeats after -3 periods
+Viewport coverage at aspect 1.777778
+Image scale independent of aspect
+Viewport coverage at aspect 1.333333
+Image scale independent of aspect
+Viewport coverage at aspect 0.5625
+Image scale independent of aspect
+Switch level 1
+Exactly one level active
+Switch resets character
+Shared background reused
+Switch level 0
+Exactly one level active
+Switch resets character
+Shared background reused
+Switch level 1
+Exactly one level active
+Switch resets character
+Shared background reused
+Switch level 0
+Exactly one level active
+Switch resets character
+Shared background reused
+Restart resets time and frame
+Existing breathing gameplay validation passed
+Live Update: upper input selected Rise frame 57 at y=2.2; lower state now 01_Cruise_5s at y=-2.2
+Live Update lower input: Descend loop and y=-2.2 verified.
+Visual QA: transparent atlas padding removes rectangular frame artifacts.
+Source panorama SHA256 matches the imported 8192x902 copy.
+No project-wide cache clean or full rebuild used.

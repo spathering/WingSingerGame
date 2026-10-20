@@ -15,15 +15,17 @@ namespace WingSinger {
         bool switching;
 
         void Start() {
-            if (player == null || input == null || hud == null || virtualCamera == null || levels == null || levels.Length == 0) {
+            if (player == null || input == null || virtualCamera == null || levels == null || levels.Length == 0) {
                 Debug.LogError("WingSinger: missing shared systems or level instances.", this);
                 enabled = false; return;
             }
             foreach (var level in levels) if (level != null) level.gameObject.SetActive(false);
-            hud.restartButton.onClick.AddListener(Restart);
-            hud.nextButton.onClick.AddListener(Next);
-            hud.resultRestartButton.onClick.AddListener(Restart);
-            hud.resultNextButton.onClick.AddListener(Next);
+            if (hud != null) {
+                hud.restartButton.onClick.AddListener(Restart);
+                hud.nextButton.onClick.AddListener(Next);
+                hud.resultRestartButton.onClick.AddListener(Restart);
+                hud.resultNextButton.onClick.AddListener(Next);
+            }
             SwitchLevel(initialLevel);
         }
 
@@ -37,7 +39,7 @@ namespace WingSinger {
             Session.Advance(Time.deltaTime, finished ? Session.PlayerLane : input.ReadLane());
             player.Present(Session, CurrentLevel.settings);
             CurrentLevel.Present(Session);
-            hud.Present(Session);
+            if (hud != null) hud.Present(Session);
             if (!finished && Session.Phase == BreathPhase.Finished) player.StopAnimation();
         }
 
@@ -62,10 +64,10 @@ namespace WingSinger {
                 target.gameObject.SetActive(true);
                 CurrentIndex = index;
                 Session = new BreathSession(target.settings.CreatePattern());
-                hud.ResetHud(target.settings.displayName);
+                if (hud != null) hud.ResetHud(target.settings.displayName);
                 player.Present(Session, target.settings);
                 target.Present(Session);
-                hud.Present(Session);
+                if (hud != null) hud.Present(Session);
                 return true;
             } catch (System.Exception error) {
                 target.gameObject.SetActive(false);

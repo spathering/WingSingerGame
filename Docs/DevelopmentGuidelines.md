@@ -106,3 +106,51 @@ MainScene
 - 使用到的渲染功能在目标画质档位正常，没有粉色材质、重复相机或 AudioListener。
 
 每次交付说明修改内容、验证方式和实际限制。后续实现如果改变本文约定，应同步更新文档和根目录 `AGENTS.md`。
+
+## 5. 增量编译与日常迭代
+
+### 基本原则
+
+后续开发默认采用增量编译，减少不必要的编译次数和受影响范围，保留必要的编译与运行验证。
+
+- Unity 的 C# 增量编译通常以程序集及其依赖关系为单位，不是只重编译一个 `.cs` 文件。当前游戏脚本属于 `Assets/Scripts/Main.asmdef` 定义的 `Main` 程序集；修改其中一个脚本时，整个相关程序集可能重新编译。
+- 资源刷新、C# 编译、域重载和 Player 构建是不同过程。域重载或长时间等待不直接等于全项目重新编译；判断时查看实际编译的程序集和日志。
+- `CompilationPipeline.RequestScriptCompilation()` 的普通请求不等于清缓存全量编译，但重复请求仍会造成额外等待。`RequestScriptCompilationOptions.CleanBuildCache` 才是明确清理编译缓存并重编译所有脚本的选项，日常迭代不使用。
+- 修改公共类可能扩大受影响的程序集范围，但不必然导致所有程序集重编译。接口和事件用于合理解耦，不保证消除程序集层面的依赖。
+
+### 默认工作流程
+
+1. 修改前确定本次变化属于代码、资源、配置还是文档。关卡参数、Prefab 属性、材质和 UI 配置优先通过已有配置资源或 Unity MCP 修改，不为改数值而重写脚本。
+2. 将同一功能的相关代码修改成批完成并保存，不在每改一个文件后主动请求编译；不通过重写相同内容或触碰无关文件的时间戳来触发刷新。
+3. 复用已经打开的 Unity 和已连接的 MCP，先等待正常资源导入、增量编译和域重载结束。通过 `mcpforunity://editor/state` 检查忙碌状态，再通过 `read_console` 检查编译错误。编辑器就绪本身不证明外部文件已经导入，必要时结合变更文件的导入记录和编译日志确认新代码生效。
+4. 若外部修改未被导入，优先定向导入实际变化的文件；需要脚本化导入时使用 `AssetDatabase.ImportAsset` 的普通导入选项，避免默认加 `ForceUpdate`。同一批导入完成后再检查一次结果。
+5. 只有确认变更已导入、编辑器空闲且仍未编译时，才请求一次普通脚本编译。MCP 可使用 `refresh_unity(scope="scripts", compile="request", wait_for_ready=true)`；该调用不是独立的“增量编译开关”，也不替代外部文件的资源导入。
+6. 编译通过后完成与改动相称的验证。代码未再改变、检查已通过时，不重复刷新和编译。纯文档修改不请求 Unity 编译；纯资源修改按需导入和验证，不主动请求 C# 编译。
+
+### Unity MCP 的刷新约束
+
+- 不默认调用 `refresh_unity(mode="force", scope="all", compile="request")`。
+- 已检查的 MCP for Unity 10.3.0 实现中，`mode="if_dirty"` 与 `mode="force"` 都可能在资源刷新时走强制刷新路径；不能仅把参数改为 `if_dirty` 就视为低成本增量操作。
+- `scope="scripts"` 避免该工具的全资源刷新分支，但仍可能发起一次编译流水线和域重载，因此只用于上述必要情况。
+- 范围更大的刷新用于确有资源发现、依赖或导入问题时；先说明原因，不将其作为每次开发完成的固定步骤。不修改第三方 MCP 插件源码实现这些约定。
+
+### 缓存、程序集与依赖
+
+- 日常开发不删除 `Library`、`Library/Bee`、`Library/ScriptAssemblies` 等缓存，不执行 Reimport All 或清缓存构建来替代排查。
+- 验证优先在当前项目与当前编辑器内完成，使用现有测试与 MCP。确需隔离时先说明原因并尽可能复用安全、可用的验证环境；不把每次复制项目、从零生成 Library 作为默认验证流程。
+- 不为普通玩法迭代频繁切换构建平台、Scripting Define Symbols、脚本后端、Unity 版本或包版本；集中安排必需的依赖更新。
+- 保持 `.asmdef`、程序集名称、目录归属与引用关系稳定。当前代码规模下不为了本约定立即重拆程序集，避免引入一次无必要的结构变更。
+- 后续模块增多、编译日志显示依赖范围过大时，再按实际边界拆分核心逻辑、表现和 Editor/测试程序集。保持依赖单向、引用精简，稳定接口放在低变动模块；移动脚本时保留 `.meta` 和资源引用。
+
+### 需要扩大编译范围时
+
+编译缓存确已损坏、引擎或包升级、平台或宏定义发生必要变化时，可以进行较大范围的重编译。先记录当前症状，检查错误、依赖与导入状态，尝试最小范围修复；确需清缓存或全量验证时说明证据与具体范围，避免因耗时较长就直接认定缓存损坏。
+
+本约定不通过关闭自动刷新、跳过编译错误或关闭域重载来掩盖问题。域重载设置会影响静态状态和事件订阅，不能当作增量编译开关随意更改。
+
+参考：
+
+- [用户提供的 CSDN 问答：Unity 增量编译常见问题](https://ask.csdn.net/questions/8617960)。采用其中减少耦合、稳定配置和合理划分程序集的建议；具体机制以 Unity 2022.3 文档和当前插件源码为准，不直接采用其示例监控代码或未经核实的热重载建议。
+- [Unity 2022.3：程序集定义](https://docs.unity3d.com/2022.3/Documentation/Manual/ScriptCompilationAssemblyDefinitionFiles.html)
+- [Unity 2022.3：RequestScriptCompilation](https://docs.unity3d.com/2022.3/Documentation/ScriptReference/Compilation.CompilationPipeline.RequestScriptCompilation.html)
+- [Unity 2022.3：CleanBuildCache](https://docs.unity3d.com/2022.3/Documentation/ScriptReference/Compilation.RequestScriptCompilationOptions.CleanBuildCache.html)
