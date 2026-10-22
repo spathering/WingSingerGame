@@ -12,8 +12,14 @@ namespace WingSinger {
             double.TryParse(line, NumberStyles.Float, CultureInfo.InvariantCulture, out value)
             && !double.IsNaN(value) && !double.IsInfinity(value);
 
+        public static bool AreThresholdsValid(double inhaleMaximum, double exhaleMinimum) =>
+            !double.IsNaN(inhaleMaximum) && !double.IsInfinity(inhaleMaximum)
+            && !double.IsNaN(exhaleMinimum) && !double.IsInfinity(exhaleMinimum)
+            && inhaleMaximum < exhaleMinimum;
+
         public static BreathLane Resolve(double value, double inhaleMaximum = 400, double exhaleMinimum = 1000) {
-            if (double.IsNaN(value) || double.IsInfinity(value)) return BreathLane.Middle;
+            if (double.IsNaN(value) || double.IsInfinity(value) || !AreThresholdsValid(inhaleMaximum, exhaleMinimum))
+                return BreathLane.Middle;
             return value <= inhaleMaximum ? BreathLane.Upper : value >= exhaleMinimum ? BreathLane.Lower : BreathLane.Middle;
         }
     }

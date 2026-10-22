@@ -17,10 +17,12 @@ namespace WingSinger {
         public readonly string Port, Message;
         public readonly bool HasSample;
         public readonly double Value, SampleAgeSeconds;
+        public readonly long SampleSequence;
         public bool Connected => Status == BreathSensorStatus.Connected;
         public bool IsFresh(double timeout) => Connected && HasSample && SampleAgeSeconds <= timeout;
-        public BreathSensorSnapshot(BreathSensorStatus status, string port, string message, bool hasSample, double value, double age) {
+        public BreathSensorSnapshot(BreathSensorStatus status, string port, string message, bool hasSample, double value, double age, long sampleSequence = 0) {
             Status = status; Port = port; Message = message; HasSample = hasSample; Value = value; SampleAgeSeconds = age;
+            SampleSequence = sampleSequence;
         }
     }
 
@@ -52,6 +54,7 @@ namespace WingSinger {
         string port = "", message = "Stopped", lastGoodPort;
         bool hasSample;
         double value, sampleTime;
+        long sampleSequence;
         public static double Now => (double)Stopwatch.GetTimestamp() / Stopwatch.Frequency;
         public bool IsRunning => worker != null && worker.IsAlive;
 
@@ -69,7 +72,7 @@ namespace WingSinger {
         }
 
         public BreathSensorSnapshot Snapshot() {
-            lock (gate) return new BreathSensorSnapshot(status, port, message, hasSample, value, hasSample ? Now - sampleTime : double.PositiveInfinity);
+            lock (gate) return new BreathSensorSnapshot(status, port, message, hasSample, value, hasSample ? Now - sampleTime : double.PositiveInfinity, sampleSequence);
         }
 
         void SetStatus(BreathSensorStatus next, string name, string detail) {
@@ -113,7 +116,7 @@ namespace WingSinger {
                         SetStatus(BreathSensorStatus.Connected, candidate, "Device recognized; waiting for samples");
                     } else if (BreathSensorProtocol.TryParseSample(line, out double raw)) {
                         lastValid = Now;
-                        lock (gate) { value = raw; sampleTime = lastValid; hasSample = true; message = "Receiving"; }
+                        lock (gate) { value = raw; sampleTime = lastValid; hasSample = true; sampleSequence++; message = "Receiving"; }
                     }
                 };
                 while (!stopping) {
