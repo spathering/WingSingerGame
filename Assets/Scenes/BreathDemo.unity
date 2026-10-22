@@ -395,6 +395,7 @@ GameObject:
   - component: {fileID: 1100468635}
   - component: {fileID: 1100468634}
   - component: {fileID: 1100468633}
+  - component: {fileID: 1100468636}
   m_Layer: 0
   m_Name: GameRoot
   m_TagString: Untagged
@@ -418,7 +419,7 @@ MonoBehaviour:
   - {fileID: 329737301}
   - {fileID: 1844603338}
   player: {fileID: 2105195316}
-  input: {fileID: 1100468634}
+  input: {fileID: 1100468636}
   hud: {fileID: 0}
   virtualCamera: {fileID: 1889780004}
   initialLevel: 0
@@ -451,6 +452,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1100468636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100468632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 673cdb84b90a5774d9547fd4a2814705, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  portOverride:
+  inhaleMaximum: 400
+  exhaleMinimum: 1000
+  sampleTimeoutSeconds: 0.5
+  handshakeTimeoutSeconds: 4
+  reconnectDelaySeconds: 2
+  inactivityTimeoutSeconds: 2
+  keyboardWhenDisconnected: 1
+  keyboardFallback: {fileID: 1100468634}
+  connectionStatus: Stopped
+  connectedPort:
+  latestValue: 0
+  freshSample: 0
 --- !u!1 &1161028835
 GameObject:
   m_ObjectHideFlags: 0

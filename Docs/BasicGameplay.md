@@ -4,6 +4,8 @@
 
 使用 Unity 2022.3.62f2 打开项目，打开 `Assets/Scenes/BreathDemo.unity`，点击 Play。原有 `MainScene.unity` 保留；示例场景作为首个构建场景。
 
+已接入 Arduino 呼吸传感器输入：115200 波特率、自动检测串口并握手，≤400 为吸气、≥1000 为呼气，中间为无输入。没有设备连接时默认保留以下键盘操作，连接后优先使用传感器。协议、配置及联调见 [ArduinoInput.md](ArduinoInput.md)。
+
 - 按住 W：吸气，前往上轨道。
 - 按住 S：呼气，前往下轨道。
 - 松开两键或同时按下：回到中轨道，可收集该轨道上的纸制物体。
@@ -47,7 +49,8 @@
 
 - `BreathPattern / BreathSession`：独立的时间、路线和计分模型。
 - `BreathInput / KeyboardBreathInput`：输入接口和 W/S 键盘实现。
-- `ExternalBreathInput`：提供 `Submit(BreathLane)` 接口，供将来的传感器适配器提交状态；当前没有实现任何传感器通信协议。
+- `ExternalBreathInput`：保留 `Submit(BreathLane)` 通用接口，供其他外部输入适配器提交状态；当前 Arduino 已由独立接收器接入。
+- `ArduinoBreathInput / BreathSensorClient / WindowsSerialTransport`：当前 Arduino 115200 串口接收、自动识别重连与三档数值输入，位于公共 GameRoot，不随关卡关闭。
 - `BreathPlayer`：自动前进、换轨视觉和相机跟随目标。
 - `BreathLevel / PaperCollectible`：引导动画、离散收集物池、显现、接触判定与退出清理。
 - `BreathLevelManager`：唯一切换入口，通过 `SetActive` 管理关卡实例；切换和重开时创建新的计分状态并重置玩家、路径和相机。HUD 为可选依赖。
