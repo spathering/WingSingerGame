@@ -1,0 +1,22 @@
+Paper collection verification
+PASS: Initial level starts
+PASS: Preview does not award points
+PASS: Game remains free of UI
+PASS: Every paper lies on a route/lane intersection
+PASS: Continuous route is hidden
+PASS: Requested GIF roles are preserved
+PASS: Guide GIF timing preserved
+PASS: Collectible GIF timing preserved
+PASS: Actual movement collects discrete objects and awards one value each
+PASS: Wrong lane cannot collect
+PASS: Swept movement catches a paper across a long frame
+PASS: Transition middle-lane paper can be collected
+PASS: Duplicate contact cannot award again
+PASS: Start, interior and final endpoint all collected in live play
+PASS: No continuous score remains
+PASS: Restart resets score, visibility and collected state
+PASS: Restart reuses the same paper pool
+PASS: Switch disables all old papers and preserves one active level
+PASS: Visible paper route is populated ahead of the player
+PASS: No runtime errors
+SUCCESS: paper layout, GIF assets, collection, feedback, final frame, pooling and level lifecycle verified.

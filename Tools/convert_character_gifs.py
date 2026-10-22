@@ -12,9 +12,13 @@ from PIL import Image
 
 
 def convert(source: Path, destination: Path):
+    return convert_files(sorted(source.glob("*.gif")), destination)
+
+
+def convert_files(paths, destination: Path, manifest_name="CharacterManifest.json"):
     destination.mkdir(parents=True, exist_ok=True)
     clips = []
-    for path in sorted(source.glob("*.gif")):
+    for path in paths:
         with Image.open(path) as gif:
             width = 256
             height = round(width * gif.height / gif.width)
@@ -39,7 +43,7 @@ def convert(source: Path, destination: Path):
                               atlas=name + ".png", frameWidth=width, frameHeight=height,
                               padding=padding, columns=columns, rows=rows, durationsMs=durations))
             print(f"{name}: {gif.n_frames} frames, {sum(durations)/1000:g}s, atlas {atlas.size}")
-    (destination / "CharacterManifest.json").write_text(
+    (destination / manifest_name).write_text(
         json.dumps(dict(clips=clips), ensure_ascii=False, indent=2), encoding="utf-8")
 
 

@@ -96,6 +96,7 @@ namespace WingSinger.Editor {
             levels[0].gameObject.SetActive(true); levels[1].gameObject.SetActive(false);
             Selection.activeGameObject = game;
             if (File.Exists("Assets/Art/Character/CharacterManifest.json")) BreathArtSetup.ApplyToOpenDemo();
+            if (File.Exists("Assets/Art/Paper/PaperManifest.json")) PaperCollectionSetup.ApplyToOpenDemo();
             EditorSceneManager.SaveScene(scene, ScenePath);
             var originalBuildScenes = EditorBuildSettings.scenes.Where(s => s.path != ScenePath).ToArray();
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) }.Concat(originalBuildScenes).ToArray();

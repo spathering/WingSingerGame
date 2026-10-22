@@ -49,11 +49,13 @@ namespace WingSinger.Editor {
             Near(p.MatchingSeconds(0, 14, BreathLane.Middle), 0, "Neutral never scores");
             var session = new BreathSession(p);
             session.Advance(2, BreathLane.Upper); Near(session.Score, 0, "No preview points");
-            session.Advance(3, BreathLane.Upper); Near(session.Score, 30, "Correct upper dwell");
-            session.Advance(4, BreathLane.Lower); Near(session.Score, 68, "Transition excludes scoring");
-            session.Advance(100, BreathLane.Upper); Near(session.Score, 96, "Final frame clamps score and duration");
+            session.Advance(3, BreathLane.Upper); Near(session.Score, 0, "Upper dwell alone does not score");
+            Check(session.TryCollect(0) && !session.TryCollect(0), "One award per collectible");
+            session.Advance(4, BreathLane.Lower); Near(session.Score, 10, "Only paper awards points");
+            session.Advance(100, BreathLane.Upper); Near(session.Score, 10, "Final frame clamps duration");
             Near(session.PlayTime, 10, "Final timer");
-            session.Advance(100, BreathLane.Lower); Near(session.Score, 96, "Finished game frozen");
+            session.Advance(100, BreathLane.Lower); Near(session.Score, 10, "Finished game frozen");
+            Check(!session.TryCollect(1), "Finished collection window closes");
             Check(session.PlayerLane == BreathLane.Upper && session.Phase == BreathPhase.Finished, "Finished input frozen");
             var empty = new BreathSession(p); empty.Advance(100, BreathLane.Middle); Near(empty.Score, 0, "No score without input");
             var one = new BreathSession(new BreathPattern(3, 4, 15, 10, 0, 0)); one.Advance(15, BreathLane.Upper);
@@ -84,9 +86,9 @@ namespace WingSinger.Editor {
             prepared.Advance(5, BreathLane.Upper); Near(prepared.Score, 0, "No early preparation score");
             Check(!prepared.IsMatching, "Initial curve cannot show scoring feedback");
             prepared.Advance(1, BreathLane.Upper); Near(prepared.Score, 0, "Initial travel excludes score");
-            prepared.Advance(3, BreathLane.Upper); Near(prepared.Score, 30, "Full inhale dwell preserved");
-            prepared.Advance(1, BreathLane.Lower); Near(prepared.Score, 30, "Travel excludes score");
-            prepared.Advance(4, BreathLane.Lower); Near(prepared.Score, 70, "Full exhale dwell preserved");
+            prepared.Advance(3, BreathLane.Upper); Near(prepared.Score, 0, "Inhale dwell does not auto-score");
+            prepared.Advance(1, BreathLane.Lower); Near(prepared.Score, 0, "Travel does not auto-score");
+            prepared.Advance(4, BreathLane.Lower); Near(prepared.Score, 0, "Exhale dwell does not auto-score");
             var single = new BreathSession(smooth); single.Advance(100, BreathLane.Upper);
             var split = new BreathSession(smooth); for (int i = 0; i < 1000; i++) split.Advance(0.1, BreathLane.Upper);
             Near(single.Score, split.Score, "Smooth route scoring remains frame-rate independent");
@@ -157,7 +159,7 @@ namespace WingSinger.Editor {
                     stage = 1; started = EditorApplication.timeSinceStartup; break;
                 case 1:
                     manual.Submit(manager.Session.RequiredLane);
-                    var expectedHeight = (float)manager.Session.Pattern.HeightAt(manager.Session.Elapsed) * temporary.laneSpacing;
+                    var expectedHeight = (float)manager.Session.Pattern.HeightAt(Math.Min(manager.Session.Elapsed, manager.Session.Pattern.Duration)) * temporary.laneSpacing;
                     Check(Mathf.Abs(manager.CurrentLevel.guide.localPosition.y - expectedHeight) < 0.001f, "Live guide diverges from smooth route");
                     if (manager.Session.Phase != BreathPhase.Finished) {
                         Check(Mathf.Abs(Camera.main.WorldToViewportPoint(manager.player.transform.position).x - initialCameraX) < 0.03f, "Camera does not keep player horizontal position");

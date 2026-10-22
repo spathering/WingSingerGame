@@ -1,0 +1,31 @@
+Player presentation verification
+PASS: Actual movement selects 02_Rise_5s
+PASS: Arrival reverses 05_Cruise_to_Rise
+PASS: Return finishes in cruise
+PASS: Lane dwell stays in cruise
+PASS: New opposite movement interrupts return
+PASS: Actual movement selects 03_Descend_5s
+PASS: Arrival reverses 04_Cruise_to_Descend
+PASS: Return finishes in cruise
+PASS: Lane dwell stays in cruise
+PASS: New opposite movement interrupts return
+PASS: Entrance joins normal forward velocity without stopping or jumping
+PASS: World movement stays continuous across gameplay start
+PASS: Camera follow target stays continuous across gameplay start
+PASS: Approach cannot award preview points
+PASS: Restart starts the whole character outside the left edge
+PASS: Restart clears pose transition
+PASS: Character visibly travels right into the frame
+PASS: Entrance preserves camera framing, game time and score
+PASS: Entrance ends exactly at the normal player anchor
+PASS: Preview still excludes score and game time after entry
+PASS: Live forward motion and camera scrolling continue throughout preview
+PASS: Real upper-lane arrival completes the return to cruise
+PASS: Real lower-lane arrival completes the return to cruise
+PASS: Switch replays entry with exactly one active level
+PASS: Rapid restart resets entry and score without stale motion
+PASS: A short preview extends to finish entry before gameplay
+PASS: Zero entrance and zero preview remain supported
+PASS: Guide and collectible GIF roles remain correct
+PASS: No HUD added
+SUCCESS

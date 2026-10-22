@@ -485,6 +485,9 @@ MonoBehaviour:
   cruise: {fileID: 11400000, guid: 6987a7753d2a2e54cba469231514957b, type: 2}
   rise: {fileID: 11400000, guid: 6142a7d3947b7d248b5de172d370adbc, type: 2}
   descend: {fileID: 11400000, guid: 4631ced3485790b4e9a9ab9e3e4e671f, type: 2}
+  cruiseToRise: {fileID: 11400000, guid: cbf5e42e1c0f3a944adde2d792d447f2, type: 2}
+  cruiseToDescend: {fileID: 11400000, guid: 98c7fabad50c5d2488a7f802afe19169, type: 2}
+  returnToCruiseSeconds: 0.28
 --- !u!212 &1161028837
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -586,7 +589,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetCamera: {fileID: 1648786079}
   backgroundRenderer: {fileID: 1269957853}
-  originWorldX: -6.143229
+  originWorldX: -14.150235
   depth: 10
 --- !u!23 &1269957853
 MeshRenderer:

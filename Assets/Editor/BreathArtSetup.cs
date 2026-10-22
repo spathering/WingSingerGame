@@ -52,6 +52,7 @@ namespace WingSinger.Editor {
             if (animator == null) animator = airship.gameObject.AddComponent<BreathCharacterAnimator>();
             animator.target = sprite;
             animator.cruise = clips[0]; animator.rise = clips[1]; animator.descend = clips[2];
+            animator.cruiseToDescend = clips[3]; animator.cruiseToRise = clips[4];
             // Clip 06 exists in the asset browser solely for preview, with no runtime reference.
             player.characterAnimation = animator;
             animator.ResetAnimation();
@@ -87,6 +88,10 @@ namespace WingSinger.Editor {
             background.backgroundRenderer.shadowCastingMode = ShadowCastingMode.Off;
             background.backgroundRenderer.receiveShadows = false;
             background.originWorldX = Camera.main.transform.position.x - (Camera.main.orthographicSize * 2 + 0.02f) * Camera.main.aspect / 2;
+            var manager = UnityEngine.Object.FindObjectOfType<BreathLevelManager>();
+            var initialLevel = manager == null || manager.levels == null ? null : manager.levels.ElementAtOrDefault(manager.initialLevel);
+            if (initialLevel != null && initialLevel.settings.playerEntranceSeconds > 0)
+                background.originWorldX -= (float)initialLevel.settings.CreatePattern().Lead * initialLevel.settings.moveSpeed;
             background.Sync();
             var volume = UnityEngine.Object.FindObjectOfType<Volume>();
             if (volume != null && volume.sharedProfile != null) {
@@ -133,12 +138,16 @@ namespace WingSinger.Editor {
         }
 
         static CharacterSpriteClip CreateClip(ClipInfo info) {
-            string path = CharacterFolder + info.name + ".asset";
+            return CreateSpriteClip(info, CharacterFolder);
+        }
+
+        public static CharacterSpriteClip CreateSpriteClip(ClipInfo info, string folder) {
+            string path = folder + info.name + ".asset";
             var clip = AssetDatabase.LoadAssetAtPath<CharacterSpriteClip>(path);
             if (clip != null && clip.sourceSha256 == info.sourceSha256 && clip.frames != null
                 && clip.frames.Length == info.durationsMs.Length && clip.frames.All(f => f != null)) return clip;
-            ConfigureTexture(CharacterFolder + info.atlas, false);
-            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(CharacterFolder + info.atlas);
+            ConfigureTexture(folder + info.atlas, false);
+            var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(folder + info.atlas);
             if (clip == null) {
                 clip = ScriptableObject.CreateInstance<CharacterSpriteClip>();
                 AssetDatabase.CreateAsset(clip, path);

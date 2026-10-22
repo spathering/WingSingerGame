@@ -30,18 +30,14 @@ namespace WingSinger {
                     return;
                 }
                 cueLabel.text = session.RequiredLane == BreathLane.Upper ? "W  /  INHALE" : "S  /  EXHALE";
-                feedbackLabel.text = session.Pattern.IsGuideTransition(session.PlayTime) ? "Follow the curve to the next lane."
-                    : session.IsMatching ? "+ SCORE   ·   ON THE PATH"
-                    : session.PlayerLane == BreathLane.Middle ? "Hold W or S to follow the glowing path."
-                    : "Follow the path at your bird, not at the guide.";
+                feedbackLabel.text = $"Collect the paper objects.  Collected: {session.CollectedCount}";
             } else {
                 cueLabel.text = "FLIGHT COMPLETE";
                 feedbackLabel.text = "R  /  RESTART     N  /  NEXT FLIGHT";
                 if (!resultsShown) {
                     resultsShown = true;
                     resultLabel.text = $"FLIGHT COMPLETE\n\n<size=64>{System.Math.Floor(session.Score):0}</size>\nPOINTS\n\n"
-                        + $"On the path: {session.CorrectSeconds:0.0}s / {session.Pattern.Duration:0}s\n"
-                        + $"Accuracy: {session.CorrectSeconds / session.Pattern.Duration:P0}";
+                        + $"Paper collected: {session.CollectedCount}";
                     resultPanel.SetActive(true);
                 }
             }

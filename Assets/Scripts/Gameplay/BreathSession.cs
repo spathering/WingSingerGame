@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace WingSinger {
     public enum BreathLane { Lower = -1, Middle = 0, Upper = 1 }
@@ -6,18 +7,18 @@ namespace WingSinger {
 
     // Pure time/score model: the guide and player sample the same route at the same world X.
     public readonly struct BreathPattern {
-        public readonly double Inhale, Exhale, Duration, PointsPerSecond, Lead, Transition, Preparation, GuideTransition;
+        public readonly double Inhale, Exhale, Duration, PointsPerCollectible, Lead, Transition, Preparation, GuideTransition;
         public double Cycle => Inhale + Exhale + 2 * GuideTransition;
         double FirstArrival => Preparation + GuideTransition;
 
-        public BreathPattern(double inhale, double exhale, double duration, double pointsPerSecond,
+        public BreathPattern(double inhale, double exhale, double duration, double pointsPerCollectible,
             double lead, double transition, double preparation = 0, double guideTransition = 0) {
             if (!Positive(inhale) || !Positive(exhale) || !Positive(duration)
-                || !Nonnegative(pointsPerSecond) || !Nonnegative(lead) || !Nonnegative(transition)
+                || !Nonnegative(pointsPerCollectible) || !Nonnegative(lead) || !Nonnegative(transition)
                 || !Nonnegative(preparation) || !Nonnegative(guideTransition))
                 throw new ArgumentException("Breathing settings must be finite; durations must be positive.");
             Inhale = inhale; Exhale = exhale; Duration = duration;
-            PointsPerSecond = pointsPerSecond; Lead = lead; Transition = transition;
+            PointsPerCollectible = pointsPerCollectible; Lead = lead; Transition = transition;
             Preparation = preparation; GuideTransition = guideTransition;
         }
 
@@ -83,7 +84,10 @@ namespace WingSinger {
         public double PlayTime => Math.Max(0, Elapsed - Pattern.Lead);
         public double Remaining => Math.Max(0, Pattern.Duration - PlayTime);
         public double CorrectSeconds { get; private set; }
-        public double Score => CorrectSeconds * Pattern.PointsPerSecond;
+        readonly HashSet<int> collected = new HashSet<int>();
+        public int CollectedCount => collected.Count;
+        public double Score => CollectedCount * Pattern.PointsPerCollectible;
+        public bool CanCollectThisFrame { get; private set; }
         public BreathLane PlayerLane { get; private set; } = BreathLane.Middle;
         public BreathLane RequiredLane => Pattern.LaneAt(PlayTime);
         public double TransitionRemaining { get; private set; }
@@ -94,11 +98,14 @@ namespace WingSinger {
 
         public BreathSession(BreathPattern pattern) { Pattern = pattern; }
 
+        public bool TryCollect(int id) => id >= 0 && CanCollectThisFrame && collected.Add(id);
+
         public void Advance(double deltaSeconds, BreathLane requestedLane) {
             if (double.IsNaN(deltaSeconds) || double.IsInfinity(deltaSeconds) || deltaSeconds < 0)
                 throw new ArgumentOutOfRangeException(nameof(deltaSeconds));
             if ((int)requestedLane < -1 || (int)requestedLane > 1)
                 throw new ArgumentOutOfRangeException(nameof(requestedLane));
+            CanCollectThisFrame = false;
             if (Phase == BreathPhase.Finished) return;
             if (PlayerLane != requestedLane) {
                 PlayerLane = requestedLane;
@@ -110,6 +117,8 @@ namespace WingSinger {
                 CorrectSeconds += Pattern.MatchingSeconds(scoreStart - Pattern.Lead, end - Pattern.Lead, PlayerLane);
             TransitionRemaining = Math.Max(0, TransitionRemaining - (end - Elapsed));
             Elapsed = end;
+            // Keep the final movement frame eligible, then close on the next Advance.
+            CanCollectThisFrame = Phase != BreathPhase.Preview;
         }
     }
 }

@@ -16,10 +16,14 @@ MonoBehaviour:
   inhaleSeconds: 3
   exhaleSeconds: 4
   durationSeconds: 45
-  pointsPerSecond: 10
+  pointsPerCollectible: 10
+  collectibleIntervalSeconds: 0.5
+  collectionRadius: 0.55
+  showGuideLine: 0
   guideLeadSeconds: 2
   preparationSeconds: 3
   guideTransitionSeconds: 0.65
   moveSpeed: 4
   laneSpacing: 2.2
   laneTransitionSeconds: 0.16
+  playerEntranceSeconds: 1.25
