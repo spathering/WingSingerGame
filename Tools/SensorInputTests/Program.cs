@@ -20,6 +20,16 @@ foreach (double v in new[] { -50d, 0, 399, 400 }) Check(BreathSensorProtocol.Res
 foreach (double v in new[] { 400.01, 600, 999.99 }) Check(BreathSensorProtocol.Resolve(v) == BreathLane.Middle, "Open interval is neutral");
 foreach (double v in new[] { 1000d, 1001, 4095 }) Check(BreathSensorProtocol.Resolve(v) == BreathLane.Lower, "Exhale includes 1000");
 foreach (double v in new[] { double.NaN, double.PositiveInfinity, double.NegativeInfinity }) Check(BreathSensorProtocol.Resolve(v) == BreathLane.Middle, "Invalid values are neutral");
+Check(BreathSensorProtocol.Resolve(1200, 1200, 1600) == BreathLane.Upper, "A custom inhale threshold includes its boundary");
+Check(BreathSensorProtocol.Resolve(1400, 1200, 1600) == BreathLane.Middle, "Custom thresholds retain a neutral interval");
+Check(BreathSensorProtocol.Resolve(1600, 1200, 1600) == BreathLane.Lower, "A custom exhale threshold includes its boundary");
+Check(BreathSensorProtocol.Resolve(700, 800, 1000) == BreathLane.Upper
+    && BreathSensorProtocol.Resolve(700, 400, 600) == BreathLane.Lower, "Changing thresholds remaps the same sample immediately");
+foreach (var thresholds in new[] { (1000d, 400d), (700d, 700d), (double.NaN, 1000d), (400d, double.PositiveInfinity), (double.NegativeInfinity, 1000d), (400d, double.NaN) }) {
+    Check(!BreathSensorProtocol.AreThresholdsValid(thresholds.Item1, thresholds.Item2)
+        && BreathSensorProtocol.Resolve(700, thresholds.Item1, thresholds.Item2) == BreathLane.Middle,
+        "Invalid/overlapping thresholds cannot drive a breathing lane");
+}
 foreach (string line in new[] { "400", " 1000.5\r", "6e2", "-1" }) Check(BreathSensorProtocol.TryParseSample(line, out _), "Invariant numeric format");
 foreach (string line in new[] { "", "NaN", "Infinity", "1,000", "value=350", "400 garbage", BreathSensorProtocol.Identity })
     Check(!BreathSensorProtocol.TryParseSample(line, out _), "Reject malformed numeric input");
@@ -44,10 +54,16 @@ using (var client = new BreathSensorClient(options, () => new[] { "COM8" }, (p, 
     Check(!client.Snapshot().Connected && !client.Snapshot().HasSample, "Numbers and incorrect identities cannot identify a device");
     fake.Feed("WINGSINGER_BREA"); fake.Feed("TH_V1\r\n1000\n");
     Until(() => client.Snapshot().IsFresh(0.2) && client.Snapshot().Value == 1000, "Handshake unlocks live samples");
+    long firstSequence = client.Snapshot().SampleSequence;
+    Check(firstSequence == 1 && client.Snapshot().SampleSequence == firstSequence, "Reading the same snapshot cannot duplicate a debug sample");
+    fake.Feed("1000\n");
+    Until(() => client.Snapshot().SampleSequence == firstSequence + 1, "An unchanged value is still a newly received sample");
     fake.Feed(string.Concat(Enumerable.Repeat("400\n1000\n", 500)) + "700\n");
     Until(() => client.Snapshot().Value == 700, "A burst retains the newest value without a main-thread queue backlog");
+    long sequenceBeforeNoise = client.Snapshot().SampleSequence;
     fake.Feed("NaN\nnoise\n"); Thread.Sleep(65);
     Check(client.Snapshot().Connected && !client.Snapshot().IsFresh(0.05), "Invalid packets do not refresh a stale reading");
+    Check(client.Snapshot().SampleSequence == sequenceBeforeNoise, "Malformed packets cannot produce new debug samples");
     fake.FailRead = true;
     Until(() => fake.Disposed, "Transport errors release the old port");
     client.Dispose();
@@ -61,6 +77,7 @@ using (var client = new BreathSensorClient(options, () => new[] { "COM7" }, (p, 
     Until(() => Volatile.Read(ref created) >= 2 && client.Snapshot().Connected && first.Disposed, "Inactivity closes and reconnects automatically");
     Check(!client.Snapshot().HasSample, "Reconnect cannot reuse a previous connection's reading");
     second.Feed("1000\n"); Until(() => client.Snapshot().HasSample && client.Snapshot().Value == 1000, "Reconnected stream becomes usable");
+    Check(client.Snapshot().SampleSequence == 2, "Sample identity stays distinct across reconnections");
     client.Dispose(); Check(second.Disposed && !client.IsRunning, "Second connection also closes on shutdown");
 }
 var wrong = new FakePort(); var right = new FakePort { AutoIdentify = true, InitialSample = "600\n" };
@@ -85,6 +102,7 @@ using (var client = new BreathSensorClient(options, () => Array.Empty<string>(),
 Check(Marshal.SizeOf(typeof(WindowsSerialTransport).GetNestedType("Dcb", BindingFlags.NonPublic)) == 28, "Windows DCB layout matches the native ABI");
 string[] candidates = WindowsSerialTransport.GetCandidatePorts();
 Check(candidates.All(WindowsSerialTransport.IsPortName), "Native enumeration returns only serial names and excludes Bluetooth devices");
+checks += ArduinoInputDebugTests.Run();
 Console.WriteLine($"PASS: {checks} sensor assertions. Native candidates: [{string.Join(", ", candidates)}]. Physical Arduino not required for simulated transport tests.");
 
 sealed class FakePort : IBreathSerialTransport {
