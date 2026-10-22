@@ -87,15 +87,17 @@ namespace WingSinger.Editor {
                 CreateLevel("Level_001_FirstFlight", "01  /  FIRST FLIGHT", 3, 4, 45, Cyan, levelRoot),
                 CreateLevel("Level_002_SlowBreath", "02  /  SLOW BREATH", 4, 6, 60, Purple, levelRoot)
             };
-            var hud = CreateHud();
             var game = new GameObject("GameRoot");
             var input = game.AddComponent<KeyboardBreathInput>();
             var manager = game.AddComponent<BreathLevelManager>();
-            manager.levels = levels; manager.player = player; manager.input = input; manager.hud = hud; manager.virtualCamera = virtualCamera;
+            manager.levels = levels; manager.player = player; manager.input = input; manager.virtualCamera = virtualCamera;
             player.ResetPlayer(levels[0].spawnPoint.position);
             // Visible in the scene editor; Start re-establishes this invariant at runtime.
             levels[0].gameObject.SetActive(true); levels[1].gameObject.SetActive(false);
             Selection.activeGameObject = game;
+            if (File.Exists("Assets/Art/Character/CharacterManifest.json")) BreathArtSetup.ApplyToOpenDemo();
+            if (File.Exists("Assets/Art/Paper/PaperManifest.json")) PaperCollectionSetup.ApplyToOpenDemo();
+            ArduinoInputSetup.ApplyToOpenDemo();
             EditorSceneManager.SaveScene(scene, ScenePath);
             var originalBuildScenes = EditorBuildSettings.scenes.Where(s => s.path != ScenePath).ToArray();
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) }.Concat(originalBuildScenes).ToArray();
@@ -159,10 +161,6 @@ namespace WingSinger.Editor {
             Shape("LightCore", level.guide, Vector3.zero, Vector2.one * 0.25f, new Color(2, 2, 2), false, 10);
             Shape("Orbit", level.guide, new Vector3(-0.25f, 0.1f, 0), Vector2.one * 0.1f, accent * 1.8f, false, 9);
             float end = (duration + config.guideLeadSeconds) * config.moveSpeed + 12;
-            foreach (int lane in new[] { -1, 0, 1 }) {
-                var line = Line("Track_" + lane, level.transform, lane == 0 ? 0.018f : 0.025f, new Color(0.19f, 0.28f, 0.4f, 0.8f), -2);
-                line.positionCount = 2; line.SetPositions(new[] { new Vector3(-12, lane * config.laneSpacing, 1), new Vector3(end, lane * config.laneSpacing, 1) });
-            }
             level.routeGlow = Line("GlowingRoute", level.transform, 0.24f, new Color(accent.r, accent.g, accent.b, 0.17f), 3);
             level.routeCore = Line("StandardRoute", level.transform, 0.065f, new Color(accent.r * 1.7f, accent.g * 1.7f, accent.b * 1.7f), 4);
             level.guide.localPosition = new Vector3(0, (float)config.CreatePattern().HeightAt(0) * config.laneSpacing, -0.2f);

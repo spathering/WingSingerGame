@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);WINGSINGER_SERIAL_TESTS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../Assets/Scripts/Gameplay/BreathSession.cs" Link="BreathSession.cs" />
+    <Compile Include="../../Assets/Scripts/Gameplay/BreathSensorProtocol.cs" Link="BreathSensorProtocol.cs" />
+    <Compile Include="../../Assets/Scripts/Gameplay/BreathSensorClient.cs" Link="BreathSensorClient.cs" />
+    <Compile Include="../../Assets/Scripts/Gameplay/WindowsSerialTransport.cs" Link="WindowsSerialTransport.cs" />
+  </ItemGroup>
+</Project>
