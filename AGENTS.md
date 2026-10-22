@@ -11,6 +11,9 @@
 - 根据功能优先评估 PrimeTween、Cinemachine、Addressables、Odin Inspector、OutlineFx、uGUI/TextMeshPro 和 Timeline；不为使用插件而强行引入功能。
 - 保持 URP 的画质档位、Renderer Feature 和 Volume 配置一致；导入素材时检查 URP 材质兼容性。
 - 修改后完成与功能相关的验证，尤其检查切关、重开和关卡关闭后的回调、音效、动画及资源引用。
+- 日常开发优先使用 Unity 的增量编译：成批保存相关修改，复用当前编辑器和已有缓存，先等待自动编译完成并检查结果，不逐文件反复请求编译。
+- 不把 `refresh_unity(mode="force", scope="all", compile="request")` 作为默认收尾操作。仅必要时定向导入变更文件；确认已导入但未编译时，再请求一次脚本编译。
+- 不为普通验证清空 `Library`、`Bee` 或脚本缓存，不使用 `CleanBuildCache`、Reimport All 或反复创建无缓存副本；程序集边界、平台、宏定义和包依赖保持稳定。扩大编译范围时说明具体原因，详见开发指南第 5 节。
 - 保留已有用户修改，不直接改第三方插件源码来承载游戏逻辑。
 
 本文件和开发指南定义后续实现要求，不代表对应管理器或玩法已经实现。

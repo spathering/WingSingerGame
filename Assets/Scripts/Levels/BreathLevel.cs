@@ -8,6 +8,12 @@ namespace WingSinger {
         public Transform guide;
         public LineRenderer routeCore;
         public LineRenderer routeGlow;
+        public SpriteRenderer guideVisual;
+        public CharacterSpriteClip guideClip;
+        public PaperCollectible collectiblePrefab;
+        readonly List<PaperCollectible> papers = new List<PaperCollectible>();
+        public IReadOnlyList<PaperCollectible> Papers => papers;
+        public PaperRoutePoint[] PaperLayout { get; private set; }
         Vector3[] routeNodes;
         Vector3[] visibleNodes;
         bool prepared;
@@ -16,7 +22,17 @@ namespace WingSinger {
             if (settings == null || spawnPoint == null || guide == null || routeCore == null || routeGlow == null)
                 throw new System.InvalidOperationException($"Level {name} has missing references.");
             settings.Validate();
+            if (guideVisual == null || guideClip == null || collectiblePrefab == null)
+                throw new System.InvalidOperationException($"Level {name} needs paper and guide animation assets.");
             var pattern = settings.CreatePattern();
+            routeCore.enabled = routeGlow.enabled = settings.showGuideLine;
+            PaperLayout = BreathCollectibleLayout.Create(pattern, settings.collectibleIntervalSeconds);
+            while (papers.Count < PaperLayout.Length) papers.Add(Instantiate(collectiblePrefab, transform));
+            for (int i = 0; i < papers.Count; i++) {
+                if (i < PaperLayout.Length) papers[i].ResetPaper(i, PaperLayout[i].Time, Point(PaperLayout[i].Time, (int)PaperLayout[i].Lane));
+                else { papers[i].StopFeedback(); papers[i].gameObject.SetActive(false); }
+            }
+            guideVisual.sprite = guideClip.Sample(0, true);
             var nodes = new List<Vector3>();
             double t = 0;
             double length = pattern.Duration + pattern.Lead;
@@ -51,9 +67,12 @@ namespace WingSinger {
 
         public void Present(BreathSession session) {
             if (!prepared) return;
-            float x = spawnPoint.localPosition.x + (float)session.Elapsed * settings.moveSpeed;
-            var head = Point(session.Elapsed, session.Pattern.HeightAt(session.Elapsed));
+            double guideTime = System.Math.Min(session.Elapsed, session.Pattern.Duration);
+            float x = spawnPoint.localPosition.x + (float)guideTime * settings.moveSpeed;
+            var head = Point(guideTime, session.Pattern.HeightAt(guideTime));
             guide.localPosition = head;
+            guideVisual.sprite = guideClip.Sample(session.Elapsed, true);
+            for (int i = 0; i < PaperLayout.Length; i++) papers[i].Present(guideTime, session.Elapsed);
             guide.localScale = Vector3.one * (1 + 0.08f * Mathf.Sin((float)session.Elapsed * 5));
             int count = 0;
             for (int i = 0; i < routeNodes.Length && routeNodes[i].x <= x; i++) visibleNodes[count++] = routeNodes[i];
@@ -66,10 +85,23 @@ namespace WingSinger {
             }
         }
 
+        public int CollectBetween(BreathSession session, Vector3 from, Vector3 to) {
+            if (!prepared || !session.CanCollectThisFrame || !gameObject.activeInHierarchy) return 0;
+            int count = 0;
+            for (int i = 0; i < PaperLayout.Length; i++) {
+                var paper = papers[i];
+                if (paper.IntersectsSweep(from, to, settings.collectionRadius) && session.TryCollect(paper.Id)) {
+                    paper.Collect(); count++;
+                } else if (!paper.Collected && to.x > paper.transform.position.x + settings.collectionRadius) paper.MarkMissed();
+            }
+            return count;
+        }
+
         public void Exit() {
             prepared = false;
             routeCore.positionCount = routeGlow.positionCount = 0;
             guide.localScale = Vector3.one;
+            foreach (var paper in papers) { paper.StopFeedback(); paper.gameObject.SetActive(false); }
         }
     }
 }

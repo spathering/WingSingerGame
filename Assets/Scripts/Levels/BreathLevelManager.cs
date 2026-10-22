@@ -13,18 +13,28 @@ namespace WingSinger {
         public int CurrentIndex { get; private set; } = -1;
         public BreathLevel CurrentLevel => CurrentIndex >= 0 && levels != null ? levels[CurrentIndex] : null;
         bool switching;
+        Vector3 previousBodyPosition;
 
         void Start() {
-            if (player == null || input == null || hud == null || virtualCamera == null || levels == null || levels.Length == 0) {
+            if (player == null || input == null || virtualCamera == null || levels == null || levels.Length == 0) {
                 Debug.LogError("WingSinger: missing shared systems or level instances.", this);
                 enabled = false; return;
             }
             foreach (var level in levels) if (level != null) level.gameObject.SetActive(false);
-            hud.restartButton.onClick.AddListener(Restart);
-            hud.nextButton.onClick.AddListener(Next);
-            hud.resultRestartButton.onClick.AddListener(Restart);
-            hud.resultNextButton.onClick.AddListener(Next);
+            if (hud != null) {
+                hud.restartButton.onClick.AddListener(Restart);
+                hud.nextButton.onClick.AddListener(Next);
+                hud.resultRestartButton.onClick.AddListener(Restart);
+                hud.resultNextButton.onClick.AddListener(Next);
+            }
             SwitchLevel(initialLevel);
+        }
+
+        void LateUpdate() {
+            if (switching || Session == null || CurrentLevel == null) return;
+            Vector3 current = player.body.position;
+            if (!player.IsEntering && CurrentLevel.CollectBetween(Session, previousBodyPosition, current) > 0) player.PlayCollectionFeedback();
+            previousBodyPosition = current;
         }
 
         void Update() {
@@ -34,10 +44,10 @@ namespace WingSinger {
             else if (Input.GetKeyDown(KeyCode.Alpha2)) SwitchLevel(1);
             if (switching || Session == null || CurrentLevel == null) return;
             bool finished = Session.Phase == BreathPhase.Finished;
-            Session.Advance(Time.deltaTime, finished ? Session.PlayerLane : input.ReadLane());
+            Session.Advance(Time.deltaTime, finished ? Session.PlayerLane : Session.Phase == BreathPhase.Preview ? BreathLane.Middle : input.ReadLane());
             player.Present(Session, CurrentLevel.settings);
             CurrentLevel.Present(Session);
-            hud.Present(Session);
+            if (hud != null) hud.Present(Session);
             if (!finished && Session.Phase == BreathPhase.Finished) player.StopAnimation();
         }
 
@@ -58,14 +68,19 @@ namespace WingSinger {
                 target.Prepare();
                 player.ResetPlayer(target.spawnPoint.position);
                 virtualCamera.PreviousStateIsValid = false;
-                virtualCamera.ForceCameraPosition(player.cameraTarget.position + new Vector3(4, 0, -10), Quaternion.identity);
+                Vector3 cameraPosition = player.cameraTarget.position + new Vector3(4, 0, -10);
+                var outputCamera = Camera.main;
+                float aspect = outputCamera != null ? outputCamera.aspect : 16f / 9f;
+                player.BeginEntrance(cameraPosition.x - virtualCamera.m_Lens.OrthographicSize * aspect, target.settings.playerEntranceSeconds);
                 target.gameObject.SetActive(true);
                 CurrentIndex = index;
                 Session = new BreathSession(target.settings.CreatePattern());
-                hud.ResetHud(target.settings.displayName);
+                if (hud != null) hud.ResetHud(target.settings.displayName);
                 player.Present(Session, target.settings);
+                previousBodyPosition = player.body.position;
+                virtualCamera.ForceCameraPosition(player.cameraTarget.position + new Vector3(4, 0, -10), Quaternion.identity);
                 target.Present(Session);
-                hud.Present(Session);
+                if (hud != null) hud.Present(Session);
                 return true;
             } catch (System.Exception error) {
                 target.gameObject.SetActive(false);

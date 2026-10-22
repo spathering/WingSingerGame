@@ -1,0 +1,21 @@
+Arduino input Play Mode verification (simulated serial transport, real scene)
+PASS: Saved scene uses sensor input with the existing W/S fallback
+PASS: Saved thresholds and automatic port selection are correct
+PASS: Receiver uses the agreed baud and handshake
+PASS: Value 400 maps to inhale through the actual receiver
+PASS: Sensor inhale moves the actual player to the upper lane
+PASS: Value 1000 maps to exhale, including the boundary
+PASS: Sensor exhale moves the actual player to the lower lane
+PASS: An intermediate value returns the player to the middle lane
+PASS: Restart resets gameplay while preserving the serial connection
+PASS: Prefab switching preserves one active level and the same receiver
+PASS: Receiver belongs to shared systems
+PASS: Malformed packets cannot keep a stale signal alive
+PASS: Stale sensor input is neutral
+PASS: Simulated unplug clears input
+PASS: Disabling input stops the worker and closes the transport
+PASS: Re-enabling cannot reactivate the old worker
+PASS: A replacement receiver can use a changed COM number
+PASS: Shutdown releases the replacement transport and resets the lane
+PASS: No gameplay UI was added
+SUCCESS: Physical Arduino is not connected; hardware end-to-end validation is pending.
