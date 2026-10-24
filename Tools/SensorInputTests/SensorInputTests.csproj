@@ -9,5 +9,8 @@
     <Compile Include="../../Assets/Scripts/Gameplay/BreathSensorProtocol.cs" Link="BreathSensorProtocol.cs" />
     <Compile Include="../../Assets/Scripts/Gameplay/BreathSensorClient.cs" Link="BreathSensorClient.cs" />
     <Compile Include="../../Assets/Scripts/Gameplay/WindowsSerialTransport.cs" Link="WindowsSerialTransport.cs" />
+    <Compile Include="../../Assets/Scripts/Gameplay/BreathInput.cs" Link="BreathInput.cs" />
+    <Compile Include="../../Assets/Scripts/Gameplay/KeyboardBreathInput.cs" Link="KeyboardBreathInput.cs" />
+    <Compile Include="../../Assets/Scripts/Gameplay/ArduinoBreathInput.cs" Link="ArduinoBreathInput.cs" />
   </ItemGroup>
 </Project>
