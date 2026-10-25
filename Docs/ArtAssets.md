@@ -1,5 +1,7 @@
 # 角色动画与森林循环背景
 
+2026-10-24：当前示例场景已改用两层循环视差素材，远景 0.65 倍、前景 1.15 倍。资源、参数和验证见 [ParallaxBackground.md](ParallaxBackground.md)。下文单层森林背景部分保留为早期实现说明。
+
 示例场景：`Assets/Scenes/BreathDemo.unity`。美术与共享玩家、摄像机放在关卡 Prefab 之外；关卡仍由 `BreathLevelManager` 在同一场景内切换根对象激活状态。
 
 ## GIF 动画
