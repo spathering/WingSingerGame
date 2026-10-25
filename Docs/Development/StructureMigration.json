@@ -1,0 +1,187 @@
+[
+  {
+    "previous": "Assets/Scripts/Gameplay/ArduinoBreathInput.cs",
+    "current": "Assets/Scripts/Input/ArduinoBreathInput.cs",
+    "preservedGuid": "673cdb84b90a5774d9547fd4a2814705"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/BreathInput.cs",
+    "current": "Assets/Scripts/Input/BreathInput.cs",
+    "preservedGuid": "faa7d65143d0dfe48ba2859a229a5c60"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/KeyboardBreathInput.cs",
+    "current": "Assets/Scripts/Input/KeyboardBreathInput.cs",
+    "preservedGuid": "d31c3e52971969a44a52feb86406cbda"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/ExternalBreathInput.cs",
+    "current": "Assets/Scripts/Input/ExternalBreathInput.cs",
+    "preservedGuid": "821a40a393fff554d81877b7e7b0cb21"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/BreathSensorClient.cs",
+    "current": "Assets/Scripts/Input/BreathSensorClient.cs",
+    "preservedGuid": "3b33f49f959f94740b9c21369f0a9453"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/BreathSensorProtocol.cs",
+    "current": "Assets/Scripts/Input/BreathSensorProtocol.cs",
+    "preservedGuid": "ef52993308ef11648ba8d6caec15ca5b"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/WindowsSerialTransport.cs",
+    "current": "Assets/Scripts/Input/WindowsSerialTransport.cs",
+    "preservedGuid": "bbffc100ca73a774d8a95aafcc4031f1"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/BreathPlayer.cs",
+    "current": "Assets/Scripts/Gameplay/Presentation/BreathPlayer.cs",
+    "preservedGuid": "f9c7faa9a3bed3d4b8ca47a4c049c4ee"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/BreathCharacterAnimator.cs",
+    "current": "Assets/Scripts/Gameplay/Presentation/BreathCharacterAnimator.cs",
+    "preservedGuid": "73b6fadf0c056164c9e85e643f6f2975"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/CharacterSpriteClip.cs",
+    "current": "Assets/Scripts/Gameplay/Presentation/CharacterSpriteClip.cs",
+    "preservedGuid": "7a042902e9d51d044a7e620e3e318a70"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/LoopingPanorama.cs",
+    "current": "Assets/Scripts/Gameplay/Presentation/LoopingPanorama.cs",
+    "preservedGuid": "104e7b27758689e49974fb7cec0683d0"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/BreathCollectibleLayout.cs",
+    "current": "Assets/Scripts/Gameplay/Collectibles/BreathCollectibleLayout.cs",
+    "preservedGuid": "0d5161a6aa3c7e74d8b54d0d7c667d6c"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/PaperCollectible.cs",
+    "current": "Assets/Scripts/Gameplay/Collectibles/PaperCollectible.cs",
+    "preservedGuid": "9854bc89c808dbb4aa027cc1aec9b7fc"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/BreathSession.cs",
+    "current": "Assets/Scripts/Gameplay/Core/BreathSession.cs",
+    "preservedGuid": "349b1a038c1c5e04c8b472a3c3191ffc"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/BreathLevelSettings.cs",
+    "current": "Assets/Scripts/Levels/BreathLevelSettings.cs",
+    "preservedGuid": "803eaece2cf148249b0030fe573d735c"
+  },
+  {
+    "previous": "Assets/Scripts/Gameplay/BreathHud.cs",
+    "current": "Assets/Scripts/UI/Legacy/BreathHud.cs",
+    "preservedGuid": "8ef545cd9b800a84680f2a61ef8c765b"
+  },
+  {
+    "previous": "Docs/BasicGameplay.md",
+    "current": "Docs/Design/BasicGameplay.md",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/PaperCollection.md",
+    "current": "Docs/Design/PaperCollection.md",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/ArtAssets.md",
+    "current": "Docs/Art/ArtAssets.md",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/ArduinoInput.md",
+    "current": "Docs/Hardware/ArduinoInput.md",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/ArduinoInputContext.md",
+    "current": "Docs/Handoffs/ArduinoInputContext.md",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/WINGSINGER_91E5B8BCE69F99E9B99BE48AB8E687.md",
+    "current": "Docs/Hardware/HardwareIntegrationContext.md",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/UnityMcpSetup.md",
+    "current": "Docs/Development/UnityMcpSetup.md",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Assets/Editor/ArduinoInputSetup.cs",
+    "current": "Assets/Editor/Setup/ArduinoInputSetup.cs",
+    "preservedGuid": "5a2b2ff9686a6294ba5f232d5cec93dd"
+  },
+  {
+    "previous": "Assets/Editor/ArduinoInputValidation.cs",
+    "current": "Assets/Editor/Validation/ArduinoInputValidation.cs",
+    "preservedGuid": "d4ccddea00b6cd64384848b7f5f8f82b"
+  },
+  {
+    "previous": "Assets/Editor/BreathArtSetup.cs",
+    "current": "Assets/Editor/Setup/BreathArtSetup.cs",
+    "preservedGuid": "b76e04823974b7743bd1bae5412c6fc6"
+  },
+  {
+    "previous": "Assets/Editor/BreathDemoBuilder.cs",
+    "current": "Assets/Editor/Setup/BreathDemoBuilder.cs",
+    "preservedGuid": "30d76e0e9becab24b91ec87260c3a027"
+  },
+  {
+    "previous": "Assets/Editor/BreathDemoValidation.cs",
+    "current": "Assets/Editor/Validation/BreathDemoValidation.cs",
+    "preservedGuid": "d3b7cd4a3da769c47ac5882b8ee2cf50"
+  },
+  {
+    "previous": "Assets/Editor/PaperCollectionSetup.cs",
+    "current": "Assets/Editor/Setup/PaperCollectionSetup.cs",
+    "preservedGuid": "fc18ef1e699489c4e906a3a3a68ca0ec"
+  },
+  {
+    "previous": "Assets/Editor/PaperCollectionValidation.cs",
+    "current": "Assets/Editor/Validation/PaperCollectionValidation.cs",
+    "preservedGuid": "d0048f059641e7b4d84a5db873c22796"
+  },
+  {
+    "previous": "Assets/Editor/PlayerPresentationValidation.cs",
+    "current": "Assets/Editor/Validation/PlayerPresentationValidation.cs",
+    "preservedGuid": "bab9513200447994783c5d38eb6f37c5"
+  },
+  {
+    "previous": "Docs/ArduinoInputValidation.txt",
+    "current": "Docs/Validation/ArduinoInputValidation.txt",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/ArtValidationReport.txt",
+    "current": "Docs/Validation/ArtValidationReport.txt",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/CleanPresentationValidation.txt",
+    "current": "Docs/Validation/CleanPresentationValidation.txt",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/PaperCollectionValidation.txt",
+    "current": "Docs/Validation/PaperCollectionValidation.txt",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/PlayerPresentationValidation.txt",
+    "current": "Docs/Validation/PlayerPresentationValidation.txt",
+    "preservedGuid": ""
+  },
+  {
+    "previous": "Docs/ValidationReport.txt",
+    "current": "Docs/Validation/ValidationReport.txt",
+    "preservedGuid": ""
+  }
+]

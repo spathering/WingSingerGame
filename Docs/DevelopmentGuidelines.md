@@ -6,11 +6,16 @@
 
 - Unity：2022.3.62f2，以 `ProjectSettings/ProjectVersion.txt` 为准。
 - 渲染管线：URP 14.0.12，以 `Packages/manifest.json` 为准。
-- 当前主场景：`Assets/Scenes/MainScene.unity`，已经加入构建列表。
+- 当前可运行的玩法入口与首个构建场景为 `Assets/Scenes/BreathDemo.unity`；`Assets/Scenes/MainScene.unity` 保留在构建列表中。
 - 画质配置：Performant、Balanced、High Fidelity；项目保存的当前档位和桌面默认档位为 High Fidelity。
 - 主场景已经配置 Global Volume 和相机后处理；Volume 包含 Bloom、Vignette、Tonemapping。
 - Balanced、High Fidelity 的 Renderer 已配置 SSAO；OutlineFx 已导入，但尚未接入这三个正式 Renderer。
-- 基础玩法在 `Assets/Scenes/BreathDemo.unity` 中实现，包含统一关卡管理器与两个关卡 Prefab 实例。运行方式和模块职责见 `Docs/BasicGameplay.md`；原有 `MainScene.unity` 保留。
+- 基础玩法在 `Assets/Scenes/BreathDemo.unity` 中实现，包含统一关卡管理器与两个关卡 Prefab 实例。运行方式和模块职责见 `Docs/Design/BasicGameplay.md`；原有 `MainScene.unity` 保留。
+- 2026-10-25 已整理第一方代码与文档目录，脚本 GUID、现有程序集和关卡实现保持不变，见 `Docs/Development/ProjectStructure.md`。
+- 13 个 UI 页面位于 `Assets/Prefabs/UI/Screens`，预览场景为 `Assets/Scenes/UI/UIFlowPreview.unity`（不加入游戏构建列表）。页面关系与接入差异见 `Docs/Design/UI/UIFlowDesign.md`，正式关卡继续遵守下述单场景管理约定。
+- `BreathDemo` 已通过 `BreathUIFlowController` 接入完整 UI 导航；启动停留首页，起飞后才激活关卡。暂停冻结游戏会话与缩放时间，USB 接收继续运行；菜单退出由统一管理器清理关卡。
+- 选关数据使用 `Assets/Settings/Levels/WingSingerLevelCatalog.asset` 和对应 `BreathLevelDefinition` SO，关联原有 Prefab 及 `BreathLevelSettings`。现有两关均可初始选择；按钮交互使用 PrimeTween，详见 `Docs/Development/UIInteractionsAndLevelCatalog.md`。
+- UI Canvas 使用 Scale With Screen Size、1920×1080 参考分辨率；参考稿坐标由 `UIPageViewport` 等比适配当前窗口和 Safe Area。调整界面后检查实际控件及文字边界，不能只检查参考分辨率；详见 `Docs/Development/UIViewportLayout.md`。
 
 ## 2. 必须遵守的关卡管理方式
 

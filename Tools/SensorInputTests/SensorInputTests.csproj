@@ -5,12 +5,12 @@
     <DefineConstants>$(DefineConstants);WINGSINGER_SERIAL_TESTS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../../Assets/Scripts/Gameplay/BreathSession.cs" Link="BreathSession.cs" />
-    <Compile Include="../../Assets/Scripts/Gameplay/BreathSensorProtocol.cs" Link="BreathSensorProtocol.cs" />
-    <Compile Include="../../Assets/Scripts/Gameplay/BreathSensorClient.cs" Link="BreathSensorClient.cs" />
-    <Compile Include="../../Assets/Scripts/Gameplay/WindowsSerialTransport.cs" Link="WindowsSerialTransport.cs" />
-    <Compile Include="../../Assets/Scripts/Gameplay/BreathInput.cs" Link="BreathInput.cs" />
-    <Compile Include="../../Assets/Scripts/Gameplay/KeyboardBreathInput.cs" Link="KeyboardBreathInput.cs" />
-    <Compile Include="../../Assets/Scripts/Gameplay/ArduinoBreathInput.cs" Link="ArduinoBreathInput.cs" />
+    <Compile Include="../../Assets/Scripts/Gameplay/Core/BreathSession.cs" Link="BreathSession.cs" />
+    <Compile Include="../../Assets/Scripts/Input/BreathSensorProtocol.cs" Link="BreathSensorProtocol.cs" />
+    <Compile Include="../../Assets/Scripts/Input/BreathSensorClient.cs" Link="BreathSensorClient.cs" />
+    <Compile Include="../../Assets/Scripts/Input/WindowsSerialTransport.cs" Link="WindowsSerialTransport.cs" />
+    <Compile Include="../../Assets/Scripts/Input/BreathInput.cs" Link="BreathInput.cs" />
+    <Compile Include="../../Assets/Scripts/Input/KeyboardBreathInput.cs" Link="KeyboardBreathInput.cs" />
+    <Compile Include="../../Assets/Scripts/Input/ArduinoBreathInput.cs" Link="ArduinoBreathInput.cs" />
   </ItemGroup>
 </Project>

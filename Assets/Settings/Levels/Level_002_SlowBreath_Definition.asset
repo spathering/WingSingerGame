@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58b793be6ef8e374da9d3effce3bbac3, type: 3}
+  m_Name: Level_002_SlowBreath_Definition
+  m_EditorClassIdentifier: 
+  levelId: slow-breath
+  title: Slow Breath
+  description: 'A slower rhythm: inhale 4 s, exhale 6 s. A 60-second forest flight.'
+  thumbnail: {fileID: 21300000, guid: ae12f0790a2c97f469055dc561e7532f, type: 3}
+  prefab: {fileID: 1859265617997825646, guid: 54cf90202b3b0ed4c8d5bd793121b8dc, type: 3}
+  settings: {fileID: 11400000, guid: 747371fa81c4ab24886477bf286cf18c, type: 2}
+  availableFromStart: 1
+  sourceScenePath: Assets/Scenes/BreathDemo.unity

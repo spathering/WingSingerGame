@@ -45,7 +45,7 @@
 
 ## 接线与验证范围
 
-沿用 [硬件文档](../../Docs/WINGSINGER_91E5B8BCE69F99E9B99BE48AB8E687.md) 的 GPIO0 与分压接线。传感器 OUT 不可直接接到 GPIO0；调整接线前断开 USB。
+沿用 [硬件文档](../../Docs/Hardware/HardwareIntegrationContext.md) 的 GPIO0 与分压接线。传感器 OUT 不可直接接到 GPIO0；调整接线前断开 USB。
 
 本程序整合通信协议与原有传感器处理。实际呼吸方向、静置基线和 ADC 大幅跳变仍需实测，不能仅凭数字出现或滤波后稳定就判定呼吸映射正常。
 

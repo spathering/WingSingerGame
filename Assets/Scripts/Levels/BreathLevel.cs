@@ -11,6 +11,7 @@ namespace WingSinger {
         public SpriteRenderer guideVisual;
         public CharacterSpriteClip guideClip;
         public PaperCollectible collectiblePrefab;
+        public bool reduceMotion;
         readonly List<PaperCollectible> papers = new List<PaperCollectible>();
         public IReadOnlyList<PaperCollectible> Papers => papers;
         public PaperRoutePoint[] PaperLayout { get; private set; }
@@ -73,7 +74,7 @@ namespace WingSinger {
             guide.localPosition = head;
             guideVisual.sprite = guideClip.Sample(session.Elapsed, true);
             for (int i = 0; i < PaperLayout.Length; i++) papers[i].Present(guideTime, session.Elapsed);
-            guide.localScale = Vector3.one * (1 + 0.08f * Mathf.Sin((float)session.Elapsed * 5));
+            guide.localScale = reduceMotion ? Vector3.one : Vector3.one * (1 + 0.08f * Mathf.Sin((float)session.Elapsed * 5));
             int count = 0;
             for (int i = 0; i < routeNodes.Length && routeNodes[i].x <= x; i++) visibleNodes[count++] = routeNodes[i];
             if (count == 0 || visibleNodes[count - 1] != head) visibleNodes[count++] = head;

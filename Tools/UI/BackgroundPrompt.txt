@@ -1,0 +1,12 @@
+Tool: built-in image_gen, edit mode, opaque output.
+Reference: Windsinger GameUI 1/03 · Follow/collect.png
+
+Edit the supplied UI screenshot into a clean reusable game background plate.
+Preserve the exact low-poly forest valley, blue sky, cream faceted clouds,
+distant mountains and triangular pine trees framing both sides. Remove all
+interface controls, cream panels, text, numbers, arrows, dotted paths, stars,
+crane, airships, mice and translucent ghosts. Reconstruct the forest/sky behind
+removed elements. Keep composition and palette, no new structures or characters.
+Full bleed landscape matching the original 2420x1668 composition.
+
+Saved project result: Assets/Art/UI/Backgrounds/ForestValley.png
