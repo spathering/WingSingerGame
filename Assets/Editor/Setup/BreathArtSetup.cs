@@ -93,6 +93,8 @@ namespace WingSinger.Editor {
             if (initialLevel != null && initialLevel.settings.playerEntranceSeconds > 0)
                 background.originWorldX -= (float)initialLevel.settings.CreatePattern().Lead * initialLevel.settings.moveSpeed;
             background.Sync();
+            if (File.Exists("Assets/Art/Background/SkyPanorama.png") && File.Exists("Assets/Art/Background/ForestForeground.png"))
+                ParallaxBackgroundSetup.ApplyToOpenDemo();
             var volume = UnityEngine.Object.FindObjectOfType<Volume>();
             if (volume != null && volume.sharedProfile != null) {
                 Bloom bloom; Vignette vignette;
@@ -177,15 +179,18 @@ namespace WingSinger.Editor {
             var previousMode = canvas == null ? RenderMode.ScreenSpaceOverlay : canvas.renderMode;
             var previousCamera = canvas == null ? null : canvas.worldCamera;
             var previousDistance = canvas == null ? 0 : canvas.planeDistance;
-            var background = UnityEngine.Object.FindObjectOfType<LoopingPanorama>();
+            var previousOrder = canvas == null ? 0 : canvas.sortingOrder;
+            var backgrounds = UnityEngine.Object.FindObjectsOfType<LoopingPanorama>();
             var renderTexture = new RenderTexture(1600, 900, 24, RenderTextureFormat.ARGB32);
             var previous = RenderTexture.active;
             var previousAspect = camera.aspect;
+            var previousTarget = camera.targetTexture;
             try {
+                camera.targetTexture = renderTexture;
                 camera.aspect = 1600f / 900;
-                if (background != null) background.Sync();
+                foreach (var background in backgrounds) background.Sync();
                 if (canvas != null) {
-                    canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = camera; canvas.planeDistance = 1;
+                    canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = camera; canvas.planeDistance = 1; canvas.sortingOrder = 32000;
                 }
                 Canvas.ForceUpdateCanvases();
                 var request = new UniversalRenderPipeline.SingleCameraRequest { destination = renderTexture };
@@ -195,12 +200,13 @@ namespace WingSinger.Editor {
                 image.ReadPixels(new Rect(0, 0, 1600, 900), 0, 0); image.Apply();
                 File.WriteAllBytes(path, image.EncodeToPNG()); UnityEngine.Object.DestroyImmediate(image);
             } finally {
-                RenderTexture.active = previous; camera.aspect = previousAspect;
+                RenderTexture.active = previous; camera.targetTexture = previousTarget; camera.aspect = previousAspect;
                 if (canvas != null) {
                     canvas.renderMode = previousMode; canvas.worldCamera = previousCamera; canvas.planeDistance = previousDistance;
+                    canvas.sortingOrder = previousOrder;
                     Canvas.ForceUpdateCanvases();
                 }
-                if (background != null) background.Sync();
+                foreach (var background in backgrounds) background.Sync();
                 renderTexture.Release(); UnityEngine.Object.DestroyImmediate(renderTexture);
             }
         }

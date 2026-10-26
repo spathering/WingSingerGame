@@ -10,7 +10,7 @@
 | 正式导航 Play Mode | 143 项，SO 目录、两关初始可选和实际进入、按钮动画、起飞、暂停/恢复/重开、退出清理、历史 ID、输入练习、存档和设置 |
 | 多窗口布局 | 13 页 × 9 种尺寸共 117 个组合、2273 项检查；540 个控件和 1494 处渲染文字边界，含点击及悬停验证 |
 | 交付审计 | 321 项，素材哈希、路径、GUID、文档链接、16:9 截图、SO 引用和运行报告 |
-| 目录迁移 | 37 条路径；24 个迁移脚本保留 GUID，23 个源码不变，1 个玩家脚本按导航需求扩展；原路径下另扩展管理器与关卡表现 |
+| 目录迁移 | 37 条路径；24 个迁移脚本保留 GUID，21 个源码不变，玩家/背景表现与美术接线脚本按已登记功能扩展；原路径下另扩展管理器与关卡表现 |
 | 输入回归 | 86 项，通过 |
 | 收集物回归 | 151 项，通过；补齐可运行测试项目入口 |
 
@@ -23,6 +23,8 @@
 现有两关通过 `BreathLevelDefinition` 与 `WingSingerLevelCatalog` SO 关联原有 Prefab 和参数，初始均可选择。准备页名称与时长均读取当前关卡。全部 Button 添加 PrimeTween 悬停、按下和回弹；暂停时使用非缩放时间，禁用/退出清理动画，Reduce Motion 立即取消缩放。配置入口见 [UI 交互与关卡目录](../Development/UIInteractionsAndLevelCatalog.md)。
 
 Canvas 已统一为 1920×1080 基准，页面由 `UIPageViewport` 等比居中适配，背景独立铺满。验证复现了旧配置在 16:9 下的 7 个控件越界；修正后全部检查通过。报告见 [UIViewportValidation.json](UIViewportValidation.json)，对比说明见 [UI 窗口适配](../Development/UIViewportLayout.md)，实际截图见 [ViewportPreviews](../Design/UI/ViewportPreviews/)。正式玩法运行截图现使用 1280×720；早期参考图与原始画廊截图保留原比例。
+
+2026-10-26 已按方案 A 整合主分支的双层背景，同时保留 UI、关卡 SO、输入与窗口适配。新增 [18 项视差/生产导航集成检查](ParallaxBackgroundMergeValidation.txt)，并重跑正式导航、多窗口及参考 UI 验证。输入与收集逻辑分别通过 86、151 项。素材内容、场景引用与路径检查见 [合并验证](MergeIntegrationValidation.json)；冲突处理记录见 [分支合并评审](../Development/MergeReview-2026-10-26.md)。
 
 正式导航验证使用生产接收器与模拟 USB 传输，覆盖 300 mV→吸气上轨、1300 mV→呼气下轨；练习保持时间使用确定性推进，成绩结算使用实际会话模型。测试使用空存档键，不修改用户进度，也不打开物理串口。本次不代表已复测 ESP32 实物连接。音乐和音效音量通过测试 AudioSource 验证，场景尚未配置实际音频资源。
 

@@ -4,6 +4,8 @@
 
 本文件可直接作为其他 agent 的任务背景。实际要继续做的工作，以用户的新要求为准；目前输入映射已经实现，不需要从零搭建。配套 ZIP 是上下文、相关源码和测试的快照，不是完整 Unity 项目或可导入的 `.unitypackage`。继续修改时，以实际仓库内的最新文件为准。
 
+2026-10-26 合并说明：配套 [ArduinoInputContext.zip](ArduinoInputContext.zip) 保留自上游的历史快照，内部旧目录及硬件结论仅供追溯；当前协议、可调阈值、调试和固件入口以 [ArduinoInput](../Hardware/ArduinoInput.md) 与实际代码为准，不从快照覆盖当前工程。
+
 ## 1. 用户已确认的要求
 
 - Arduino 通过 USB 串口输出传感器数值，固定 **115200** 波特率。

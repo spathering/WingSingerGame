@@ -14,6 +14,7 @@
 - [PrimeTween 按钮交互与关卡 SO 目录](Development/UIInteractionsAndLevelCatalog.md)：现有两关、可选关卡配置和接线/验证入口。
 - [UI 窗口与 16:9 适配](Development/UIViewportLayout.md)：Canvas 基准、页面等比适配和多尺寸验证。
 - [原有角色和场景素材](Art/ArtAssets.md)。
+- [两层循环视差背景](Art/ParallaxBackground.md)：主分支合入的天空与透明前景、参数及合并验证。
 - [Unity MCP 配置记录](Development/UnityMcpSetup.md)：历史端口与路径需要现场核实。
 
 ## 硬件

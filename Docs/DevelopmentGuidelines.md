@@ -16,6 +16,7 @@
 - `BreathDemo` 已通过 `BreathUIFlowController` 接入完整 UI 导航；启动停留首页，起飞后才激活关卡。暂停冻结游戏会话与缩放时间，USB 接收继续运行；菜单退出由统一管理器清理关卡。
 - 选关数据使用 `Assets/Settings/Levels/WingSingerLevelCatalog.asset` 和对应 `BreathLevelDefinition` SO，关联原有 Prefab 及 `BreathLevelSettings`。现有两关均可初始选择；按钮交互使用 PrimeTween，详见 `Docs/Development/UIInteractionsAndLevelCatalog.md`。
 - UI Canvas 使用 Scale With Screen Size、1920×1080 参考分辨率；参考稿坐标由 `UIPageViewport` 等比适配当前窗口和 Safe Area。调整界面后检查实际控件及文字边界，不能只检查参考分辨率；详见 `Docs/Development/UIViewportLayout.md`。
+- 2026-10-26 按方案 A 合入主分支的双层视差背景：共享远景 0.65 倍、透明前景 1.15 倍，仍保留现有 UI、关卡 SO 和单场景管理。配置与验证见 `Docs/Art/ParallaxBackground.md`。
 
 ## 2. 必须遵守的关卡管理方式
 

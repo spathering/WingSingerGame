@@ -1,0 +1,21 @@
+Two-layer background integration validation
+2026-10-26T15:28:52.8958417+08:00
+PASS: Production starts at the menu with isolated progress and no auto-started session
+PASS: The real navigation starts the first registered gameplay level
+PASS: Exactly two shared panorama layers
+PASS: Shared layers use a supported URP shader
+PASS: Looping Foreground tracks its configured speed
+PASS: Looping Foreground loops after a full period
+PASS: Looping Foreground covers a resized viewport
+PASS: Looping Background tracks its configured speed
+PASS: Looping Background loops after a full period
+PASS: Looping Background covers a resized viewport
+PASS: Foreground scrolls faster than background
+PASS: Transparent foreground is layered above the sky and anchored below gameplay
+PASS: Navigation restart resets the session and releases pause
+PASS: Next level uses the existing second SO configuration
+PASS: Restart/switch keep one level and both shared layers
+PASS: Switch reuses both background objects
+PASS: Leaving a paused level clears gameplay while retaining the shared background layers
+PASS: Background validation leaves no pause, physical receiver or fabricated completion records
+SUCCESS

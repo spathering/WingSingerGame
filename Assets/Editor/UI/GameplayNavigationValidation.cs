@@ -61,6 +61,8 @@ namespace WingSinger.Editor {
             Check(flow.router.pages.Count(p => p.gameObject.activeSelf) == 1, "Exactly one UI page after " + name);
         }
         static IEnumerator Run() {
+            SessionState.SetBool(Key + "Background", Application.runInBackground);
+            Application.runInBackground = true;
             for (int i = 0; i < 5; i++) yield return null;
             flow = Object.FindObjectOfType<BreathUIFlowController>();
             Check(flow != null && flow.Progress != null && flow.profileKey == "", "Production flow starts with an isolated in-memory profile");
@@ -233,23 +235,28 @@ namespace WingSinger.Editor {
             var target = new RenderTexture(1280, 720, 24, RenderTextureFormat.ARGB32);
             var previous = RenderTexture.active; var cameraTarget = camera.targetTexture;
             var mode = canvas.renderMode; var canvasCamera = canvas.worldCamera; float distance = canvas.planeDistance, aspect = camera.aspect;
+            var panoramas = Object.FindObjectsOfType<LoopingPanorama>();
             int sortingOrder = canvas.sortingOrder;
             Texture2D image = null;
             try {
                 target.Create(); canvas.renderMode = RenderMode.ScreenSpaceCamera; canvas.worldCamera = camera; canvas.planeDistance = .5f;
                 canvas.sortingOrder = 32000;
-                camera.targetTexture = target; camera.aspect = 1280f / 720; Canvas.ForceUpdateCanvases(); camera.Render();
+                camera.targetTexture = target; camera.aspect = 1280f / 720;
+                foreach (var panorama in panoramas) panorama.Sync();
+                Canvas.ForceUpdateCanvases(); camera.Render();
                 RenderTexture.active = target; image = new Texture2D(1280, 720, TextureFormat.RGB24, false); image.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0); image.Apply();
                 File.WriteAllBytes("Docs/Design/UI/RuntimePreviews/" + name + ".png", image.EncodeToPNG());
             } finally {
                 canvas.renderMode = mode; canvas.worldCamera = canvasCamera; canvas.planeDistance = distance;
                 canvas.sortingOrder = sortingOrder;
                 camera.targetTexture = cameraTarget; camera.aspect = aspect; RenderTexture.active = previous;
+                foreach (var panorama in panoramas) panorama.Sync();
                 if (image != null) Object.DestroyImmediate(image); target.Release(); Object.DestroyImmediate(target);
             }
         }
         static void Finish(bool success, string error) {
             if (flow != null) { flow.ExitSession(); flow.sensorInput.Disconnect(); }
+            Application.runInBackground = SessionState.GetBool(Key + "Background", false);
             Directory.CreateDirectory(Path.GetDirectoryName(Report));
             File.WriteAllText(Report, JsonUtility.ToJson(new Result { date = DateTimeOffset.Now.ToString("O"), success = success, checks = checks.ToArray(), error = error }, true));
             if (success) Debug.Log("WingSinger gameplay navigation passed: " + checks.Count + " checks."); else Debug.LogError(error);

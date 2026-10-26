@@ -57,6 +57,8 @@ namespace WingSinger.Editor {
         }
         static void Check(bool value, string description) { if (!value) throw new Exception(description); checks.Add(description); }
         static IEnumerator Run() {
+            SessionState.SetBool(Key + "Background", Application.runInBackground);
+            Application.runInBackground = true;
             checks.Clear(); result = new Result { date = DateTimeOffset.Now.ToString("O"), resolutions = sizes.Select(s => s.x + "x" + s.y).ToArray() };
             for (int i = 0; i < 4; i++) yield return null;
             var router = Object.FindObjectOfType<UIScreenRouter>(); canvas = router.GetComponent<Canvas>();
@@ -145,6 +147,7 @@ namespace WingSinger.Editor {
             finally { RenderTexture.active=previous;Object.DestroyImmediate(image); }
         }
         static void Finish(bool success, string error) {
+            Application.runInBackground = SessionState.GetBool(Key + "Background", false);
             if (camera != null) camera.targetTexture = null;
             if (target != null) { target.Release();Object.DestroyImmediate(target); target=null; }
             if (camera != null) Object.DestroyImmediate(camera.gameObject);

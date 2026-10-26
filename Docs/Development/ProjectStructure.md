@@ -42,3 +42,5 @@
 ## 导航接入后的增量修改
 
 目录整理后，根据导航图扩展了 `BreathLevelManager` 的可控启动、暂停和退出接口，并在 `BreathPlayer`、`BreathLevel` 增加减少动画选项；三者保留原 GUID 和原有关卡实例管理方式。主场景新增公共 UI 实例和业务绑定，参考图页面资源继续用于画廊。源码内容校验对这三个明确修改的脚本检查 GUID，其他迁移脚本继续检查与迁移前内容相同。
+
+2026-10-26 主分支背景集成另扩展 `Gameplay/Presentation/LoopingPanorama` 与 `Editor/Setup/BreathArtSetup`，承接双层视差与适配窗口的截图逻辑；两者保留原 GUID。新增背景接线/验证脚本放在 `Editor/Setup`，背景文档与历史验证记录分别归入 `Docs/Art` 与 `Docs/Validation`。目录审计对这两个已登记扩展检查内容变化与 GUID，其他迁移脚本继续检查源码内容。

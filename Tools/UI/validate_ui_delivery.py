@@ -31,6 +31,8 @@ intentional_changes={
     'Assets/Scripts/Levels/BreathLevelManager.cs',
     'Assets/Scripts/Gameplay/Presentation/BreathPlayer.cs',
     'Assets/Scripts/Levels/BreathLevel.cs',
+    'Assets/Scripts/Gameplay/Presentation/LoopingPanorama.cs',
+    'Assets/Editor/Setup/BreathArtSetup.cs',
 }
 changed_scripts=[]
 for entry in migration:
@@ -43,7 +45,7 @@ for entry in migration:
     if current.suffix=='.cs':
         original=subprocess.check_output(['git','show',migration_base+':'+entry['previous']],cwd=root)
         if entry['current'] in intentional_changes:
-            check(original.replace(b'\r\n',b'\n')!=current.read_bytes().replace(b'\r\n',b'\n'),'Documented gameplay navigation extension: '+current.name)
+            check(original.replace(b'\r\n',b'\n')!=current.read_bytes().replace(b'\r\n',b'\n'),'Documented gameplay/UI/parallax extension: '+current.name)
             changed_scripts.append(entry['current'])
         else:
             check(original.replace(b'\r\n',b'\n')==current.read_bytes().replace(b'\r\n',b'\n'),'Existing runtime/editor source logic unchanged: '+current.name)
