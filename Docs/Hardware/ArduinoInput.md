@@ -1,5 +1,7 @@
 # Arduino 呼吸输入
 
+2026-10-29：游戏默认输入已切换为 Windows x64 BLE，连接及硬件参数确认见 [BluetoothInput.md](BluetoothInput.md)。本文后续内容保留为 **Usb Serial 模式**的协议和调试说明；115200 不适用于 BLE 空口配置。
+
 供其他 agent 接手的历史独立上下文见 [ArduinoInputContext.md](../Handoffs/ArduinoInputContext.md)，配套源码与测试历史快照包见 [ArduinoInputContext.zip](../Handoffs/ArduinoInputContext.zip)。快照不替代仓库中的最新实现。
 
 当前示例场景 `Assets/Scenes/BreathDemo.unity` 使用共享 `GameRoot` 上的 `ArduinoBreathInput`，由同一个 `BreathLevelManager.input` 读取。Windows 编辑器和 Windows 桌面版支持 USB 串口；其他平台暂时只使用键盘后备输入。

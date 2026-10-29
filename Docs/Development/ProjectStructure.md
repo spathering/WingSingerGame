@@ -4,7 +4,7 @@
 
 | 目录 | 责任 |
 | --- | --- |
-| `Assets/Scripts/Input` | BreathInput、Arduino 输入、解析协议、后台客户端、Windows 串口与键盘后备 |
+| `Assets/Scripts/Input` | BreathInput、Arduino 输入、解析协议、后台客户端、Windows BLE/USB 串口与键盘后备 |
 | `Assets/Scripts/Gameplay/Core` | 纯时间、路线和计分会话模型 |
 | `Assets/Scripts/Gameplay/Presentation` | 玩家表现、角色精灵动画、背景滚动 |
 | `Assets/Scripts/Gameplay/Collectibles` | 收集物布局、表现与接触判定 |

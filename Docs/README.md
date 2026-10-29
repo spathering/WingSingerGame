@@ -19,13 +19,16 @@
 
 ## 硬件
 
+- [ESP32-C3 BLE 输入、连接步骤和硬件待确认参数](Hardware/BluetoothInput.md)：当前游戏默认连接方式，Windows x64；实际硬件 BLE 协议待确认。
+- [BLE 参考固件](../Firmware/WingSingerBreathSensorBLE/README.md)：软件已提供，未烧录/实机验证。
 - [Arduino 输入协议与调试](Hardware/ArduinoInput.md)。
 - [硬件与串口联调上下文](Hardware/HardwareIntegrationContext.md)：原 WINGSINGER_91E5B8BCE69F99E9B99BE48AB8E687 文档，保留历史实测和问题记录。
 - [Arduino 接手上下文](Handoffs/ArduinoInputContext.md)：历史交接材料，最新实现以代码、固件说明为准。
-- [当前 ESP32 固件](../Firmware/WingSingerBreathSensor/README.md)。
+- [USB 调试固件与共享采样逻辑](../Firmware/WingSingerBreathSensor/README.md)。
 
 ## 验证与参考
 
+- [BLE 定向 Unity 验证](Validation/BluetoothInputValidation.json)：实际原生插件加载/释放与模拟 BLE 输入，真实硬件仍待联调。
 - [本轮验收汇总](Validation/UIValidationSummary.md)。
 - [UI 构建验证](Validation/UIBuildValidation.json)。
 - [UI 实际 Play Mode 验证](Validation/UIPlayValidation.json)、[目录/资源/链接验证](Validation/ProjectOrganizationValidation.json)。

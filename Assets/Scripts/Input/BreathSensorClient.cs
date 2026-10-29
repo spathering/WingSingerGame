@@ -82,7 +82,7 @@ namespace WingSinger {
         void Run() {
             try {
                 while (!stopping) {
-                    SetStatus(BreathSensorStatus.Searching, "", "Waiting for a recognized Arduino");
+                    SetStatus(BreathSensorStatus.Searching, "", "Searching for the breath sensor");
                     try {
                         var ports = options.PortOverride.Length > 0 ? new[] { options.PortOverride } : enumerate();
                         foreach (string candidate in ports.Distinct(StringComparer.OrdinalIgnoreCase)
@@ -135,7 +135,8 @@ namespace WingSinger {
             } finally {
                 lock (gate) active = null;
                 transport?.Dispose();
-                if (!stopping) SetStatus(BreathSensorStatus.Searching, "", "Disconnected or handshake/data timeout");
+                if (!stopping && Snapshot().Status != BreathSensorStatus.Searching)
+                    SetStatus(BreathSensorStatus.Searching, "", "Disconnected or handshake/data timeout");
             }
         }
 

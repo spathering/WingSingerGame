@@ -1,5 +1,7 @@
 # 整合固件的主机逻辑检查
 
+Windows 安装 Visual Studio C++ 工具链后可运行 `Tools/FirmwareTests/Run.ps1`，同时执行下面的原 USB 26 项检查及新增 BLE 14 项主机检查。BLE 测试使用 `BLE/` 中的无线 API 替身，只验证实际 BLE `.ino` 的逻辑，不代表 ESP32 目标编译或射频通信通过。
+
 从项目根目录运行（本机提供 g++）：
 
 ```powershell

@@ -1,0 +1,23 @@
+{
+    "success": true,
+    "date": "2026-10-29T12:52:53.0571098+08:00",
+    "error": "",
+    "checks": [
+        "Real scene starts at home with isolated progress and no active session",
+        "Saved scene uses shared BLE input",
+        "Fragmented BLE identity and 400 sample control the upper lane",
+        "UI shows real BLE transport without fabricated battery telemetry",
+        "1000 BLE sample controls lower lane",
+        "700 BLE sample controls middle lane",
+        "Existing controller check requests exactly one reconnection",
+        "BLE-ready takeoff activates exactly one level",
+        "Pause freezes gameplay while BLE notifications continue",
+        "Switch and restart reuse level instances and the same BLE receiver",
+        "Leaving gameplay disables level roots while shared BLE input remains available",
+        "Stale BLE sample returns to middle before disconnect",
+        "Inactivity closes old transport and re-identifies replacement",
+        "Component disable stops receiver and releases notifications",
+        "BLE gameplay uses one scene throughout"
+    ],
+    "scope": "Unity Mono native DLL scan/cancel plus simulated BLE UART in the real scene; no physical BLE or ESP32 target build."
+}

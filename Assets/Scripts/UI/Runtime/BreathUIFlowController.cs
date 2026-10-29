@@ -216,7 +216,8 @@ namespace WingSinger.UI {
             var settings = SelectedSettings;
             var s = IsSessionActive ? levelManager.Session : null;
             var recent = Progress.RecentFlights;
-            string connection = SensorFresh ? "USB connected" : sensorInput != null && sensorInput.ReceiverSnapshot.Connected ? "Waiting for data" : "Controller disconnected";
+            string transport = sensorInput != null ? sensorInput.ConnectionLabel : "BLE";
+            string connection = SensorFresh ? transport + " connected" : sensorInput != null && sensorInput.ReceiverSnapshot.Connected ? "Waiting for data" : "Controller disconnected";
             switch (kind) {
                 case UIValueKind.LevelTitle: return ViewingHistory && CurrentResult != null ? "Level " + CurrentResult.levelNumber + " - " + CurrentResult.levelTitle
                     : "Level " + router.SelectedLevel + " - " + (SelectedDefinition != null ? SelectedDefinition.title : settings != null ? settings.displayName : "Unavailable");
@@ -228,9 +229,9 @@ namespace WingSinger.UI {
                 case UIValueKind.Streak: return Progress.Streak + "-day streak";
                 case UIValueKind.StreakDays: return Progress.Streak + "-day";
                 case UIValueKind.Connection: return connection;
-                case UIValueKind.InputReadiness: return SensorFresh ? InputReady ? connection : "Adjust sensor thresholds" : InputReady ? "Keyboard: W / S available" : "Connect USB controller to fly";
+                case UIValueKind.InputReadiness: return SensorFresh ? InputReady ? connection : "Adjust sensor thresholds" : InputReady ? "Keyboard: W / S available" : "Connect " + transport + " controller to fly";
                 case UIValueKind.Battery: return "--";
-                case UIValueKind.Signal: return "USB";
+                case UIValueKind.Signal: return transport;
                 case UIValueKind.HudStep: return IsPracticing ? "Step " + (practiceStage + 1) + " / 3" : CurrentResult != null && CurrentResult.practice ? "Complete" : "Flight " + (s == null ? "0:00" : Duration((float)s.PlayTime));
                 case UIValueKind.Collected: return (s != null ? s.CollectedCount : CurrentResult != null ? CurrentResult.collected : 0).ToString();
                 case UIValueKind.ResultSeconds: return CurrentResult == null ? "0:00" : Duration(CurrentResult.seconds);

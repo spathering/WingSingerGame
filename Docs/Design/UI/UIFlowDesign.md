@@ -1,5 +1,7 @@
 # 13 个 UI 页面与跳转设计
 
+2026-10-29 输入接入更新：正式场景已默认使用 Windows x64 BLE，连接状态显示实际 `BLE`/`USB` 类型，未知电量仍为 `--`。本文原有“只有 USB、尚无 BLE”描述属于之前的接入记录；当前协议和硬件组待确认内容以 [BluetoothInput.md](../../Hardware/BluetoothInput.md) 为准。
+
 整理日期：2026-10-25。视觉依据为 [References](References/) 中 13 张用户提供的图；文件名、哈希与资源对应见 `Assets/Art/UI/UIAssetManifest.json`。下文将图中可直接确认的控件和根据业务补充的跳转规则分别说明。
 
 ## 页面目录

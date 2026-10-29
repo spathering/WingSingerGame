@@ -3,7 +3,16 @@ using UnityEngine;
 
 namespace WingSinger {
     public sealed class ArduinoBreathInput : BreathInput {
-        [Header("115200 baud / 8N1 / newline-delimited numbers")]
+        [Header("传感器连接（修改后重新连接）")]
+        public BreathSensorConnectionKind connectionKind = BreathSensorConnectionKind.BluetoothLE;
+        public string bluetoothDeviceName = WindowsBleTransport.DefaultDeviceName;
+        [Tooltip("可留空自动选择。多台同名设备时填写指定设备的蓝牙地址，例如 AA:BB:CC:DD:EE:FF。")]
+        public string bluetoothAddress = "";
+        public string bluetoothServiceUuid = WindowsBleTransport.ServiceUuid;
+        public string bluetoothNotifyUuid = WindowsBleTransport.NotifyUuid;
+        public string bluetoothWriteUuid = WindowsBleTransport.WriteUuid;
+        [Min(5)] public float bluetoothConnectTimeoutSeconds = 30;
+        [Header("USB 调试后备：115200 / 8N1")]
         [Tooltip("Leave empty to scan serial ports and identify the sensor with the WingSinger handshake.")]
         public string portOverride = "";
         [Header("呼吸阈值与调试（实时生效）")]
@@ -31,10 +40,12 @@ namespace WingSinger {
         [SerializeField] bool freshSample;
         [SerializeField, InspectorName("当前呼吸状态")] string breathState = "未连接";
         BreathSensorClient receiver;
+        BreathSensorConnectionKind activeConnectionKind;
         long lastLoggedSampleSequence = -1;
         string lastDebugState;
         public BreathSensorClient Receiver => receiver;
         public BreathSensorSnapshot ReceiverSnapshot => receiver == null ? default : receiver.Snapshot();
+        public string ConnectionLabel => (receiver == null ? connectionKind : activeConnectionKind) == BreathSensorConnectionKind.BluetoothLE ? "BLE" : "USB";
 
         void OnEnable() { if (Application.isPlaying) Connect(); }
 
@@ -45,11 +56,23 @@ namespace WingSinger {
             try {
                 if (!Finite(sampleTimeoutSeconds) || sampleTimeoutSeconds <= 0 || inactivityTimeoutSeconds < sampleTimeoutSeconds)
                     throw new ArgumentException("Sensor timeouts are invalid.");
-                if (suppliedClient == null && !WindowsSerialTransport.IsSupported) {
-                    connectionStatus = "Serial input supports Windows; keyboard fallback is available.";
+                bool bluetooth = connectionKind == BreathSensorConnectionKind.BluetoothLE;
+                if (suppliedClient == null && !(bluetooth ? WindowsBleTransport.IsSupported : WindowsSerialTransport.IsSupported)) {
+                    connectionStatus = "Sensor input supports Windows x64; keyboard fallback is available.";
                     return;
                 }
-                receiver = suppliedClient ?? new BreathSensorClient(new BreathSensorConnectionOptions(portOverride,
+                activeConnectionKind = connectionKind;
+                if (suppliedClient != null) receiver = suppliedClient;
+                else if (bluetooth) {
+                    WindowsBleTransport.ValidateProfile(bluetoothServiceUuid, bluetoothNotifyUuid, bluetoothWriteUuid);
+                    WindowsBleTransport.ParseAddress(bluetoothAddress);
+                    // Freeze Inspector configuration for this connection; worker threads never read Unity fields.
+                    string name = bluetoothDeviceName, address = bluetoothAddress, service = bluetoothServiceUuid,
+                        notify = bluetoothNotifyUuid, write = bluetoothWriteUuid;
+                    receiver = new BreathSensorClient(new BreathSensorConnectionOptions("", bluetoothConnectTimeoutSeconds,
+                        reconnectDelaySeconds, inactivityTimeoutSeconds), () => new[] { "BLE: " + name },
+                        (_, __) => WindowsBleTransport.Open(name, address, service, notify, write));
+                } else receiver = new BreathSensorClient(new BreathSensorConnectionOptions(portOverride,
                     handshakeTimeoutSeconds, reconnectDelaySeconds, inactivityTimeoutSeconds));
                 receiver.Start();
             } catch (Exception error) {
@@ -85,7 +108,7 @@ namespace WingSinger {
             // Log on the main thread, even during the level's opening preview.
             // The receiver still stores only the newest sample, without a log queue.
             if (freshSample && (state.SampleSequence != lastLoggedSampleSequence || breathState != lastDebugState)) {
-                Debug.Log(FormattableString.Invariant($"[WingSinger Arduino] {state.Port} | 数值={state.Value:0.###} mV | 状态={breathState} | 吸气≤{inhaleMaximum:0.###}，呼气≥{exhaleMinimum:0.###}"), this);
+                Debug.Log(FormattableString.Invariant($"[WingSinger Arduino] {ConnectionLabel} {state.Port} | 数值={state.Value:0.###} mV | 状态={breathState} | 吸气≤{inhaleMaximum:0.###}，呼气≥{exhaleMinimum:0.###}"), this);
                 lastLoggedSampleSequence = state.SampleSequence;
             } else if (!freshSample && breathState != lastDebugState) {
                 Debug.Log($"[WingSinger Arduino] 状态={breathState} | {connectionStatus}", this);

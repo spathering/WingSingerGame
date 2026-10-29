@@ -1,5 +1,7 @@
 # Arduino 呼吸输入：Agent 接手上下文
 
+2026-10-29 更新：当前游戏默认改为 BLE，旧串口快照仍只用于 USB 调试。新接收器、参考固件、待硬件确认的 UUID/格式与连接步骤见 [BluetoothInput.md](../Hardware/BluetoothInput.md)。不要从历史 ZIP 恢复并覆盖当前实现。
+
 整理日期：2026-10-22（Asia/Shanghai）。项目：`H:\PolyU\PM\WingSingerGame`。本次整理时最近提交为 `6a35e0d arduino映射`，工作区原先干净。
 
 本文件可直接作为其他 agent 的任务背景。实际要继续做的工作，以用户的新要求为准；目前输入映射已经实现，不需要从零搭建。配套 ZIP 是上下文、相关源码和测试的快照，不是完整 Unity 项目或可导入的 `.unitypackage`。继续修改时，以实际仓库内的最新文件为准。

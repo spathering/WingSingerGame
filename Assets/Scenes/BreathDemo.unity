@@ -1163,6 +1163,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 673cdb84b90a5774d9547fd4a2814705, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  connectionKind: 1
+  bluetoothDeviceName: WingSinger Breath
+  bluetoothAddress: ''
+  bluetoothServiceUuid: 6e400001-b5a3-f393-e0a9-e50e24dcca9e
+  bluetoothNotifyUuid: 6e400003-b5a3-f393-e0a9-e50e24dcca9e
+  bluetoothWriteUuid: 6e400002-b5a3-f393-e0a9-e50e24dcca9e
+  bluetoothConnectTimeoutSeconds: 30
   portOverride: 
   inhaleMaximum: 400
   exhaleMinimum: 1000
@@ -2582,7 +2589,7 @@ PrefabInstance:
     - target: {fileID: 6135232368042298403, guid: 261c30afb9b9c0f4ba8708521eed5698,
         type: 3}
       propertyPath: m_text
-      value: WingSinger USB Controller
+      value: WingSinger Breath Controller
       objectReference: {fileID: 0}
     - target: {fileID: 6138107428719968787, guid: 261c30afb9b9c0f4ba8708521eed5698,
         type: 3}
