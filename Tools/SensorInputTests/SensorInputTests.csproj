@@ -9,8 +9,12 @@
     <Compile Include="../../Assets/Scripts/Input/BreathSensorProtocol.cs" Link="BreathSensorProtocol.cs" />
     <Compile Include="../../Assets/Scripts/Input/BreathSensorClient.cs" Link="BreathSensorClient.cs" />
     <Compile Include="../../Assets/Scripts/Input/WindowsSerialTransport.cs" Link="WindowsSerialTransport.cs" />
+    <Compile Include="../../Assets/Scripts/Input/WindowsBleTransport.cs" Link="WindowsBleTransport.cs" />
     <Compile Include="../../Assets/Scripts/Input/BreathInput.cs" Link="BreathInput.cs" />
     <Compile Include="../../Assets/Scripts/Input/KeyboardBreathInput.cs" Link="KeyboardBreathInput.cs" />
     <Compile Include="../../Assets/Scripts/Input/ArduinoBreathInput.cs" Link="ArduinoBreathInput.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../Assets/Plugins/WingSinger/Bluetooth/x86_64/WingSingerBle.dll" Link="WingSingerBle.dll" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -75,7 +75,7 @@ namespace WingSinger.Editor {
             BindOptional(controller, "Content/ControllerPanel/Status/Label", UIValueKind.Connection);
             BindOptional(controller, "Content/ControllerPanel/BatteryValue", UIValueKind.Battery);
             BindOptional(controller, "Content/ControllerPanel/SignalValue", UIValueKind.Signal);
-            Find<TMP_Text>(controller, "Content/ControllerPanel/DeviceName").text = "WingSinger USB Controller";
+            Find<TMP_Text>(controller, "Content/ControllerPanel/DeviceName").text = "WingSinger Breath Controller";
             Find<TMP_Text>(controller, "Content/ControllerPanel/SignalLabel").text = "Connection";
             var levels = router.pages.Single(p => p.screenId == UIScreenId.LevelSelect);
             bindings.levelCards = levels.GetComponentsInChildren<UIRouteButton>(true).Where(b => b.action == UIRouteAction.SelectLevel).OrderBy(b => b.levelNumber).Select(b => b.GetComponent<Button>()).ToArray();

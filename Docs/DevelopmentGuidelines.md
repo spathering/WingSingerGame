@@ -4,6 +4,8 @@
 
 ## 1. 项目基线与当前状态
 
+- 2026-10-29 默认硬件输入改为 Windows x64 BLE，继续复用共享 `ArduinoBreathInput` 与原阈值，USB 可选调试。硬件组尚未确认实际 BLE 协议；软件提供可配置 UUID 和参考固件，连接及验证范围见 `Docs/Hardware/BluetoothInput.md`。暂停时 BLE 接收继续，未知电量保持 `--`。
+
 - Unity：2022.3.62f2，以 `ProjectSettings/ProjectVersion.txt` 为准。
 - 渲染管线：URP 14.0.12，以 `Packages/manifest.json` 为准。
 - 当前可运行的玩法入口与首个构建场景为 `Assets/Scenes/BreathDemo.unity`；`Assets/Scenes/MainScene.unity` 保留在构建列表中。

@@ -103,6 +103,7 @@ Check(Marshal.SizeOf(typeof(WindowsSerialTransport).GetNestedType("Dcb", Binding
 string[] candidates = WindowsSerialTransport.GetCandidatePorts();
 Check(candidates.All(WindowsSerialTransport.IsPortName), "Native enumeration returns only serial names and excludes Bluetooth devices");
 checks += ArduinoInputDebugTests.Run();
+checks += BluetoothInputTests.Run();
 Console.WriteLine($"PASS: {checks} sensor assertions. Native candidates: [{string.Join(", ", candidates)}]. Physical Arduino not required for simulated transport tests.");
 
 sealed class FakePort : IBreathSerialTransport {
