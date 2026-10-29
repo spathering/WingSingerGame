@@ -1,6 +1,6 @@
 # Arduino 呼吸输入
 
-2026-10-29：游戏默认输入已切换为 Windows x64 BLE，连接及硬件参数确认见 [BluetoothInput.md](BluetoothInput.md)。本文后续内容保留为 **Usb Serial 模式**的协议和调试说明；115200 不适用于 BLE 空口配置。
+2026-10-29：参数已抽离为独立 SO 与本机 JSON，游戏内入口 `Settings > Hardware settings`，详见 [HardwareSettings.md](HardwareSettings.md)。本文后面的 Inspector 操作位置属于旧记录，当前请在独立资源或游戏硬件页修改 USB 阈值和调试开关。游戏默认输入已切换为 Windows x64 BLE，连接及硬件参数确认见 [BluetoothInput.md](BluetoothInput.md)。本文后续内容保留为 **Usb Serial 模式**的协议和调试说明；115200 不适用于 BLE 空口配置。
 
 供其他 agent 接手的历史独立上下文见 [ArduinoInputContext.md](../Handoffs/ArduinoInputContext.md)，配套源码与测试历史快照包见 [ArduinoInputContext.zip](../Handoffs/ArduinoInputContext.zip)。快照不替代仓库中的最新实现。
 

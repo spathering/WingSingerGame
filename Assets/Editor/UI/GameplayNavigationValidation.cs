@@ -34,6 +34,7 @@ namespace WingSinger.Editor {
             if (sceneFlow == null) throw new InvalidOperationException("Connect navigation first.");
             // Unsaved test overrides: never open physical ports or write the user's save data.
             sceneFlow.profileKey = ""; sceneFlow.sensorInput.enabled = false;
+            sceneFlow.sensorInput.loadSavedConfiguration = false;
             SessionState.SetBool(Key, true); SessionState.SetInt(Key + "Stage", 0);
             SessionState.SetFloat(Key + "Started", (float)EditorApplication.timeSinceStartup);
             EditorApplication.isPlaying = true;
@@ -104,6 +105,7 @@ namespace WingSinger.Editor {
             Check(effect.CurrentScale == 1 && !effect.IsAnimating && effect.ReduceMotion, "Reduce Motion immediately suppresses all optional button scaling");
             port = new SamplePort();
             var client = new BreathSensorClient(new BreathSensorConnectionOptions("COM99", 1, .05, 5), null, (p, b) => port);
+            input.bluetoothProtocol = BreathBluetoothProtocol.HandshakeUart; // This fixture exercises legacy line framing.
             input.Connect(client);
             double until = EditorApplication.timeSinceStartup + 3;
             while (!flow.SensorFresh && EditorApplication.timeSinceStartup < until) yield return null;

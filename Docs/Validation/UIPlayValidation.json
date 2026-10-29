@@ -1,8 +1,8 @@
 {
-    "date": "2026-10-25 Asia/Shanghai",
+    "date": "2026-10-29T15:42:16.8593270+08:00",
     "success": true,
     "checks": [
-        "Actual Play Mode has all 13 pages",
+        "Actual Play Mode has all 14 pages",
         "Awake opens HomeDashboard",
         "Interactable button: Settings",
         "Runtime button opens Settings",
@@ -51,6 +51,7 @@
         "One active page in Play: PracticeExhale",
         "One active page in Play: PracticeFollow",
         "One active page in Play: PracticeComplete",
+        "One active page in Play: HardwareSettings",
         "UI navigation does not load another Unity scene"
     ],
     "error": ""

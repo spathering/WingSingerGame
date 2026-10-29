@@ -24,7 +24,7 @@ namespace WingSinger.Editor {
             public bool success;
             public string date, error;
             public string[] checks;
-            public string scope = "Unity Mono native DLL scan/cancel plus simulated BLE UART in the real scene; no physical BLE or ESP32 target build.";
+            public string scope = "Unity Mono native DLL scan/cancel plus simulated hardware CSV notifications in the real scene; no physical BLE or ESP32 target build.";
         }
         static BluetoothInputValidation() { EditorApplication.update += Tick; }
         [MenuItem("WingSinger/Validate Bluetooth Input")]
@@ -34,15 +34,16 @@ namespace WingSinger.Editor {
                 throw new InvalidOperationException("Stop Play and save the scene first.");
             EditorSceneManager.OpenScene(BreathDemoBuilder.ScenePath);
             var sensor = UnityEngine.Object.FindObjectOfType<ArduinoBreathInput>();
+            sensor.loadSavedConfiguration = false;
+            sensor.ConfigurationFileOverride = Path.GetFullPath("Temp/HardwareSettingsValidation/HardwareInput.json");
             if (sensor == null || sensor.connectionKind != BreathSensorConnectionKind.BluetoothLE)
                 throw new InvalidOperationException("BreathDemo must use the BLE input connection.");
-            WindowsBleTransport.ValidateProfile(sensor.bluetoothServiceUuid, sensor.bluetoothNotifyUuid, sensor.bluetoothWriteUuid);
+            WindowsBleTransport.ValidateProfile(sensor.bluetoothServiceUuid, sensor.bluetoothNotifyUuid, "");
             WindowsBleTransport.ParseAddress(sensor.bluetoothAddress);
             Directory.CreateDirectory("Logs");
             var watch = Stopwatch.StartNew();
             using (var native = WindowsBleTransport.Open("WingSinger Native Lifecycle Test - no match", "", sensor.bluetoothServiceUuid,
-                sensor.bluetoothNotifyUuid, sensor.bluetoothWriteUuid)) {
-                native.WriteLine(BreathSensorProtocol.Hello);
+                sensor.bluetoothNotifyUuid, "")) {
                 Thread.Sleep(100);
                 try {
                     if (native.Read(new byte[256]) != 0) throw new InvalidOperationException("A non-matching scan produced data.");
@@ -81,26 +82,27 @@ namespace WingSinger.Editor {
             for (int i = 0; i < 5; i++) yield return null;
             flow = UnityEngine.Object.FindObjectOfType<BreathUIFlowController>();
             var sensor = flow.sensorInput; var manager = flow.levelManager;
+            sensor.ConfigurationFileOverride = Path.GetFullPath("Temp/HardwareSettingsValidation/HardwareInput.json");
             Check(flow.Progress != null && flow.profileKey == "" && manager.Session == null, "Real scene starts at home with isolated progress and no active session");
-            Check(sensor.connectionKind == BreathSensorConnectionKind.BluetoothLE && manager.input == sensor, "Saved scene uses shared BLE input");
+            Check(sensor.connectionKind == BreathSensorConnectionKind.BluetoothLE && sensor.bluetoothProtocol == BreathBluetoothProtocol.CsvNotifications && sensor.bluetoothDeviceName == "ESP32_C3_Mini" && manager.input == sensor, "Saved scene uses shared BLE input");
             sensor.sampleTimeoutSeconds = .1f; sensor.keyboardWhenDisconnected = false;
             var port = new SimulatedBle();
             var replacement = new SimulatedBle();
             int opens = 0;
-            var client = new BreathSensorClient(new BreathSensorConnectionOptions("", 1, .05, .4),
+            var client = new BreathSensorClient(new BreathSensorConnectionOptions("", 1, .05, .4, csvNotifications: true),
                 () => new[] { "BLE: simulated" }, (_, __) => Interlocked.Increment(ref opens) == 1 ? port : replacement);
             sensor.enabled = true; sensor.Connect(client);
             double until = EditorApplication.timeSinceStartup + 3;
             while (!flow.SensorFresh && EditorApplication.timeSinceStartup < until) yield return null;
-            Check(flow.SensorFresh && sensor.ReadLane() == BreathLane.Upper, "Fragmented BLE identity and 400 sample control the upper lane");
+            Check(flow.SensorFresh && sensor.ReadLane() == BreathLane.Upper, "CSV notification without newline or handshake controls upper lane");
             Check(flow.Text(UIValueKind.Connection) == "BLE connected" && flow.Text(UIValueKind.Signal) == "BLE"
                 && flow.Text(UIValueKind.Battery) == "--", "UI shows real BLE transport without fabricated battery telemetry");
-            port.Value = 1000; until = EditorApplication.timeSinceStartup + 2;
+            port.Value = 1700; until = EditorApplication.timeSinceStartup + 2;
             while (sensor.ReadLane() != BreathLane.Lower && EditorApplication.timeSinceStartup < until) yield return null;
-            Check(sensor.ReadLane() == BreathLane.Lower, "1000 BLE sample controls lower lane");
-            port.Value = 700; until = EditorApplication.timeSinceStartup + 2;
+            Check(sensor.ReadLane() == BreathLane.Lower, "1700 BLE sample controls lower lane");
+            port.Value = 1300; until = EditorApplication.timeSinceStartup + 2;
             while (sensor.ReadLane() != BreathLane.Middle && EditorApplication.timeSinceStartup < until) yield return null;
-            Check(flow.SensorFresh && sensor.ReadLane() == BreathLane.Middle, "700 BLE sample controls middle lane");
+            Check(flow.SensorFresh && sensor.ReadLane() == BreathLane.Middle, "1300 BLE sample controls middle lane");
             int reconnects = 0; flow.ReconnectOverride = () => reconnects++;
             flow.router.Route(UIRouteAction.CheckConnection);
             Check(reconnects == 1, "Existing controller check requests exactly one reconnection");
@@ -128,6 +130,8 @@ namespace WingSinger.Editor {
             until = EditorApplication.timeSinceStartup + 3;
             while (!(opens >= 2 && flow.SensorFresh) && EditorApplication.timeSinceStartup < until) yield return null;
             Check(opens >= 2 && port.Disposed && flow.SensorFresh, "Inactivity closes old transport and re-identifies replacement");
+            var hardware = HardwareSettingsValidation.Run(flow, value => replacement.Value = value, Check);
+            while (hardware.MoveNext()) yield return hardware.Current;
             sensor.enabled = false;
             Check(sensor.Receiver == null && !client.IsRunning && replacement.Disposed, "Component disable stops receiver and releases notifications");
             Check(UnityEngine.SceneManagement.SceneManager.sceneCount == 1, "BLE gameplay uses one scene throughout");
@@ -144,18 +148,16 @@ namespace WingSinger.Editor {
             EditorApplication.isPlaying = false;
         }
         sealed class SimulatedBle : IBreathSerialTransport {
-            readonly ConcurrentQueue<byte> bytes = new ConcurrentQueue<byte>();
             public volatile int Value = 400;
             public volatile bool Withhold, Disposed;
-            bool identified;
-            void Feed(string text) { foreach (byte value in Encoding.ASCII.GetBytes(text)) bytes.Enqueue(value); }
-            public void WriteLine(string line) { if (line == BreathSensorProtocol.Hello) { Feed(BreathSensorProtocol.Identity + "\n"); identified = true; } }
+            public void WriteLine(string line) { throw new InvalidOperationException("CSV firmware must never receive HELLO"); }
             public int Read(byte[] buffer) {
                 if (Disposed) throw new IOException("BLE disconnected");
-                if (bytes.IsEmpty) { Thread.Sleep(10); if (!Withhold && identified) Feed(Value + "\n"); }
-                int count = 0;
-                while (count < Math.Min(7, buffer.Length) && bytes.TryDequeue(out byte value)) buffer[count++] = value;
-                return count;
+                Thread.Sleep(10);
+                if (Withhold) return 0;
+                byte[] packet = Encoding.ASCII.GetBytes(Value + ",0.000,REST");
+                Array.Copy(packet, buffer, packet.Length);
+                return packet.Length;
             }
             public void CancelRead() { Withhold = true; }
             public void Dispose() { Disposed = true; }

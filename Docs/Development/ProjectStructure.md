@@ -44,3 +44,7 @@
 目录整理后，根据导航图扩展了 `BreathLevelManager` 的可控启动、暂停和退出接口，并在 `BreathPlayer`、`BreathLevel` 增加减少动画选项；三者保留原 GUID 和原有关卡实例管理方式。主场景新增公共 UI 实例和业务绑定，参考图页面资源继续用于画廊。源码内容校验对这三个明确修改的脚本检查 GUID，其他迁移脚本继续检查与迁移前内容相同。
 
 2026-10-26 主分支背景集成另扩展 `Gameplay/Presentation/LoopingPanorama` 与 `Editor/Setup/BreathArtSetup`，承接双层视差与适配窗口的截图逻辑；两者保留原 GUID。新增背景接线/验证脚本放在 `Editor/Setup`，背景文档与历史验证记录分别归入 `Docs/Art` 与 `Docs/Validation`。目录审计对这两个已登记扩展检查内容变化与 GUID，其他迁移脚本继续检查源码内容。
+
+## 2026-10-29 硬件设置扩展
+
+`Assets/Settings/Input` 保存独立硬件默认 SO，`BreathSensorSettings` / `BreathSensorConfiguration` 负责默认值、副本和 JSON 持久化。原 Arduino 输入、接收器、协议与 setup 入口在保留 GUID 的前提下扩展。新增 `HardwareSettingsPanel` 与第 14 个生产 UI 页面，原 13 张参考素材与迁移 GUID 不变。具体入口和验证范围见 [HardwareSettings.md](../Hardware/HardwareSettings.md)。

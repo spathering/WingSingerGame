@@ -21,12 +21,13 @@ namespace WingSinger.Editor {
             if (manager == null) throw new InvalidOperationException("BreathLevelManager is missing.");
             var sensor = manager.GetComponent<ArduinoBreathInput>();
             if (sensor == null) sensor = manager.gameObject.AddComponent<ArduinoBreathInput>();
-            sensor.connectionKind = BreathSensorConnectionKind.BluetoothLE;
+            sensor.settings = AssetDatabase.LoadAssetAtPath<BreathSensorSettings>(HardwareSettingsSetup.SettingsPath);
+            if (sensor.settings == null) throw new InvalidOperationException("Hardware settings asset is missing.");
             sensor.keyboardFallback = manager.GetComponent<KeyboardBreathInput>();
             manager.input = sensor;
             EditorUtility.SetDirty(sensor); EditorUtility.SetDirty(manager);
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
-            Debug.Log("WingSinger input configured for Windows x64 BLE: WingSinger Breath, <=400 inhale, >=1000 exhale, handshake required.");
+            Debug.Log("WingSinger BLE CSV: ESP32_C3_Mini, Notify only, no handshake; filtered ADC uses center +/- deviation.");
         }
     }
 }

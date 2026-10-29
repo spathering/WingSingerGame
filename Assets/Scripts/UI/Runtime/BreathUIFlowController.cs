@@ -60,7 +60,7 @@ namespace WingSinger.UI {
             if (Input.GetKeyDown(KeyCode.Escape)) {
                 if (IsSessionActive && !IsPaused) Pause();
                 else if (router.CurrentScreen == UIScreenId.FlightPaused) Resume();
-                else if (router.CurrentScreen == UIScreenId.Settings || router.CurrentScreen == UIScreenId.ControllerConnection) router.Back();
+                else if (router.CurrentScreen == UIScreenId.Settings || router.CurrentScreen == UIScreenId.ControllerConnection || router.CurrentScreen == UIScreenId.HardwareSettings) router.Back();
             }
             if (Time.unscaledTime >= refreshAt) { Refresh(); refreshAt = Time.unscaledTime + .1f; }
         }
@@ -105,7 +105,7 @@ namespace WingSinger.UI {
         }
         void Navigate(UIScreenId target) {
             if (target == UIScreenId.HomeDashboard || target == UIScreenId.HomeClean) { ExitSession(); ShowHome(); return; }
-            if (target == UIScreenId.Settings || target == UIScreenId.ControllerConnection) {
+            if (target == UIScreenId.Settings || target == UIScreenId.ControllerConnection || target == UIScreenId.HardwareSettings) {
                 if (IsSessionActive && !IsPaused) Pause();
                 router.Show(target); return;
             }
@@ -127,7 +127,7 @@ namespace WingSinger.UI {
             if (!string.IsNullOrEmpty(record.levelId) && levelManager.catalog != null) return levelManager.catalog.IndexOf(record.levelId) + 1;
             return record.levelNumber >= 1 && record.levelNumber <= AvailableLevels ? record.levelNumber : 0;
         }
-        public bool InputReady => levelManager != null && (levelManager.input != sensorInput || SensorFresh && BreathSensorProtocol.AreThresholdsValid(sensorInput.inhaleMaximum, sensorInput.exhaleMinimum)
+        public bool InputReady => levelManager != null && (levelManager.input != sensorInput || SensorFresh && sensorInput.ThresholdsValid
             || (sensorInput != null && !sensorInput.ReceiverSnapshot.Connected && sensorInput.keyboardWhenDisconnected && sensorInput.keyboardFallback != null));
         void StartSession(bool practice) {
             if (!CanSelect(router.SelectedLevel) || !InputReady) return;
@@ -229,6 +229,9 @@ namespace WingSinger.UI {
                 case UIValueKind.Streak: return Progress.Streak + "-day streak";
                 case UIValueKind.StreakDays: return Progress.Streak + "-day";
                 case UIValueKind.Connection: return connection;
+                case UIValueKind.SensorReading:
+                    return (SensorFresh ? "ADC " + sensorInput.ReceiverSnapshot.Value.ToString("0.#", CultureInfo.InvariantCulture) : "ADC --")
+                        + " mV\n" + (sensorInput != null ? sensorInput.DecisionLabel : "默认");
                 case UIValueKind.InputReadiness: return SensorFresh ? InputReady ? connection : "Adjust sensor thresholds" : InputReady ? "Keyboard: W / S available" : "Connect " + transport + " controller to fly";
                 case UIValueKind.Battery: return "--";
                 case UIValueKind.Signal: return transport;

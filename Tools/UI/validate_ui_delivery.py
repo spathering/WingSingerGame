@@ -33,6 +33,10 @@ intentional_changes={
     'Assets/Scripts/Levels/BreathLevel.cs',
     'Assets/Scripts/Gameplay/Presentation/LoopingPanorama.cs',
     'Assets/Editor/Setup/BreathArtSetup.cs',
+    'Assets/Editor/Setup/ArduinoInputSetup.cs',
+    'Assets/Scripts/Input/ArduinoBreathInput.cs',
+    'Assets/Scripts/Input/BreathSensorClient.cs',
+    'Assets/Scripts/Input/BreathSensorProtocol.cs',
 }
 changed_scripts=[]
 for entry in migration:
@@ -80,7 +84,7 @@ check(play['success'],'Actual Unity Play Mode checks passed')
 navigation=json.loads((root/'Docs/Validation/GameplayNavigationValidation.json').read_text(encoding='utf-8-sig'))
 check(navigation['success'],'Production single-scene gameplay navigation Play Mode checks passed')
 viewport=json.loads((root/'Docs/Validation/UIViewportValidation.json').read_text(encoding='utf-8-sig'))
-check(viewport['success'] and viewport['pageResolutionCases']==117,'All 13 pages pass actual layout checks at 9 viewport sizes')
+check(viewport['success'] and viewport['pageResolutionCases']==126,'All 14 pages pass actual layout checks at 9 viewport sizes')
 check(viewport['legacyOverflowCount']>0,'Old 16:9 control overflow reproduced before validating the corrected layout')
 check(viewport['checkedControls']>0 and viewport['checkedText']>0,'Viewport audit checks actual control and rendered text bounds')
 check('m_ReferenceResolution: {x: 1920, y: 1080}' in (root/'Assets/Prefabs/UI/UIFlowRoot.prefab').read_text(),'Canvas prefab uses the 16:9 reference resolution')
@@ -97,7 +101,11 @@ for name in ('Level_001_FirstFlight','Level_002_SlowBreath'):
     check('availableFromStart: 1' in data,'Existing level starts selectable: '+name)
 catalog_guid=re.search(r'^guid: (\w+)',Path(str(catalog)+'.meta').read_text(),re.M).group(1)
 check('catalog: {fileID: 11400000, guid: '+catalog_guid in (root/'Assets/Scenes/BreathDemo.unity').read_text(),'Main scene registers the level catalog')
-prefabs=list((root/'Assets/Prefabs/UI/Screens').glob('*.prefab'))
+all_prefabs=list((root/'Assets/Prefabs/UI/Screens').glob('*.prefab'))
+prefabs=[p for p in all_prefabs if p.name != '14_HardwareSettings.prefab']
+check(len(all_prefabs)==14,'13 reference screens plus one production hardware page')
+hardware=json.loads((root/'Docs/Validation/BluetoothInputValidation.json').read_text(encoding='utf-8-sig'))
+check(hardware['success'] and any('Actual rendered HUD binding' in c for c in hardware['checks']),'Hardware settings and actual ADC HUD Play validation passed')
 check(len(prefabs)==13,'No missing or extra screen prefab')
 for prefab in prefabs:
     check(Path(str(prefab)+'.meta').exists(),'Screen has stable Unity metadata: '+prefab.stem)
@@ -122,9 +130,9 @@ for i,prefab in enumerate(sorted(prefabs)):
     draw.text((x+4,y+272),prefab.stem,font=label_font,fill='#004b42')
 draw.text((430,978),'WingSinger / 13 editable UI screens',font=ImageFont.truetype(str(font),32),fill='#004b42')
 overview.save(root/'Docs/Design/UI/Previews/UIScreensOverview.png')
-result=dict(date='2026-10-25 Asia/Shanghai',success=True,referenceCount=13,spriteCount=60,
+result=dict(date='2026-10-29 Asia/Shanghai',success=True,referenceCount=13,spriteCount=60,
             preservedScripts=preserved_scripts,migratedPaths=len(migration),unityBuildChecks=len(build['passedChecks']),
-            unityPlayChecks=len(play['checks']),sensorAssertions=86,collectionAssertions=151,
+            unityPlayChecks=len(play['checks']),sensorAssertions=171,collectionAssertions=151,
             intentionallyExtendedScripts=changed_scripts,gameplayNavigationChecks=len(navigation['checks']),
             viewportCases=viewport['pageResolutionCases'],viewportChecks=len(viewport['checks']),
             internalMarkdownLinksValid=True,checks=checks)

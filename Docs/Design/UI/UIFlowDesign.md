@@ -1,6 +1,6 @@
 # 13 个 UI 页面与跳转设计
 
-2026-10-29 输入接入更新：正式场景已默认使用 Windows x64 BLE，连接状态显示实际 `BLE`/`USB` 类型，未知电量仍为 `--`。本文原有“只有 USB、尚无 BLE”描述属于之前的接入记录；当前协议和硬件组待确认内容以 [BluetoothInput.md](../../Hardware/BluetoothInput.md) 为准。
+2026-10-29 输入接入更新：正式场景已默认使用 Windows x64 BLE，连接状态显示实际 `BLE`/`USB` 类型，未知电量仍为 `--`。本文原有“只有 USB、尚无 BLE”描述属于之前的接入记录；当前已按 sketch_oct27b 的无握手 CSV Notify 对接，协议与验证范围以 [BluetoothInput.md](../../Hardware/BluetoothInput.md) 为准。
 
 整理日期：2026-10-25。视觉依据为 [References](References/) 中 13 张用户提供的图；文件名、哈希与资源对应见 `Assets/Art/UI/UIAssetManifest.json`。下文将图中可直接确认的控件和根据业务补充的跳转规则分别说明。
 
@@ -138,3 +138,7 @@ Settings 原图下方 How to play 超出 Support 边框；实现将其移回面�
 - 实际运行验证：[UIPlayValidation.json](../../Validation/UIPlayValidation.json)。
 - 正式导航验证：[GameplayNavigationValidation.json](../../Validation/GameplayNavigationValidation.json)；[主场景运行截图](RuntimePreviews/)。该验证使用模拟 USB 传输，不替代 ESP32 实物测试。
 - 素材说明：[UIAssetGuide](../../Art/UIAssetGuide.md)。
+
+## 2026-10-29：生产硬件设置补充页
+
+原 13 张参考 UI 之外新增 `14_HardwareSettings.prefab`，入口为 Settings 中原禁用的 Language 占位行（显示 Hardware settings），原 Controller 页仍保留。新页返回 Settings，暂停来源继续返回 Pause。游戏 HUD 将连接徽标替换为原始 ADC 与吸气/默认/呼气；配置、持久化及验收见 [HardwareSettings.md](../../Hardware/HardwareSettings.md)。

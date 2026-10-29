@@ -62,7 +62,7 @@ namespace WingSinger.Editor {
             checks.Clear(); result = new Result { date = DateTimeOffset.Now.ToString("O"), resolutions = sizes.Select(s => s.x + "x" + s.y).ToArray() };
             for (int i = 0; i < 4; i++) yield return null;
             var router = Object.FindObjectOfType<UIScreenRouter>(); canvas = router.GetComponent<Canvas>();
-            Check(router.pages.Length == 13 && router.pages.All(p => p.GetComponent<UIPageViewport>() != null), "All 13 pages carry the responsive layout component");
+            Check(router.pages.Length == 14 && router.pages.All(p => p.GetComponent<UIPageViewport>() != null), "All 14 pages carry the responsive layout component");
             var scaler = canvas.GetComponent<CanvasScaler>();
             Check(scaler.uiScaleMode == CanvasScaler.ScaleMode.ScaleWithScreenSize && scaler.referenceResolution == new Vector2(1920,1080), "Canvas uses Scale With Screen Size and a 1920x1080 reference resolution");
             camera = new GameObject("Viewport Validation Camera", typeof(Camera)).GetComponent<Camera>();
@@ -132,6 +132,8 @@ namespace WingSinger.Editor {
         static bool Inside(Rect bounds, int w, int h) => bounds.xMin >= -1 && bounds.yMin >= -1 && bounds.xMax <= w+1 && bounds.yMax <= h+1;
         static bool Covers(RectTransform rect, int w, int h) { var b = ScreenBounds(rect); return b.xMin <= 1 && b.yMin <= 1 && b.xMax >= w-1 && b.yMax >= h-1; }
         static bool TextInside(TMP_Text text, int w, int h) {
+            // Empty TMP input fields keep a caret/zero-width placeholder but have no rendered glyph bounds.
+            if (!text.textInfo.characterInfo.Take(text.textInfo.characterCount).Any(character => character.isVisible)) return true;
             var bounds = text.textBounds; Vector2 min = new Vector2(float.MaxValue,float.MaxValue), max = -min;
             for (int x=0;x<2;x++) for(int y=0;y<2;y++) {
                 var local = new Vector3(x==0?bounds.min.x:bounds.max.x,y==0?bounds.min.y:bounds.max.y,bounds.center.z);

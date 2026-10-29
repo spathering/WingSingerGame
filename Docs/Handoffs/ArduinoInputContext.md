@@ -1,6 +1,6 @@
 # Arduino 呼吸输入：Agent 接手上下文
 
-2026-10-29 更新：当前游戏默认改为 BLE，旧串口快照仍只用于 USB 调试。新接收器、参考固件、待硬件确认的 UUID/格式与连接步骤见 [BluetoothInput.md](../Hardware/BluetoothInput.md)。不要从历史 ZIP 恢复并覆盖当前实现。
+2026-10-29 更新：当前游戏默认改为 BLE，旧串口快照仍只用于 USB 调试。当前 BLE 使用 ESP32_C3_Mini 的 Notify-only CSV、5 点均值及中心 ± 偏差，无 HELLO 握手；协议与连接步骤见 [BluetoothInput.md](../Hardware/BluetoothInput.md)。不要从历史 ZIP 恢复并覆盖当前实现。
 
 整理日期：2026-10-22（Asia/Shanghai）。项目：`H:\PolyU\PM\WingSingerGame`。本次整理时最近提交为 `6a35e0d arduino映射`，工作区原先干净。
 

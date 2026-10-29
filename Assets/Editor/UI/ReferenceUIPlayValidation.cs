@@ -15,7 +15,7 @@ namespace WingSinger.Editor {
     public static class ReferenceUIPlayValidation {
         const string Key="WingSinger.UI.PlayValidation";
         const string Report="Docs/Validation/UIPlayValidation.json";
-        [Serializable] class Result { public string date="2026-10-25 Asia/Shanghai"; public bool success; public string[] checks; public string error; }
+        [Serializable] class Result { public string date=DateTimeOffset.Now.ToString("O"); public bool success; public string[] checks; public string error; }
         static ReferenceUIPlayValidation() { EditorApplication.update+=Tick; }
         [MenuItem("WingSinger/UI/Validate UI Play Mode")]
         public static void Begin() {
@@ -38,7 +38,7 @@ namespace WingSinger.Editor {
             try {
                 void Check(bool ok,string name) { if(!ok) throw new Exception(name); checks.Add(name); }
                 var router=UnityEngine.Object.FindObjectOfType<UIScreenRouter>();
-                Check(router!=null&&router.pages.Length==13,"Actual Play Mode has all 13 pages");
+                Check(router!=null&&router.pages.Length==14,"Actual Play Mode has all 14 pages");
                 UIPageView Current()=>router.pages.Single(p=>p.screenId==router.CurrentScreen);
                 void Click(string name) { var button=Current().GetComponentsInChildren<Button>().First(b=>b.name==name); Check(button.interactable,"Interactable button: "+name); button.onClick.Invoke(); }
                 Check(router.CurrentScreen==UIScreenId.HomeDashboard,"Awake opens HomeDashboard");

@@ -35,6 +35,11 @@ namespace WingSinger.Editor {
             try {
                 switch (action) {
                     case "state": break;
+                    case "setup-hardware-ui": HardwareSettingsSetup.Apply(); break;
+                    case "import-bluetooth-plugin":
+                        if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play before importing the BLE plugin.");
+                        AssetDatabase.ImportAsset("Assets/Plugins/WingSinger/Bluetooth/x86_64/WingSingerBle.dll");
+                        break;
                     case "import-pending":
                         if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play before importing scripts.");
                         foreach (string path in pendingScripts) AssetDatabase.ImportAsset(path.Replace('\\', '/'));
@@ -44,6 +49,7 @@ namespace WingSinger.Editor {
                     case "validate-preview": ReferenceUIPlayValidation.Begin(); break;
                     case "setup-viewport": UIViewportSetup.Apply(); break;
                     case "validate-viewport": UIViewportValidation.Begin(); break;
+                    case "validate-bluetooth": BluetoothInputValidation.Begin(); break;
                     case "validate-parallax": ParallaxBackgroundSetup.ValidateExisting(); break;
                     case "open-gameplay":
                         UIIntegrationSetup.RequireSavedScenes(); EditorSceneManager.OpenScene(GameplayNavigationSetup.ScenePath); break;

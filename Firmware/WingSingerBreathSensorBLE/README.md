@@ -1,6 +1,6 @@
 # ESP32-C3 BLE 参考固件
 
-硬件组尚未确认现有 BLE 固件协议。本目录提供与游戏新 BLE 接收器匹配的参考实现，未自动烧录，尚未完成 ESP32 目标编译或实机验证。
+本目录是旧 HELLO/换行数字 BLE UART 参考固件。当前游戏默认已按用户提供的 sketch_oct27b 对接 ESP32_C3_Mini 的无握手 CSV Notify，与本目录固件不同。若使用本目录固件，Unity 请选择 Handshake Uart 并将设备名设为 WingSinger Breath。此固件未自动烧录，尚未完成 ESP32 目标编译或实机验证。
 
 在 Arduino IDE 中打开同目录 `WingSingerBreathSensorBLE.ino`，使用 Arduino-ESP32 3.x 的内置 BLE 库、ESP32C3 Dev Module、USB CDC On Boot = Enabled。保留旁边 `../WingSingerBreathSensor` 文件夹：BLE 版本直接复用该 USB 固件中的 ADC、校准和诊断实现；不能只复制本目录的 `.ino` 后单独编译。
 

@@ -527,7 +527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e245f75c76ee8b04c845b2fd6015563c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 6
+  value: 26
   index: 0
 --- !u!114 &322960348
 MonoBehaviour:
@@ -814,7 +814,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e245f75c76ee8b04c845b2fd6015563c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 6
+  value: 26
   index: 0
 --- !u!114 &841242991
 MonoBehaviour:
@@ -990,8 +990,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 104e7b27758689e49974fb7cec0683d0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   targetCamera: {fileID: 1648786079}
   backgroundRenderer: {fileID: 999728553}
   originWorldX: -11.613334
@@ -1163,26 +1163,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 673cdb84b90a5774d9547fd4a2814705, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectionKind: 1
-  bluetoothDeviceName: WingSinger Breath
-  bluetoothAddress: ''
-  bluetoothServiceUuid: 6e400001-b5a3-f393-e0a9-e50e24dcca9e
-  bluetoothNotifyUuid: 6e400003-b5a3-f393-e0a9-e50e24dcca9e
-  bluetoothWriteUuid: 6e400002-b5a3-f393-e0a9-e50e24dcca9e
-  bluetoothConnectTimeoutSeconds: 30
-  portOverride: 
-  inhaleMaximum: 400
-  exhaleMinimum: 1000
-  debugLogging: 0
-  sampleTimeoutSeconds: 0.5
-  handshakeTimeoutSeconds: 4
-  reconnectDelaySeconds: 2
-  inactivityTimeoutSeconds: 2
-  keyboardWhenDisconnected: 1
+  settings: {fileID: 11400000, guid: 619dc228abb1432cb138eb44bdd320c4, type: 2}
+  loadSavedConfiguration: 1
   keyboardFallback: {fileID: 1100468634}
   connectionStatus: Stopped
   connectedPort: 
   latestValue: 0
+  filteredValue: 0
+  pressureKPa: 0
+  firmwareState: 
   freshSample: 0
   breathState: "\u672A\u8FDE\u63A5"
 --- !u!1 &1161028835
@@ -2219,7 +2208,7 @@ PrefabInstance:
     - target: {fileID: 3027980849583574340, guid: 261c30afb9b9c0f4ba8708521eed5698,
         type: 3}
       propertyPath: m_fontSizeMax
-      value: 44.532074
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 3027980849583574340, guid: 261c30afb9b9c0f4ba8708521eed5698,
         type: 3}
@@ -2499,7 +2488,7 @@ PrefabInstance:
     - target: {fileID: 5743605688225921216, guid: 261c30afb9b9c0f4ba8708521eed5698,
         type: 3}
       propertyPath: m_fontSizeMax
-      value: 44.532074
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 5743605688225921216, guid: 261c30afb9b9c0f4ba8708521eed5698,
         type: 3}
@@ -2609,7 +2598,7 @@ PrefabInstance:
     - target: {fileID: 6476687322391432083, guid: 261c30afb9b9c0f4ba8708521eed5698,
         type: 3}
       propertyPath: m_fontSizeMax
-      value: 44.532074
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 6476687322391432083, guid: 261c30afb9b9c0f4ba8708521eed5698,
         type: 3}
@@ -2869,7 +2858,7 @@ PrefabInstance:
     - target: {fileID: 8824962021387345457, guid: 261c30afb9b9c0f4ba8708521eed5698,
         type: 3}
       propertyPath: m_fontSizeMax
-      value: 44.532074
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 8824962021387345457, guid: 261c30afb9b9c0f4ba8708521eed5698,
         type: 3}
@@ -4458,7 +4447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e245f75c76ee8b04c845b2fd6015563c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 6
+  value: 26
   index: 0
 --- !u!114 &1596233727
 MonoBehaviour:
@@ -4798,7 +4787,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e245f75c76ee8b04c845b2fd6015563c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 6
+  value: 26
   index: 0
 --- !u!114 &1756593017
 MonoBehaviour:

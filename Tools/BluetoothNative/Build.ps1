@@ -10,7 +10,12 @@ $compiler = Join-Path $toolset 'bin/Hostx64/x64/cl.exe'
 $output = Join-Path $projectRoot 'Assets/Plugins/WingSinger/Bluetooth/x86_64'
 $intermediate = Join-Path $projectRoot 'Logs/BluetoothNativeBuild'
 New-Item -ItemType Directory -Path $output,$intermediate -Force | Out-Null
-$arguments = @('/nologo','/std:c++20','/EHsc','/O2','/MT','/LD','/W4',
+$coroutineOptions = @('/std:c++20')
+# Older Windows SDK C++/WinRT headers require the pre-C++20 coroutine extension.
+if ((Get-Content -LiteralPath "$sdkRoot/Include/$sdk/cppwinrt/winrt/base.h" -Raw).Contains('#include <experimental/coroutine>')) {
+    $coroutineOptions = @('/std:c++17', '/await')
+}
+$arguments = $coroutineOptions + @('/nologo','/EHsc','/O2','/MT','/LD','/W4',
     "/I$toolset/include", "/I$sdkRoot/Include/$sdk/ucrt", "/I$sdkRoot/Include/$sdk/shared",
     "/I$sdkRoot/Include/$sdk/um", "/I$sdkRoot/Include/$sdk/winrt", "/I$sdkRoot/Include/$sdk/cppwinrt",
     (Join-Path $PSScriptRoot 'WingSingerBle.cpp'), "/Fo$intermediate/WingSingerBle.obj",

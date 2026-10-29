@@ -1,6 +1,7 @@
 // First-party Windows x64 BLE backend. No managed callbacks cross a Unity domain reload.
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <combaseapi.h>
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.Devices.Bluetooth.h>
@@ -26,6 +27,15 @@ using namespace Windows::Storage::Streams;
 using namespace std::chrono_literals;
 
 namespace {
+guid ParseGuid(char const* text) {
+    guid result{};
+    std::wstring normalized(to_hstring(text));
+    if (!normalized.empty() && normalized.front() != L'{') normalized = L"{" + normalized + L"}";
+    check_hresult(CLSIDFromString(normalized.c_str(), reinterpret_cast<GUID*>(&result)));
+    return result;
+}
+template<class T> auto AdvertisedAddressType(T const& args, int) -> decltype(args.BluetoothAddressType()) { return args.BluetoothAddressType(); }
+template<class T> BluetoothAddressType AdvertisedAddressType(T const&, long) { return BluetoothAddressType::Unspecified; }
 struct Session {
     std::atomic<bool> stopping{false};
     std::mutex gate;
@@ -95,7 +105,7 @@ void Run(std::shared_ptr<Session> const& session) {
             auto const localName = args.Advertisement().LocalName();
             if (!localName.empty()) seen.name = std::wstring(localName);
             if (!scan->selected && seen.service && (wantedName.empty() || seen.name == wantedName)) {
-                scan->selected = args.BluetoothAddress(); scan->type = args.BluetoothAddressType();
+                scan->selected = args.BluetoothAddress(); scan->type = AdvertisedAddressType(args, 0);
             }
         });
         watcher.Stopped([scan](auto const&, BluetoothLEAdvertisementWatcherStoppedEventArgs const& args) {
@@ -115,7 +125,9 @@ void Run(std::shared_ptr<Session> const& session) {
         watcher.Stop(); watcher = nullptr;
         if (!address) throw std::runtime_error("BLE sensor not found: check power, advertised name/service, and other connected apps");
         if (session->stopping) throw std::runtime_error("BLE stopped");
-        device = session->Await(BluetoothLEDevice::FromBluetoothAddressAsync(address, addressType));
+        device = addressType == BluetoothAddressType::Unspecified
+            ? session->Await(BluetoothLEDevice::FromBluetoothAddressAsync(address))
+            : session->Await(BluetoothLEDevice::FromBluetoothAddressAsync(address, addressType));
         if (!device) throw std::runtime_error("BLE device access denied or unavailable");
         auto services = session->Await(device.GetGattServicesForUuidAsync(session->serviceUuid, BluetoothCacheMode::Uncached));
         if (services.Status() != GattCommunicationStatus::Success || services.Services().Size() != 1)
@@ -128,9 +140,11 @@ void Run(std::shared_ptr<Session> const& session) {
             if (characteristic.Uuid() == session->notifyUuid) notify = characteristic;
             if (characteristic.Uuid() == session->writeUuid) write = characteristic;
         }
-        if (!notify || !write || (notify.CharacteristicProperties() & GattCharacteristicProperties::Notify) == GattCharacteristicProperties::None
-            || (write.CharacteristicProperties() & GattCharacteristicProperties::Write) == GattCharacteristicProperties::None)
-            throw std::runtime_error("BLE needs a Notify characteristic and a Write-with-response characteristic");
+        if (!notify || (notify.CharacteristicProperties() & GattCharacteristicProperties::Notify) == GattCharacteristicProperties::None)
+            throw std::runtime_error("BLE needs the configured Notify characteristic");
+        if (session->writeUuid != guid{} && (!write
+            || (write.CharacteristicProperties() & GattCharacteristicProperties::Write) == GattCharacteristicProperties::None))
+            throw std::runtime_error("Legacy BLE UART needs the configured Write-with-response characteristic");
         std::weak_ptr<Session> weak = session;
         changed = notify.ValueChanged([weak](auto const&, GattValueChangedEventArgs const& args) {
             if (auto state = weak.lock(); state && !state->stopping) {
@@ -145,6 +159,7 @@ void Run(std::shared_ptr<Session> const& session) {
             std::string command;
             { std::lock_guard lock(session->gate); if (!session->error.empty()) break; command.swap(session->command); }
             if (!command.empty()) {
+                if (!write) throw std::runtime_error("Notify-only BLE does not support commands");
                 DataWriter writer;
                 writer.WriteBytes(array_view<uint8_t const>(reinterpret_cast<uint8_t const*>(command.data()),
                     reinterpret_cast<uint8_t const*>(command.data()) + command.size()));
@@ -173,7 +188,8 @@ extern "C" __declspec(dllexport) void* __cdecl WS_BleCreate(char const* name, ui
     try {
         auto state = std::make_shared<Session>();
         state->name = std::wstring(to_hstring(name)); state->addressFilter = address;
-        state->serviceUuid = guid(to_hstring(service)); state->notifyUuid = guid(to_hstring(notify)); state->writeUuid = guid(to_hstring(write));
+        state->serviceUuid = ParseGuid(service); state->notifyUuid = ParseGuid(notify);
+        state->writeUuid = write && *write ? ParseGuid(write) : guid{};
         auto handle = std::make_unique<Handle>(state);
         state->worker = std::thread([state] { Run(state); });
         return handle.release();
@@ -197,6 +213,20 @@ extern "C" __declspec(dllexport) int __cdecl WS_BleWrite(void* handle, char cons
     if (!state->error.empty() || state->stopping) return -1;
     state->command = command; // Only the latest repeated HELLO is needed before discovery finishes.
     return 0;
+}
+// Never concatenate notifications or expose a truncated suffix as the next CSV sample.
+extern "C" __declspec(dllexport) int __cdecl WS_BleReadNotification(void* handle, uint8_t* buffer, int capacity) noexcept {
+    auto const& state = *static_cast<Handle*>(handle);
+    std::lock_guard lock(state->gate);
+    if (!state->error.empty()) return -1;
+    if (state->packets.empty()) return 0;
+    auto const& packet = state->packets.front();
+    if (state->packetOffset || packet.size() > static_cast<size_t>(capacity)) {
+        state->error = "BLE notification cannot fit the packet buffer"; return -1;
+    }
+    const auto count = static_cast<int>(packet.size());
+    memcpy(buffer, packet.data(), packet.size()); state->packets.pop_front();
+    return count;
 }
 extern "C" __declspec(dllexport) void __cdecl WS_BleError(void* handle, char* text, int capacity) noexcept {
     auto const& state = *static_cast<Handle*>(handle);

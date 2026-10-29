@@ -4,7 +4,7 @@
 
 使用 Unity 2022.3.62f2 打开项目，打开 `Assets/Scenes/BreathDemo.unity`，点击 Play。原有 `MainScene.unity` 保留；示例场景作为首个构建场景。
 
-已接入呼吸传感器输入：默认 Windows x64 BLE 自动发现/订阅并握手，保留 USB 115200 调试模式；≤400 为吸气、≥1000 为呼气，中间为无输入。没有设备连接时默认保留以下键盘操作，连接后优先使用传感器。BLE 实际硬件协议待硬件组确认，配置与连接见 [BluetoothInput.md](../Hardware/BluetoothInput.md)，USB 调试见 [ArduinoInput.md](../Hardware/ArduinoInput.md)。
+已接入呼吸传感器输入：默认 Windows x64 BLE 自动发现 ESP32_C3_Mini 并订阅 CSV 通知，无握手；最近 5 个 ADC 均值 <1200 为吸气、>1400 为呼气，中间为无输入，中心/偏差可调。保留 USB 115200 调试模式及原阈值。没有设备连接时默认保留以下键盘操作，连接后优先使用传感器。BLE 按用户提供的 sketch_oct27b 协议对接，配置与连接见 [BluetoothInput.md](../Hardware/BluetoothInput.md)，USB 调试见 [ArduinoInput.md](../Hardware/ArduinoInput.md)。
 
 - 按住 W：吸气，前往上轨道。
 - 按住 S：呼气，前往下轨道。

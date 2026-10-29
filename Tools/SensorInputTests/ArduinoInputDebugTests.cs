@@ -19,7 +19,7 @@ static class ArduinoInputDebugTests {
         var port = new FakePort { AutoIdentify = true, InitialSample = "400\n" };
         var client = new BreathSensorClient(new BreathSensorConnectionOptions("COM99", 1, 0.1, 2),
             () => new[] { "COM99" }, (_, _) => port);
-        var sensor = new ArduinoBreathInput { sampleTimeoutSeconds = 1, inactivityTimeoutSeconds = 2 };
+        var sensor = new ArduinoBreathInput { connectionKind = BreathSensorConnectionKind.UsbSerial, sampleTimeoutSeconds = 1, inactivityTimeoutSeconds = 2 };
         UnityEngine.Debug.Messages.Clear();
         try {
             sensor.Connect(client);
@@ -82,17 +82,26 @@ static class ArduinoInputDebugTests {
 namespace UnityEngine {
     public class Object { }
     public class MonoBehaviour : Object { }
+    public class ScriptableObject : Object { }
+    public sealed class CreateAssetMenuAttribute : Attribute { public string menuName; }
+    public static class JsonUtility {
+        static readonly System.Text.Json.JsonSerializerOptions Options = new System.Text.Json.JsonSerializerOptions { IncludeFields = true };
+        public static T FromJson<T>(string text) => System.Text.Json.JsonSerializer.Deserialize<T>(text, Options);
+        public static string ToJson(object value, bool pretty = false) => System.Text.Json.JsonSerializer.Serialize(value, value.GetType(), Options);
+    }
     public sealed class HeaderAttribute : Attribute { public HeaderAttribute(string _) { } }
     public sealed class TooltipAttribute : Attribute { public TooltipAttribute(string _) { } }
     public sealed class InspectorNameAttribute : Attribute { public InspectorNameAttribute(string _) { } }
     public sealed class MinAttribute : Attribute { public MinAttribute(float _) { } }
+    public sealed class RangeAttribute : Attribute { public RangeAttribute(float _, float __) { } }
     public sealed class SerializeField : Attribute { }
-    public static class Application { public static bool isPlaying = true; }
+    public static class Application { public static bool isPlaying = true; public static string persistentDataPath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "WingSingerSensorTests"); }
     public enum KeyCode { W, S }
     public static class Input { public static bool GetKey(KeyCode _) => false; }
     public static class Debug {
         public static readonly List<string> Messages = new List<string>();
         public static void Log(object message, Object context) => Messages.Add(message.ToString());
+        public static void LogWarning(object message, Object context) => Messages.Add(message.ToString());
         public static void LogError(object message, Object context) => throw new Exception(message.ToString());
     }
 }

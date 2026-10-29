@@ -66,7 +66,7 @@ namespace WingSinger.Editor {
             var router = canvas.AddComponent<UIScreenRouter>();
             var pages = new List<UIPageView>();
             var paths = new List<string>();
-            foreach (UIScreenId id in Enum.GetValues(typeof(UIScreenId))) {
+            foreach (UIScreenId id in Enum.GetValues(typeof(UIScreenId)).Cast<UIScreenId>().Where(id => (int)id <= 13)) {
                 var page = MakeScreen(id);
                 var path = Screens + ((int)id).ToString("00") + "_" + id + ".prefab";
                 PrefabUtility.SaveAsPrefabAsset(page.gameObject, path);
@@ -95,6 +95,7 @@ namespace WingSinger.Editor {
             };
             File.WriteAllText(Report, JsonUtility.ToJson(report, true));
             UIIntegrationSetup.InstallInteractions();
+            HardwareSettingsSetup.Apply();
             Debug.Log($"WingSinger UI build passed: {paths.Count} screens, {sprites.Count} sprites, {checks.Count} checks. Open {PreviewScene}");
         }
 
@@ -523,7 +524,7 @@ namespace WingSinger.Editor {
             router.Route(UIRouteAction.AdvancePractice); router.Route(UIRouteAction.AdvancePractice); Require(router.CurrentScreen==UIScreenId.PracticeComplete,"Practice follows crane then completes");
             router.Route(UIRouteAction.StartFlight); router.Route(UIRouteAction.AdvancePractice); Require(router.CurrentScreen==UIScreenId.FlightComplete,"Explicit preview mode reaches flight results");
             router.Route(UIRouteAction.NextLevel); Require(router.CurrentScreen==UIScreenId.ReadyForTakeoff&&router.SelectedLevel==5,"Next Level increments selection and returns to Ready");
-            foreach(UIScreenId id in Enum.GetValues(typeof(UIScreenId))) { router.Show(id); Require(router.pages.Count(p=>p.gameObject.activeSelf)==1,"Exactly one active UI screen: "+id); }
+            foreach(var page in router.pages) { var id=page.screenId; router.Show(id); Require(router.pages.Count(p=>p.gameObject.activeSelf)==1,"Exactly one active UI screen: "+id); }
             router.Initialize();
         }
         static void CapturePages(GameObject root,UIScreenRouter router) {

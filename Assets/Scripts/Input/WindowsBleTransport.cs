@@ -7,10 +7,10 @@ using System.Text;
 namespace WingSinger {
     public enum BreathSensorConnectionKind { UsbSerial = 0, BluetoothLE = 1 }
 
-    // The BLE UART profile uses the existing newline decoder and identity handshake.
+    // Hardware CSV notifications preserve packet boundaries; legacy UART keeps its line decoder.
     // Its native worker owns discovery/GATT; Unity never calls a radio operation on its main thread.
     public sealed class WindowsBleTransport : IBreathSerialTransport {
-        public const string DefaultDeviceName = "WingSinger Breath";
+        public const string DefaultDeviceName = "ESP32_C3_Mini";
         public const string ServiceUuid = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
         public const string WriteUuid = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
         public const string NotifyUuid = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
@@ -22,31 +22,37 @@ namespace WingSinger {
             return value;
         }
         public static void ValidateProfile(string service, string notify, string write) {
-            if (!Guid.TryParse(service, out Guid s) || s == Guid.Empty || !Guid.TryParse(notify, out Guid n) || n == Guid.Empty
-                || !Guid.TryParse(write, out Guid w) || w == Guid.Empty || s == n || s == w || n == w)
-                throw new ArgumentException("BLE requires three distinct, non-empty service/notify/write UUIDs.");
+            if (!Guid.TryParse(service, out Guid s) || s == Guid.Empty || !Guid.TryParse(notify, out Guid n) || n == Guid.Empty || s == n)
+                throw new ArgumentException("BLE requires distinct, non-empty service/notify UUIDs.");
+            if (!string.IsNullOrEmpty(write) && (!Guid.TryParse(write, out Guid w) || w == Guid.Empty || s == w || n == w))
+                throw new ArgumentException("The optional Write UUID must be non-empty and distinct from Service and Notify.");
         }
 #if (UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || WINGSINGER_SERIAL_TESTS) && !UNITY_32
         public static bool IsSupported => IntPtr.Size == 8;
         readonly object gate = new object();
         IntPtr handle;
-        WindowsBleTransport(IntPtr handle) { this.handle = handle; }
+        readonly bool notificationsOnly;
+        WindowsBleTransport(IntPtr handle, bool notificationsOnly) { this.handle = handle; this.notificationsOnly = notificationsOnly; }
         public static IBreathSerialTransport Open(string name, string address, string service, string notify, string write) {
             if (!IsSupported) throw new PlatformNotSupportedException("BLE currently supports Windows x64.");
             ValidateProfile(service, notify, write);
+            bool notificationsOnly = string.IsNullOrEmpty(write);
+            if (notificationsOnly && string.IsNullOrWhiteSpace(name) && ParseAddress(address) == 0)
+                throw new ArgumentException("Notify-only BLE requires a device name or address filter.");
             var instance = WS_BleCreate(name ?? "", ParseAddress(address), service, notify, write);
             if (instance == IntPtr.Zero) throw new IOException("Cannot start Windows BLE backend.");
-            return new WindowsBleTransport(instance);
+            return new WindowsBleTransport(instance, notificationsOnly);
         }
         public int Read(byte[] buffer) {
             lock (gate) {
                 RequireHandle();
-                int count = WS_BleRead(handle, buffer, buffer.Length);
+                int count = notificationsOnly ? WS_BleReadNotification(handle, buffer, buffer.Length) : WS_BleRead(handle, buffer, buffer.Length);
                 if (count < 0) throw RadioError();
                 return count;
             }
         }
         public void WriteLine(string line) {
+            if (notificationsOnly) throw new InvalidOperationException("This BLE firmware has no Write characteristic or handshake.");
             if (line != BreathSensorProtocol.Hello) throw new ArgumentException("The BLE input transport only sends the sensor identity request.");
             lock (gate) {
                 RequireHandle();
@@ -69,6 +75,7 @@ namespace WingSinger {
         static extern IntPtr WS_BleCreate([MarshalAs(UnmanagedType.LPUTF8Str)] string name, ulong address,
             [MarshalAs(UnmanagedType.LPUTF8Str)] string service, [MarshalAs(UnmanagedType.LPUTF8Str)] string notify, [MarshalAs(UnmanagedType.LPUTF8Str)] string write);
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)] static extern int WS_BleRead(IntPtr handle, [Out] byte[] bytes, int capacity);
+        [DllImport(Library, CallingConvention = CallingConvention.Cdecl)] static extern int WS_BleReadNotification(IntPtr handle, [Out] byte[] bytes, int capacity);
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)] static extern int WS_BleWrite(IntPtr handle, string command);
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)] static extern void WS_BleError(IntPtr handle, StringBuilder error, int capacity);
         [DllImport(Library, CallingConvention = CallingConvention.Cdecl)] static extern void WS_BleStop(IntPtr handle);

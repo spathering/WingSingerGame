@@ -19,8 +19,10 @@
 
 ## 硬件
 
-- [ESP32-C3 BLE 输入、连接步骤和硬件待确认参数](Hardware/BluetoothInput.md)：当前游戏默认连接方式，Windows x64；实际硬件 BLE 协议待确认。
-- [BLE 参考固件](../Firmware/WingSingerBreathSensorBLE/README.md)：软件已提供，未烧录/实机验证。
+- [独立硬件配置与游戏内硬件设置页](Hardware/HardwareSettings.md)：Settings 入口、SO / JSON 持久化与 ADC 三态 HUD。
+
+- [ESP32-C3 BLE 输入、硬件 CSV 协议和连接步骤](Hardware/BluetoothInput.md)：当前游戏默认连接方式，Windows x64；已对照 sketch_oct27b，实机仍待验证。
+- [BLE 参考固件](../Firmware/WingSingerBreathSensorBLE/README.md)：旧 Handshake Uart 模式专用，与当前硬件 CSV 不同。
 - [Arduino 输入协议与调试](Hardware/ArduinoInput.md)。
 - [硬件与串口联调上下文](Hardware/HardwareIntegrationContext.md)：原 WINGSINGER_91E5B8BCE69F99E9B99BE48AB8E687 文档，保留历史实测和问题记录。
 - [Arduino 接手上下文](Handoffs/ArduinoInputContext.md)：历史交接材料，最新实现以代码、固件说明为准。

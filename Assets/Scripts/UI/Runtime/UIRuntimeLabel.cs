@@ -6,7 +6,7 @@ namespace WingSinger.UI {
         LevelTitle, WorldLevels, InhaleSeconds, ExhaleSeconds, TodayPractice, Streak,
         Connection, InputReadiness, Battery, Signal, HudStep, Collected, ResultSeconds,
         ResultCycles, ResultRhythm, TodaySessions, WeeklyFlights, WeeklyMinutes,
-        RecentTitle, RecentDetail, InhaleHint, ExhaleHint, InstructionTitle, InstructionDetail, StreakDays, LevelDescription
+        RecentTitle, RecentDetail, InhaleHint, ExhaleHint, InstructionTitle, InstructionDetail, StreakDays, LevelDescription, SensorReading
     }
     [RequireComponent(typeof(TMP_Text))]
     public sealed class UIRuntimeLabel : MonoBehaviour {

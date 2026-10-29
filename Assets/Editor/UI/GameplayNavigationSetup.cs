@@ -57,7 +57,7 @@ namespace WingSinger.Editor {
                     Bind(hud.Find("Step/Label").GetComponent<TMP_Text>(), UIValueKind.HudStep);
                     Bind(hud.Find("Stars/Label").GetComponent<TMP_Text>(), UIValueKind.Collected);
                     var badge = hud.Find("ConnectionBadge/Label") ?? hud.Find("Connection/Label");
-                    Bind(badge.GetComponent<TMP_Text>(), UIValueKind.Connection);
+                    Bind(badge.GetComponent<TMP_Text>(), UIValueKind.SensorReading);
                 }
                 BindOptional(page, "Footer/Instruction/Title", UIValueKind.InstructionTitle);
                 BindOptional(page, "Footer/Instruction/Subtitle", UIValueKind.InstructionDetail);

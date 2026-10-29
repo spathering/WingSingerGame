@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c78e204c59e4838945df47dde3b6d18, type: 3}
+  m_Name: WingSingerHardwareSettings
+  m_EditorClassIdentifier: 
+  defaults:
+    connectionKind: 1
+    bluetoothDeviceName: ESP32_C3_Mini
+    bluetoothProtocol: 0
+    bluetoothAddress: ''
+    bluetoothServiceUuid: 6e400001-b5a3-f393-e0a9-e50e24dcca9e
+    bluetoothNotifyUuid: 6e400003-b5a3-f393-e0a9-e50e24dcca9e
+    bluetoothWriteUuid: 6e400002-b5a3-f393-e0a9-e50e24dcca9e
+    bluetoothCenterMv: 1300
+    bluetoothDeviationMv: 100
+    bluetoothFilterSamples: 5
+    bluetoothConnectTimeoutSeconds: 30
+    portOverride: 
+    inhaleMaximum: 400
+    exhaleMinimum: 1000
+    sampleTimeoutSeconds: 0.5
+    handshakeTimeoutSeconds: 4
+    reconnectDelaySeconds: 2
+    inactivityTimeoutSeconds: 2
+    keyboardWhenDisconnected: 1
+    debugLogging: 0

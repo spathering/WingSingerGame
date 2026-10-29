@@ -4,7 +4,7 @@
 
 ## 1. 项目基线与当前状态
 
-- 2026-10-29 默认硬件输入改为 Windows x64 BLE，继续复用共享 `ArduinoBreathInput` 与原阈值，USB 可选调试。硬件组尚未确认实际 BLE 协议；软件提供可配置 UUID 和参考固件，连接及验证范围见 `Docs/Hardware/BluetoothInput.md`。暂停时 BLE 接收继续，未知电量保持 `--`。
+- 2026-10-29 默认硬件输入改为 Windows x64 BLE，继续复用共享 `ArduinoBreathInput` 与原阈值，USB 可选调试。按用户提供的 sketch_oct27b 对接 ESP32_C3_Mini 的无握手 CSV Notify，以 5 点 ADC 均值及可调基准 ± 偏差映射；连接及验证范围见 `Docs/Hardware/BluetoothInput.md`。参数抽离到 `Assets/Settings/Input/WingSingerHardwareSettings.asset`，游戏内从 Settings 进入硬件页并保存本机 JSON，HUD 显示 ADC 与吸气/默认/呼气。见 `Docs/Hardware/HardwareSettings.md`。暂停时 BLE 接收继续，未知电量保持 `--`。
 
 - Unity：2022.3.62f2，以 `ProjectSettings/ProjectVersion.txt` 为准。
 - 渲染管线：URP 14.0.12，以 `Packages/manifest.json` 为准。

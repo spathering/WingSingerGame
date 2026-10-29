@@ -43,7 +43,7 @@ namespace WingSinger.Editor {
             }
             AssetDatabase.SaveAssets();
             EditorSceneManager.OpenScene(string.IsNullOrEmpty(original) ? GameplayNavigationSetup.ScenePath : original);
-            Debug.Log("WingSinger: responsive 1920x1080 Canvas and aspect-preserving page layouts applied to all 13 pages.");
+            Debug.Log("WingSinger: responsive 1920x1080 Canvas and aspect-preserving page layouts applied to all registered pages.");
         }
         public static void ConfigureCanvas(Canvas canvas) {
             var scaler = canvas.GetComponent<CanvasScaler>();
