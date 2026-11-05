@@ -35,5 +35,14 @@ namespace WingSinger {
             }
             return frames[low];
         }
+        public void SamplePair(double seconds, out Sprite first, out Sprite next, out float blend) {
+            first = Sample(seconds, true); next = first; blend = 0;
+            if (first == null || Duration <= 0) return;
+            int index = System.Array.IndexOf(frames, first);
+            double time = System.Math.Max(0, seconds) % Duration;
+            float start = index == 0 ? 0 : frameEnds[index - 1];
+            blend = Mathf.Clamp01((float)((time - start) / (frameEnds[index] - start)));
+            next = frames[(index + 1) % frames.Length];
+        }
     }
 }

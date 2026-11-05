@@ -1,0 +1,1214 @@
+{
+  "source": "H:\\PolyU\\PM\\WindSinger素材\\11.2\\hc1\\hc1",
+  "sourceWidth": 30000,
+  "sourceHeight": 1562,
+  "width": 4096,
+  "height": 216,
+  "framesPerSecond": 20,
+  "frames": [
+    {
+      "source": "合成 1_00000.png",
+      "sha256": "c9dbbbb999b173f08136258318feb1bb14454564364b08d7d1201809555343de",
+      "file": "Forest_000.png",
+      "sourceBytes": 41635390,
+      "outputBytes": 1520662,
+      "repairedEdgePixels": 51879
+    },
+    {
+      "source": "合成 1_00001.png",
+      "sha256": "55972ca923af229cfb48b3448fa180a297acb025c900c6f8168bab4a4688233c",
+      "file": "Forest_001.png",
+      "sourceBytes": 41678771,
+      "outputBytes": 1520711,
+      "repairedEdgePixels": 51920
+    },
+    {
+      "source": "合成 1_00002.png",
+      "sha256": "5f9245634822a0d252f4c2dabf44aef0d69b31d8e56e21095208dc5152223f47",
+      "file": "Forest_002.png",
+      "sourceBytes": 40975190,
+      "outputBytes": 1511598,
+      "repairedEdgePixels": 53381
+    },
+    {
+      "source": "合成 1_00003.png",
+      "sha256": "533590cd0f818d369a1bebc032ecac2b560aefa7f020d2a35a456cb1115e5dfd",
+      "file": "Forest_003.png",
+      "sourceBytes": 40911444,
+      "outputBytes": 1505081,
+      "repairedEdgePixels": 51050
+    },
+    {
+      "source": "合成 1_00004.png",
+      "sha256": "38533d3c0c342d178e18f1c896b91b1c43b33da5579d5c5382ad606fa0885edd",
+      "file": "Forest_004.png",
+      "sourceBytes": 41214581,
+      "outputBytes": 1509881,
+      "repairedEdgePixels": 52738
+    },
+    {
+      "source": "合成 1_00005.png",
+      "sha256": "5332c33d3bab28675114b181abc3f6b8c413bf393b5f7944bc606f7fd5610231",
+      "file": "Forest_005.png",
+      "sourceBytes": 41547534,
+      "outputBytes": 1514471,
+      "repairedEdgePixels": 52855
+    },
+    {
+      "source": "合成 1_00006.png",
+      "sha256": "989e846bcdb76c8fc11c63d5826186030b1ed514d6ff56d11311a61aedb01c7b",
+      "file": "Forest_006.png",
+      "sourceBytes": 41617915,
+      "outputBytes": 1514694,
+      "repairedEdgePixels": 52492
+    },
+    {
+      "source": "合成 1_00007.png",
+      "sha256": "f2f458cb57a69a6d1c10dca8fc2cfae18fcceba4b56f9a49858ab6754f4d2310",
+      "file": "Forest_007.png",
+      "sourceBytes": 41154877,
+      "outputBytes": 1508455,
+      "repairedEdgePixels": 50969
+    },
+    {
+      "source": "合成 1_00008.png",
+      "sha256": "2d4313a7e4c91f9d4853294cef0855ada36cf8690920f4e94f2d2246ac2e7a6b",
+      "file": "Forest_008.png",
+      "sourceBytes": 41114116,
+      "outputBytes": 1501151,
+      "repairedEdgePixels": 47860
+    },
+    {
+      "source": "合成 1_00009.png",
+      "sha256": "63dd5158e67b09abb7f5cc54331d05dc8f1244df16f518546b860729b4510321",
+      "file": "Forest_009.png",
+      "sourceBytes": 41274289,
+      "outputBytes": 1500652,
+      "repairedEdgePixels": 47597
+    },
+    {
+      "source": "合成 1_00010.png",
+      "sha256": "a1d0feebdf51bb26334fde1151aabb6323ffb1a3c09a78faf7c186d5f1f913a7",
+      "file": "Forest_010.png",
+      "sourceBytes": 41498568,
+      "outputBytes": 1502440,
+      "repairedEdgePixels": 47011
+    },
+    {
+      "source": "合成 1_00011.png",
+      "sha256": "47e1b786ea86579650744cc48660a684cd1c47cef523214efdddd03cc85056c8",
+      "file": "Forest_011.png",
+      "sourceBytes": 41490620,
+      "outputBytes": 1503249,
+      "repairedEdgePixels": 46945
+    },
+    {
+      "source": "合成 1_00012.png",
+      "sha256": "033d5d8eb177cc31dafa4181054c9045ba51e96fd29fbc9f46d441c68f3c1e92",
+      "file": "Forest_012.png",
+      "sourceBytes": 41261472,
+      "outputBytes": 1498182,
+      "repairedEdgePixels": 45716
+    },
+    {
+      "source": "合成 1_00013.png",
+      "sha256": "400f60b4a26f6af53859f74dee94ed0317d65ad745d7fb084aeeb442d4294b38",
+      "file": "Forest_013.png",
+      "sourceBytes": 41200154,
+      "outputBytes": 1487936,
+      "repairedEdgePixels": 41835
+    },
+    {
+      "source": "合成 1_00014.png",
+      "sha256": "7ca11ed609f26175548a51face71c0e443d4934c300b06e246ad4510f338866f",
+      "file": "Forest_014.png",
+      "sourceBytes": 41001881,
+      "outputBytes": 1491146,
+      "repairedEdgePixels": 43217
+    },
+    {
+      "source": "合成 1_00015.png",
+      "sha256": "22eb2aba3d4c7a8443a3d099863add5cc711e585bf970cd1e3139435631be823",
+      "file": "Forest_015.png",
+      "sourceBytes": 41464147,
+      "outputBytes": 1493679,
+      "repairedEdgePixels": 43220
+    },
+    {
+      "source": "合成 1_00016.png",
+      "sha256": "4760b1ba96997a5d780a1e6c0d33c688ca47d76d838fa29b8b43ad1b9fe8ee21",
+      "file": "Forest_016.png",
+      "sourceBytes": 41445822,
+      "outputBytes": 1493397,
+      "repairedEdgePixels": 43226
+    },
+    {
+      "source": "合成 1_00017.png",
+      "sha256": "069f1f4d026fd5a05dce8423eb5ff610a6f2bbe5109e051c72b70a1438ae4b06",
+      "file": "Forest_017.png",
+      "sourceBytes": 41284676,
+      "outputBytes": 1494781,
+      "repairedEdgePixels": 43847
+    },
+    {
+      "source": "合成 1_00018.png",
+      "sha256": "8be5bde80bf6ba799ab5510f345f980bb08667a0d7b8a56a7416527a017be0a3",
+      "file": "Forest_018.png",
+      "sourceBytes": 41411713,
+      "outputBytes": 1490569,
+      "repairedEdgePixels": 41886
+    },
+    {
+      "source": "合成 1_00019.png",
+      "sha256": "f257f7b9fa5b41b24d92c0d94b4ef9a9979990ccd7ca6b5b6dd86ceccc4f9033",
+      "file": "Forest_019.png",
+      "sourceBytes": 41516054,
+      "outputBytes": 1497508,
+      "repairedEdgePixels": 43624
+    },
+    {
+      "source": "合成 1_00020.png",
+      "sha256": "5f0e14e9d8e683eeeab069d5762620ac62c2d46ba7a6bdec75b5f16b4cafc953",
+      "file": "Forest_020.png",
+      "sourceBytes": 41493798,
+      "outputBytes": 1493214,
+      "repairedEdgePixels": 42892
+    },
+    {
+      "source": "合成 1_00021.png",
+      "sha256": "49b508d82cd6be30a56ce24668433136bd826dbf5f8158950cb4a962165d24be",
+      "file": "Forest_021.png",
+      "sourceBytes": 41386756,
+      "outputBytes": 1493859,
+      "repairedEdgePixels": 42880
+    },
+    {
+      "source": "合成 1_00022.png",
+      "sha256": "ee5837242f9dc3a64d96e89ee263ec2fd7177790aa619dfb7e048d5e6f3cd80b",
+      "file": "Forest_022.png",
+      "sourceBytes": 41174283,
+      "outputBytes": 1491599,
+      "repairedEdgePixels": 42362
+    },
+    {
+      "source": "合成 1_00023.png",
+      "sha256": "d95680bfd879f667d1e31d14c0dbffae4aa57f7d59530c17f159fec2eea848c6",
+      "file": "Forest_023.png",
+      "sourceBytes": 41169684,
+      "outputBytes": 1487963,
+      "repairedEdgePixels": 40664
+    },
+    {
+      "source": "合成 1_00024.png",
+      "sha256": "3bd7aa15ee8ba80ef8a5009cacb5ae73c71ebb7726667d471402163ef1b4384c",
+      "file": "Forest_024.png",
+      "sourceBytes": 41330697,
+      "outputBytes": 1493096,
+      "repairedEdgePixels": 42054
+    },
+    {
+      "source": "合成 1_00025.png",
+      "sha256": "db940bd859ea9bf926e925041a49cf0e32f2a1de65a33fc1bd250df6a6dbba42",
+      "file": "Forest_025.png",
+      "sourceBytes": 41514530,
+      "outputBytes": 1492711,
+      "repairedEdgePixels": 41585
+    },
+    {
+      "source": "合成 1_00026.png",
+      "sha256": "2a08201730b23c888e4ae9e4bd8fefdeade22575558319381b60ffb4b73464c6",
+      "file": "Forest_026.png",
+      "sourceBytes": 41464347,
+      "outputBytes": 1493175,
+      "repairedEdgePixels": 42184
+    },
+    {
+      "source": "合成 1_00027.png",
+      "sha256": "76c564ee6cbd887a45250458c8b0f73099f1b292b34c7a9b7738624773af0a03",
+      "file": "Forest_027.png",
+      "sourceBytes": 41369335,
+      "outputBytes": 1495424,
+      "repairedEdgePixels": 43172
+    },
+    {
+      "source": "合成 1_00028.png",
+      "sha256": "08144bb2bbb8c7d97c6e94ab7eeef088396844a471dd1112be2af3db157231c3",
+      "file": "Forest_028.png",
+      "sourceBytes": 41434273,
+      "outputBytes": 1492523,
+      "repairedEdgePixels": 41633
+    },
+    {
+      "source": "合成 1_00029.png",
+      "sha256": "f7fb3cef2fa8be67dbcd635059d5cf696e4e227863b90beaf4832389a6f0ad6d",
+      "file": "Forest_029.png",
+      "sourceBytes": 41430832,
+      "outputBytes": 1495637,
+      "repairedEdgePixels": 42052
+    },
+    {
+      "source": "合成 1_00030.png",
+      "sha256": "892c5e2f79add2079c2a3f69999166368d040d9f6d947d57e3fd41fece39d0e6",
+      "file": "Forest_030.png",
+      "sourceBytes": 41723908,
+      "outputBytes": 1495689,
+      "repairedEdgePixels": 41800
+    },
+    {
+      "source": "合成 1_00031.png",
+      "sha256": "483fd9d56a5f1a83bc729235dee1c2e3d52f0d0a2e0d8d11c5c391612bf2396a",
+      "file": "Forest_031.png",
+      "sourceBytes": 41754521,
+      "outputBytes": 1494461,
+      "repairedEdgePixels": 41841
+    },
+    {
+      "source": "合成 1_00032.png",
+      "sha256": "2930b97a803e0f055f64adcf61d9237b9613426bfb326a7fe0c8cb27f6b7cc29",
+      "file": "Forest_032.png",
+      "sourceBytes": 41373417,
+      "outputBytes": 1491025,
+      "repairedEdgePixels": 41667
+    },
+    {
+      "source": "合成 1_00033.png",
+      "sha256": "25f77bccd867eb3f66652b1b8dbaf8097067d66f1b12f9ff807b068e38ea1111",
+      "file": "Forest_033.png",
+      "sourceBytes": 41493186,
+      "outputBytes": 1488861,
+      "repairedEdgePixels": 41359
+    },
+    {
+      "source": "合成 1_00034.png",
+      "sha256": "5377854e442a5adf4d74d0c81b7033189baabe72a9390afb9f39e4a704399f09",
+      "file": "Forest_034.png",
+      "sourceBytes": 41435864,
+      "outputBytes": 1493982,
+      "repairedEdgePixels": 42335
+    },
+    {
+      "source": "合成 1_00035.png",
+      "sha256": "3d2050745ad22e4bbc5856bc7a3ccd2bf126c38a118a73803c2e8cc0d91d533a",
+      "file": "Forest_035.png",
+      "sourceBytes": 41367726,
+      "outputBytes": 1491743,
+      "repairedEdgePixels": 41246
+    },
+    {
+      "source": "合成 1_00036.png",
+      "sha256": "76e446df9ea7c8a5f7ebb83e6d29c3f2e0fddfaed4a447538a414659f60228bb",
+      "file": "Forest_036.png",
+      "sourceBytes": 41543142,
+      "outputBytes": 1493599,
+      "repairedEdgePixels": 41319
+    },
+    {
+      "source": "合成 1_00037.png",
+      "sha256": "0fd983dd972dfb053bac86e8acc30d2a30e4640eb0ef37ef1833edef130351fd",
+      "file": "Forest_037.png",
+      "sourceBytes": 41134839,
+      "outputBytes": 1491763,
+      "repairedEdgePixels": 41392
+    },
+    {
+      "source": "合成 1_00038.png",
+      "sha256": "119d6b9a9274a65a9403c653e2151c8c3c6c903f5c60868205c755c4fab69811",
+      "file": "Forest_038.png",
+      "sourceBytes": 41116162,
+      "outputBytes": 1487810,
+      "repairedEdgePixels": 40824
+    },
+    {
+      "source": "合成 1_00039.png",
+      "sha256": "321fcf595f04c6cbcae037d2b09b5c7018e42e7b5d5121520a13289e7ffdbdfa",
+      "file": "Forest_039.png",
+      "sourceBytes": 41027927,
+      "outputBytes": 1493712,
+      "repairedEdgePixels": 42725
+    },
+    {
+      "source": "合成 1_00040.png",
+      "sha256": "e21e39173483fb0426c18948431e992ffe5094d86080d946133648781ac94b3a",
+      "file": "Forest_040.png",
+      "sourceBytes": 41057593,
+      "outputBytes": 1494453,
+      "repairedEdgePixels": 42449
+    },
+    {
+      "source": "合成 1_00041.png",
+      "sha256": "6d8dd94a2629dbd20465a49f78989f643cb93a24e34f6720735735901b201802",
+      "file": "Forest_041.png",
+      "sourceBytes": 40952679,
+      "outputBytes": 1491011,
+      "repairedEdgePixels": 41359
+    },
+    {
+      "source": "合成 1_00042.png",
+      "sha256": "08ad7d9c458441577dc8cfe294f74cef5210890d32ee9e5578762f3c0427f46c",
+      "file": "Forest_042.png",
+      "sourceBytes": 40839747,
+      "outputBytes": 1491676,
+      "repairedEdgePixels": 41809
+    },
+    {
+      "source": "合成 1_00043.png",
+      "sha256": "d48747202701796a60dd88edde091d02c0512d2043fcd1329fdb2b12ed132d7c",
+      "file": "Forest_043.png",
+      "sourceBytes": 40997850,
+      "outputBytes": 1488747,
+      "repairedEdgePixels": 41150
+    },
+    {
+      "source": "合成 1_00044.png",
+      "sha256": "deaf0b51fb1138bbe60d3b159fab34f22e86f65b1faddf1245de5545eabc364e",
+      "file": "Forest_044.png",
+      "sourceBytes": 40785868,
+      "outputBytes": 1492182,
+      "repairedEdgePixels": 42218
+    },
+    {
+      "source": "合成 1_00045.png",
+      "sha256": "493b79eed2410728bb28354fc89adddeda7fa8ff3bd584130fa47e4787de82a3",
+      "file": "Forest_045.png",
+      "sourceBytes": 40837308,
+      "outputBytes": 1492178,
+      "repairedEdgePixels": 42507
+    },
+    {
+      "source": "合成 1_00046.png",
+      "sha256": "3e3f11575a85ec5164758295021841fe3a17bb58b6ac01fd0d4c4f2f11e4d54a",
+      "file": "Forest_046.png",
+      "sourceBytes": 40876053,
+      "outputBytes": 1491586,
+      "repairedEdgePixels": 42525
+    },
+    {
+      "source": "合成 1_00047.png",
+      "sha256": "609137aeec1fb255219e2bbbf94bd7480f228d5cf7039ae9de34855fcce08a82",
+      "file": "Forest_047.png",
+      "sourceBytes": 40569948,
+      "outputBytes": 1492713,
+      "repairedEdgePixels": 42230
+    },
+    {
+      "source": "合成 1_00048.png",
+      "sha256": "d1d9bb1d9f8a8e5d2b4904fbdb0325452bb591e5db96345585fd721c637582dd",
+      "file": "Forest_048.png",
+      "sourceBytes": 40783254,
+      "outputBytes": 1489112,
+      "repairedEdgePixels": 41377
+    },
+    {
+      "source": "合成 1_00049.png",
+      "sha256": "8030fd0dd53ffa2304fdaf7e982054761720caf2d25cbd3bc2468edf90a7446a",
+      "file": "Forest_049.png",
+      "sourceBytes": 40533051,
+      "outputBytes": 1492385,
+      "repairedEdgePixels": 42490
+    },
+    {
+      "source": "合成 1_00050.png",
+      "sha256": "178515af74929715b190a4890fe1c7ceab36a865101906813879f4f182d5435e",
+      "file": "Forest_050.png",
+      "sourceBytes": 40442205,
+      "outputBytes": 1489273,
+      "repairedEdgePixels": 41827
+    },
+    {
+      "source": "合成 1_00051.png",
+      "sha256": "ee1e2606fd9c5c8a7ade89e46342e85b3e19de028799962bb8280813da2fe59b",
+      "file": "Forest_051.png",
+      "sourceBytes": 40637549,
+      "outputBytes": 1493292,
+      "repairedEdgePixels": 43081
+    },
+    {
+      "source": "合成 1_00052.png",
+      "sha256": "51d3e67c212310fb94230f0ef3a407511341d5b7961dcc25db873293567028fc",
+      "file": "Forest_052.png",
+      "sourceBytes": 40509070,
+      "outputBytes": 1493784,
+      "repairedEdgePixels": 43194
+    },
+    {
+      "source": "合成 1_00053.png",
+      "sha256": "bd918465d10a8ac8811b975ec6a7f754d7b75541d837605fd6ccca12016e64ce",
+      "file": "Forest_053.png",
+      "sourceBytes": 40499314,
+      "outputBytes": 1486448,
+      "repairedEdgePixels": 41318
+    },
+    {
+      "source": "合成 1_00054.png",
+      "sha256": "e80279289151568661afe4c039d37221b84709660971d418bf24271b4c15e550",
+      "file": "Forest_054.png",
+      "sourceBytes": 40369400,
+      "outputBytes": 1491704,
+      "repairedEdgePixels": 42433
+    },
+    {
+      "source": "合成 1_00055.png",
+      "sha256": "a58459c5a52614a84f4ecfe4d2ad8963868203a961c29b1c5f70ae9d129d44eb",
+      "file": "Forest_055.png",
+      "sourceBytes": 40436678,
+      "outputBytes": 1491344,
+      "repairedEdgePixels": 42275
+    },
+    {
+      "source": "合成 1_00056.png",
+      "sha256": "31f740bb47264339a3d0c2a0101a980109ad1252e7229d6c90b237eb71f6db7a",
+      "file": "Forest_056.png",
+      "sourceBytes": 40416091,
+      "outputBytes": 1490834,
+      "repairedEdgePixels": 42542
+    },
+    {
+      "source": "合成 1_00057.png",
+      "sha256": "5885593458ffc1ae4e6bebcf1dfdad74cd33d25c9aa09edc636dd703a7a08624",
+      "file": "Forest_057.png",
+      "sourceBytes": 40422787,
+      "outputBytes": 1493088,
+      "repairedEdgePixels": 43171
+    },
+    {
+      "source": "合成 1_00058.png",
+      "sha256": "77c870399b309565ef22fb6cb5acf5563e463c245ada384a736e77cfd197722e",
+      "file": "Forest_058.png",
+      "sourceBytes": 40540337,
+      "outputBytes": 1489465,
+      "repairedEdgePixels": 42246
+    },
+    {
+      "source": "合成 1_00059.png",
+      "sha256": "43a7c000c84e69db568a381710ca2d3fa0f79d1d2702a6b9d9d22f5cd6557147",
+      "file": "Forest_059.png",
+      "sourceBytes": 40367673,
+      "outputBytes": 1491356,
+      "repairedEdgePixels": 42272
+    },
+    {
+      "source": "合成 1_00060.png",
+      "sha256": "c2127ddb28a9d4e670b5d0d67808868996e1ca8cd04c39ffcff4208a90cc0da2",
+      "file": "Forest_060.png",
+      "sourceBytes": 40532508,
+      "outputBytes": 1492405,
+      "repairedEdgePixels": 42198
+    },
+    {
+      "source": "合成 1_00061.png",
+      "sha256": "84b9f6ac3cb8568c0e72030d6a326b8422d6f5bc9f01d0e45f4c765dc4d67b29",
+      "file": "Forest_061.png",
+      "sourceBytes": 40526868,
+      "outputBytes": 1492910,
+      "repairedEdgePixels": 42194
+    },
+    {
+      "source": "合成 1_00062.png",
+      "sha256": "22aaf4733016662209af9f28a4fd6648b93daf508f13b1f4c45f8fdddae76c91",
+      "file": "Forest_062.png",
+      "sourceBytes": 40324026,
+      "outputBytes": 1490111,
+      "repairedEdgePixels": 42239
+    },
+    {
+      "source": "合成 1_00063.png",
+      "sha256": "c7ba0d567745cdd033b73863d88177db6e93c2f8005029ca6bb573be37eefb54",
+      "file": "Forest_063.png",
+      "sourceBytes": 40551786,
+      "outputBytes": 1489370,
+      "repairedEdgePixels": 41983
+    },
+    {
+      "source": "合成 1_00064.png",
+      "sha256": "8387733d20ac7785627060223796dad0a4dc3012674793fc1ff3dd13a6d4a3e9",
+      "file": "Forest_064.png",
+      "sourceBytes": 40514489,
+      "outputBytes": 1493911,
+      "repairedEdgePixels": 43020
+    },
+    {
+      "source": "合成 1_00065.png",
+      "sha256": "8cdd73edc7aa6407cb1dc5ed56a98acc336b4aa55b77bf27f0565fd8a5539cbc",
+      "file": "Forest_065.png",
+      "sourceBytes": 40621794,
+      "outputBytes": 1492947,
+      "repairedEdgePixels": 41973
+    },
+    {
+      "source": "合成 1_00066.png",
+      "sha256": "06df88cbd5abff1b4b323585d1c1995b02ce2722060bbd9466f54180f777adf7",
+      "file": "Forest_066.png",
+      "sourceBytes": 40629698,
+      "outputBytes": 1492944,
+      "repairedEdgePixels": 41786
+    },
+    {
+      "source": "合成 1_00067.png",
+      "sha256": "0208ad6c37c949eb53dc9aa57fce86220b2eaa33cbfe0f6e21caa0bfbfba4a27",
+      "file": "Forest_067.png",
+      "sourceBytes": 40718163,
+      "outputBytes": 1492739,
+      "repairedEdgePixels": 41949
+    },
+    {
+      "source": "合成 1_00068.png",
+      "sha256": "8504585ca0a4b4b2ed38cbef1d696484fb60d4996129e4a5e125244d59737143",
+      "file": "Forest_068.png",
+      "sourceBytes": 40672278,
+      "outputBytes": 1488939,
+      "repairedEdgePixels": 41782
+    },
+    {
+      "source": "合成 1_00069.png",
+      "sha256": "4ad2560d58b72b40c98838571582647b936bd0f894b2cad2c0160ee992abbbf0",
+      "file": "Forest_069.png",
+      "sourceBytes": 40615972,
+      "outputBytes": 1494930,
+      "repairedEdgePixels": 42622
+    },
+    {
+      "source": "合成 1_00070.png",
+      "sha256": "7d0c0a2492d4b3fb60fd1dc73df2a4adbacecb3401f5d9f638c52797133b8d43",
+      "file": "Forest_070.png",
+      "sourceBytes": 40755160,
+      "outputBytes": 1494497,
+      "repairedEdgePixels": 42632
+    },
+    {
+      "source": "合成 1_00071.png",
+      "sha256": "622cb9d4d0e7718dd0083fc516ee3192e2c0a81bb4f351e38318734ff3543832",
+      "file": "Forest_071.png",
+      "sourceBytes": 40699402,
+      "outputBytes": 1492114,
+      "repairedEdgePixels": 41810
+    },
+    {
+      "source": "合成 1_00072.png",
+      "sha256": "44b3aa41e727d7beae74f1f108924ae57f3132fcdb7aa47485c970d55ac9849b",
+      "file": "Forest_072.png",
+      "sourceBytes": 40584124,
+      "outputBytes": 1490379,
+      "repairedEdgePixels": 41504
+    },
+    {
+      "source": "合成 1_00073.png",
+      "sha256": "03258825b7d924b260368b3658b9456a0e1ca49df3231036c2ea964d68f62320",
+      "file": "Forest_073.png",
+      "sourceBytes": 40766224,
+      "outputBytes": 1489374,
+      "repairedEdgePixels": 41188
+    },
+    {
+      "source": "合成 1_00074.png",
+      "sha256": "56e5da519f3fbfee3eefd4d8ec0cdde43c5576aea5f4800c31549431ba505aad",
+      "file": "Forest_074.png",
+      "sourceBytes": 40810577,
+      "outputBytes": 1492754,
+      "repairedEdgePixels": 42267
+    },
+    {
+      "source": "合成 1_00075.png",
+      "sha256": "e5e782b20ea8ea4162a35b2f4d95e89fb36704c8d8269e8766320ee07435d045",
+      "file": "Forest_075.png",
+      "sourceBytes": 40915551,
+      "outputBytes": 1495904,
+      "repairedEdgePixels": 42627
+    },
+    {
+      "source": "合成 1_00076.png",
+      "sha256": "e5e782b20ea8ea4162a35b2f4d95e89fb36704c8d8269e8766320ee07435d045",
+      "file": "Forest_076.png",
+      "sourceBytes": 40915551,
+      "outputBytes": 1495904,
+      "repairedEdgePixels": 42627
+    },
+    {
+      "source": "合成 1_00077.png",
+      "sha256": "391b7db7dd8b55b6ac431d8053fac5a655510133329787f23991605d31b4ae3c",
+      "file": "Forest_077.png",
+      "sourceBytes": 40603624,
+      "outputBytes": 1491280,
+      "repairedEdgePixels": 41747
+    },
+    {
+      "source": "合成 1_00078.png",
+      "sha256": "548a5553c863023c5b2132eff77c2ac9a3995f141f66714a1e9dd80e006b0763",
+      "file": "Forest_078.png",
+      "sourceBytes": 40910566,
+      "outputBytes": 1490297,
+      "repairedEdgePixels": 41283
+    },
+    {
+      "source": "合成 1_00079.png",
+      "sha256": "d36c13c630e885e16aa5e0b174d2272c94bd542e574c6c579f4a76f61ff26f1c",
+      "file": "Forest_079.png",
+      "sourceBytes": 40766488,
+      "outputBytes": 1494772,
+      "repairedEdgePixels": 41580
+    },
+    {
+      "source": "合成 1_00080.png",
+      "sha256": "968f7e302058d080934ebbda3f7be35fcbf3528bb42cf98b9c2709ccf990fad7",
+      "file": "Forest_080.png",
+      "sourceBytes": 40731035,
+      "outputBytes": 1492628,
+      "repairedEdgePixels": 41991
+    },
+    {
+      "source": "合成 1_00081.png",
+      "sha256": "d9fbc42acaae133a9f7f0656399b8f5cd611149a40ab178aade342746d02a347",
+      "file": "Forest_081.png",
+      "sourceBytes": 40864478,
+      "outputBytes": 1495248,
+      "repairedEdgePixels": 42892
+    },
+    {
+      "source": "合成 1_00082.png",
+      "sha256": "db9c42973c57d970cb6b8d4c2a4ed620b914bdd404eee5eb27c32057f4dd505f",
+      "file": "Forest_082.png",
+      "sourceBytes": 40569137,
+      "outputBytes": 1492754,
+      "repairedEdgePixels": 42972
+    },
+    {
+      "source": "合成 1_00083.png",
+      "sha256": "d52307c87e8ab112def1553bae41990d954edfe4559f9784acf14a9bbd39a226",
+      "file": "Forest_083.png",
+      "sourceBytes": 40658679,
+      "outputBytes": 1487151,
+      "repairedEdgePixels": 41914
+    },
+    {
+      "source": "合成 1_00084.png",
+      "sha256": "0ece3531c866b825305a65dee4aee783ba19b3ff2e4128762bb9b925879de937",
+      "file": "Forest_084.png",
+      "sourceBytes": 40504392,
+      "outputBytes": 1492207,
+      "repairedEdgePixels": 42226
+    },
+    {
+      "source": "合成 1_00085.png",
+      "sha256": "77496738a18d41302e0b747ea66a573d58b819f9afcf66c55cad22589c7f10ab",
+      "file": "Forest_085.png",
+      "sourceBytes": 40799995,
+      "outputBytes": 1493540,
+      "repairedEdgePixels": 42486
+    },
+    {
+      "source": "合成 1_00086.png",
+      "sha256": "b48647d8ebbe11712cc8cbddfc33ce1f8c1837d7a30bb5ee28791a97266d9a05",
+      "file": "Forest_086.png",
+      "sourceBytes": 40721755,
+      "outputBytes": 1492483,
+      "repairedEdgePixels": 42556
+    },
+    {
+      "source": "合成 1_00087.png",
+      "sha256": "1f8bdb48dee5d659d0d609dc8ff38b0c3182ce376964dfb56b823e522c5fdac9",
+      "file": "Forest_087.png",
+      "sourceBytes": 40642804,
+      "outputBytes": 1494929,
+      "repairedEdgePixels": 43419
+    },
+    {
+      "source": "合成 1_00088.png",
+      "sha256": "602e9ed43035dfcd0f42287cb1b59109ddd28a79670599026002e0b2ae9fd0b3",
+      "file": "Forest_088.png",
+      "sourceBytes": 40772143,
+      "outputBytes": 1489997,
+      "repairedEdgePixels": 42274
+    },
+    {
+      "source": "合成 1_00089.png",
+      "sha256": "c6dc055407ac6f9cb7d1dad8f6f2fcb1a350e2442455fc1e2d8b327add62226b",
+      "file": "Forest_089.png",
+      "sourceBytes": 40616238,
+      "outputBytes": 1492463,
+      "repairedEdgePixels": 42646
+    },
+    {
+      "source": "合成 1_00090.png",
+      "sha256": "e6c636b91b8269f3f90926b7899c264d84e6edccbf6819a5798b1ef43051c505",
+      "file": "Forest_090.png",
+      "sourceBytes": 40777086,
+      "outputBytes": 1494854,
+      "repairedEdgePixels": 42542
+    },
+    {
+      "source": "合成 1_00091.png",
+      "sha256": "1e8a13431c53291fd8ef56cf8ed1c143a8fec2ec27b9988e19628358637db163",
+      "file": "Forest_091.png",
+      "sourceBytes": 40791736,
+      "outputBytes": 1494860,
+      "repairedEdgePixels": 42585
+    },
+    {
+      "source": "合成 1_00092.png",
+      "sha256": "6a56fefe0d866a0356a81dcfea8cbe866dbeb81cbaf6a3969a5acde3da19a931",
+      "file": "Forest_092.png",
+      "sourceBytes": 40531027,
+      "outputBytes": 1490907,
+      "repairedEdgePixels": 42383
+    },
+    {
+      "source": "合成 1_00093.png",
+      "sha256": "4e1081f0555ada5c28574fed980f829b5056a80a9f7894d0703e8896355ad3a0",
+      "file": "Forest_093.png",
+      "sourceBytes": 40820483,
+      "outputBytes": 1489090,
+      "repairedEdgePixels": 42149
+    },
+    {
+      "source": "合成 1_00094.png",
+      "sha256": "d48d157f0705906e3fa037e7707ac7d3351f9927599dba6582ca3105bf016f9f",
+      "file": "Forest_094.png",
+      "sourceBytes": 40778091,
+      "outputBytes": 1495176,
+      "repairedEdgePixels": 43380
+    },
+    {
+      "source": "合成 1_00095.png",
+      "sha256": "15633bd0ca168ada3c7d7e4dd29e353f51c3afbceb3ee59ada7083ae52b7338e",
+      "file": "Forest_095.png",
+      "sourceBytes": 40803211,
+      "outputBytes": 1492198,
+      "repairedEdgePixels": 42215
+    },
+    {
+      "source": "合成 1_00096.png",
+      "sha256": "9e8558a117faf0e5499dfcd04764f7cb635d85c6fdeab5a34d35f1708d5fe651",
+      "file": "Forest_096.png",
+      "sourceBytes": 40869243,
+      "outputBytes": 1492673,
+      "repairedEdgePixels": 42030
+    },
+    {
+      "source": "合成 1_00097.png",
+      "sha256": "f78ea930c5ab6c6e493d7d3cc23b566d8eb78f2287ffa8fa22aae589c79edf30",
+      "file": "Forest_097.png",
+      "sourceBytes": 40745603,
+      "outputBytes": 1493295,
+      "repairedEdgePixels": 42480
+    },
+    {
+      "source": "合成 1_00098.png",
+      "sha256": "db0dd9d8f7ba4efef18e09b9c038b4e6b292bbc1ceb051d19dfde9d11313c64c",
+      "file": "Forest_098.png",
+      "sourceBytes": 40762464,
+      "outputBytes": 1488379,
+      "repairedEdgePixels": 41501
+    },
+    {
+      "source": "合成 1_00099.png",
+      "sha256": "7e73e504c5738f2c36c1c103c8a6bc92d96729355892cbcdb984ae74bfdab13f",
+      "file": "Forest_099.png",
+      "sourceBytes": 40816488,
+      "outputBytes": 1498460,
+      "repairedEdgePixels": 43613
+    },
+    {
+      "source": "合成 1_00100.png",
+      "sha256": "33fb99c5dfbcadd3d2b1f54e186c00360426e3d141b1770120fac7ee9bba1253",
+      "file": "Forest_100.png",
+      "sourceBytes": 40946226,
+      "outputBytes": 1495989,
+      "repairedEdgePixels": 43302
+    },
+    {
+      "source": "合成 1_00101.png",
+      "sha256": "957ecd136886df819eda4a78089a62a746d84d1f3533f27aaf932b7fc6f1dcde",
+      "file": "Forest_101.png",
+      "sourceBytes": 40863825,
+      "outputBytes": 1493032,
+      "repairedEdgePixels": 42186
+    },
+    {
+      "source": "合成 1_00102.png",
+      "sha256": "e1d4acc70501c218b21e297ddfcbddd55087893fa3f500b14dde55078eee41db",
+      "file": "Forest_102.png",
+      "sourceBytes": 40777874,
+      "outputBytes": 1494635,
+      "repairedEdgePixels": 42602
+    },
+    {
+      "source": "合成 1_00103.png",
+      "sha256": "1a15f7bbb6d43d866d00c4e0f658784146a3946a7708332b748981a507d60db5",
+      "file": "Forest_103.png",
+      "sourceBytes": 40925769,
+      "outputBytes": 1488709,
+      "repairedEdgePixels": 41228
+    },
+    {
+      "source": "合成 1_00104.png",
+      "sha256": "ad33e315a8e41e2d945cef6cefab3f06fb29cce8aa3ad896d75307ad4a40b023",
+      "file": "Forest_104.png",
+      "sourceBytes": 40796533,
+      "outputBytes": 1493041,
+      "repairedEdgePixels": 42639
+    },
+    {
+      "source": "合成 1_00105.png",
+      "sha256": "b039124ebf1263626aa80459a622c91870c2eeb9a986469f7e725dbeed79fc8b",
+      "file": "Forest_105.png",
+      "sourceBytes": 41020800,
+      "outputBytes": 1493881,
+      "repairedEdgePixels": 42759
+    },
+    {
+      "source": "合成 1_00106.png",
+      "sha256": "b5981be0c8afbc789beb51f2beffdee7f7c4379d6d1c2bd9ca4120f4a07b5d61",
+      "file": "Forest_106.png",
+      "sourceBytes": 41031112,
+      "outputBytes": 1493588,
+      "repairedEdgePixels": 42729
+    },
+    {
+      "source": "合成 1_00107.png",
+      "sha256": "b2f4835737cafc774e7aa40dd1d123d338329d6ad5fc0276139a1c8cc48111f6",
+      "file": "Forest_107.png",
+      "sourceBytes": 40829709,
+      "outputBytes": 1492201,
+      "repairedEdgePixels": 42468
+    },
+    {
+      "source": "合成 1_00108.png",
+      "sha256": "3a3f91915e8475c80806d5590118cdcbdb744b8f481ca8174cb9f811e12b8b9b",
+      "file": "Forest_108.png",
+      "sourceBytes": 41024917,
+      "outputBytes": 1488571,
+      "repairedEdgePixels": 41246
+    },
+    {
+      "source": "合成 1_00109.png",
+      "sha256": "b31a48ed08acffa2c34e6cfc93269d04449a335124f53b2a51801d925c539bc2",
+      "file": "Forest_109.png",
+      "sourceBytes": 40944784,
+      "outputBytes": 1493930,
+      "repairedEdgePixels": 42678
+    },
+    {
+      "source": "合成 1_00110.png",
+      "sha256": "2a09b2c2cc51f8d2fbdb58d0eb16f0796785e12b2956c1da11f2cb96e42cc26c",
+      "file": "Forest_110.png",
+      "sourceBytes": 40946760,
+      "outputBytes": 1492308,
+      "repairedEdgePixels": 42518
+    },
+    {
+      "source": "合成 1_00111.png",
+      "sha256": "984cfe3324a35d7a449301e82861c0053c1de5c1c8d9acac276013c51ccd5309",
+      "file": "Forest_111.png",
+      "sourceBytes": 41087263,
+      "outputBytes": 1495085,
+      "repairedEdgePixels": 43243
+    },
+    {
+      "source": "合成 1_00112.png",
+      "sha256": "1d54833b49d3f18471ff5a19a1cd11e460eb6592f1e6806f700818a4e82c19ab",
+      "file": "Forest_112.png",
+      "sourceBytes": 40904419,
+      "outputBytes": 1494267,
+      "repairedEdgePixels": 43500
+    },
+    {
+      "source": "合成 1_00113.png",
+      "sha256": "e35a4da42f4caf9fb620b535afc1251915b93023fd86089b5bc1f47c46fffa71",
+      "file": "Forest_113.png",
+      "sourceBytes": 40865073,
+      "outputBytes": 1486608,
+      "repairedEdgePixels": 41199
+    },
+    {
+      "source": "合成 1_00114.png",
+      "sha256": "4492f19946a4af21867527f961b95551b35bfd5b3bceee7715e8f2e3cef2e252",
+      "file": "Forest_114.png",
+      "sourceBytes": 40779958,
+      "outputBytes": 1493040,
+      "repairedEdgePixels": 42550
+    },
+    {
+      "source": "合成 1_00115.png",
+      "sha256": "679112c44857913393b4a503524b8a5ed6a4c1ba5ee7ebbbae853ffb3da400a9",
+      "file": "Forest_115.png",
+      "sourceBytes": 40965830,
+      "outputBytes": 1493459,
+      "repairedEdgePixels": 42540
+    },
+    {
+      "source": "合成 1_00116.png",
+      "sha256": "221115ec50e0e781b4eccf924426a47188daa2a8fa058bd5430a8314c17a9bda",
+      "file": "Forest_116.png",
+      "sourceBytes": 40889226,
+      "outputBytes": 1492579,
+      "repairedEdgePixels": 42834
+    },
+    {
+      "source": "合成 1_00117.png",
+      "sha256": "869adffa20c334aa5d0c3e34902b0c035322e5aca8d9dac562ae09d0f99dde67",
+      "file": "Forest_117.png",
+      "sourceBytes": 40834665,
+      "outputBytes": 1492119,
+      "repairedEdgePixels": 43489
+    },
+    {
+      "source": "合成 1_00118.png",
+      "sha256": "e4870090c279be2302666c3fd1cc494ea9a05c3fdd2934d3c8677f5f97e72692",
+      "file": "Forest_118.png",
+      "sourceBytes": 40972030,
+      "outputBytes": 1487792,
+      "repairedEdgePixels": 42515
+    },
+    {
+      "source": "合成 1_00119.png",
+      "sha256": "9900d639ba5b571b122bef65f2ee7cd7d3b93828f4f9635a43ff40f6ee3a910e",
+      "file": "Forest_119.png",
+      "sourceBytes": 40852209,
+      "outputBytes": 1492695,
+      "repairedEdgePixels": 43055
+    },
+    {
+      "source": "合成 1_00120.png",
+      "sha256": "893121312dbcc4db2b07c8c982b5f79295660d519c89752220e0724323b5412f",
+      "file": "Forest_120.png",
+      "sourceBytes": 41110754,
+      "outputBytes": 1494732,
+      "repairedEdgePixels": 42644
+    },
+    {
+      "source": "合成 1_00121.png",
+      "sha256": "5e1e7b2412a255db11b45cfe6c5c26319a24458a3c16fb9b964ea9ddaa231af9",
+      "file": "Forest_121.png",
+      "sourceBytes": 41124685,
+      "outputBytes": 1495190,
+      "repairedEdgePixels": 42683
+    },
+    {
+      "source": "合成 1_00122.png",
+      "sha256": "f88c782c95d3e2afe7166d15a28376c54cde01984ba41fd687b7eb1ef901a029",
+      "file": "Forest_122.png",
+      "sourceBytes": 40861748,
+      "outputBytes": 1490903,
+      "repairedEdgePixels": 42842
+    },
+    {
+      "source": "合成 1_00123.png",
+      "sha256": "5e368371c963a4c3935bd19490f7bd8fa68390d1d17651bc0b2c66646cec4f18",
+      "file": "Forest_123.png",
+      "sourceBytes": 41048870,
+      "outputBytes": 1490298,
+      "repairedEdgePixels": 42602
+    },
+    {
+      "source": "合成 1_00124.png",
+      "sha256": "d5d69a4463e93723304247a3a15da711d758279018ebbafbbb10fecfabe6ca0c",
+      "file": "Forest_124.png",
+      "sourceBytes": 41035345,
+      "outputBytes": 1495874,
+      "repairedEdgePixels": 44111
+    },
+    {
+      "source": "合成 1_00125.png",
+      "sha256": "726af91db346c015482c4c4a23a2998ecf49766607cd95a5aa3b8391422ea9dc",
+      "file": "Forest_125.png",
+      "sourceBytes": 41075673,
+      "outputBytes": 1493782,
+      "repairedEdgePixels": 42869
+    },
+    {
+      "source": "合成 1_00126.png",
+      "sha256": "e8cca6e78f3e2c9046d80476bcb8cec5c02dbe23d66195d8748818f1f9ed8f68",
+      "file": "Forest_126.png",
+      "sourceBytes": 41142549,
+      "outputBytes": 1493243,
+      "repairedEdgePixels": 42275
+    },
+    {
+      "source": "合成 1_00127.png",
+      "sha256": "d25130535280d17aa01ab93bc946ce3b299be08e2cd1d63759dfb347a94cb41f",
+      "file": "Forest_127.png",
+      "sourceBytes": 40976541,
+      "outputBytes": 1491161,
+      "repairedEdgePixels": 42316
+    },
+    {
+      "source": "合成 1_00128.png",
+      "sha256": "bb55498458fbd7121d63e8754360d5969519cfb61e6393bf9fff689d028dcd9a",
+      "file": "Forest_128.png",
+      "sourceBytes": 41012713,
+      "outputBytes": 1488747,
+      "repairedEdgePixels": 42199
+    },
+    {
+      "source": "合成 1_00129.png",
+      "sha256": "9248e9972ddba8d1be5afcd50c14b0547f180c15fc8bd3ac8e916c682dd2d6c3",
+      "file": "Forest_129.png",
+      "sourceBytes": 41080007,
+      "outputBytes": 1495211,
+      "repairedEdgePixels": 43461
+    },
+    {
+      "source": "合成 1_00130.png",
+      "sha256": "318b193830e855d1b66bceff4ab74cf99cf1d6a33c8e5fa24217d80b3c1ec933",
+      "file": "Forest_130.png",
+      "sourceBytes": 41123828,
+      "outputBytes": 1494503,
+      "repairedEdgePixels": 42954
+    },
+    {
+      "source": "合成 1_00131.png",
+      "sha256": "7444e0b4d7017b7df4bb5f62b4ca4c3f8904fb0c7b4e8199904e9409003602bb",
+      "file": "Forest_131.png",
+      "sourceBytes": 41017370,
+      "outputBytes": 1491989,
+      "repairedEdgePixels": 42131
+    },
+    {
+      "source": "合成 1_00132.png",
+      "sha256": "107c104654844bc893de844f832f69c053dc693a19392fc4abc03cc997e2f274",
+      "file": "Forest_132.png",
+      "sourceBytes": 40975975,
+      "outputBytes": 1491993,
+      "repairedEdgePixels": 42493
+    },
+    {
+      "source": "合成 1_00133.png",
+      "sha256": "05e9f1aaffeac908eed3d2c3ada67a0fcb21b87f0b919af740e8f111c79f2d07",
+      "file": "Forest_133.png",
+      "sourceBytes": 41081503,
+      "outputBytes": 1489790,
+      "repairedEdgePixels": 42064
+    },
+    {
+      "source": "合成 1_00134.png",
+      "sha256": "9f40c2eda24f929f9c24b20f8466cf12f1c10eeeb179559b1fccf318899e198c",
+      "file": "Forest_134.png",
+      "sourceBytes": 40907816,
+      "outputBytes": 1490689,
+      "repairedEdgePixels": 42686
+    },
+    {
+      "source": "合成 1_00135.png",
+      "sha256": "b26f6b4863936147bc2535a5b678d925b7e4683e4f27c35532f585234b556b59",
+      "file": "Forest_135.png",
+      "sourceBytes": 41160391,
+      "outputBytes": 1494071,
+      "repairedEdgePixels": 42929
+    },
+    {
+      "source": "合成 1_00136.png",
+      "sha256": "765d3c3c881c3b613f80a0d4f9d9d694db733d7849655f70d773eb28d55ba684",
+      "file": "Forest_136.png",
+      "sourceBytes": 41180501,
+      "outputBytes": 1494485,
+      "repairedEdgePixels": 43055
+    },
+    {
+      "source": "合成 1_00137.png",
+      "sha256": "7f836270e467384065ee0c5c896cb30890b9e43e497b25cf7bf81751e83fa874",
+      "file": "Forest_137.png",
+      "sourceBytes": 40923037,
+      "outputBytes": 1492183,
+      "repairedEdgePixels": 42385
+    },
+    {
+      "source": "合成 1_00138.png",
+      "sha256": "084d0e27e3988a056debf0f8abad3ff46efe354564ce315e2bf3e6eb31d94f82",
+      "file": "Forest_138.png",
+      "sourceBytes": 41086386,
+      "outputBytes": 1491056,
+      "repairedEdgePixels": 41751
+    },
+    {
+      "source": "合成 1_00139.png",
+      "sha256": "38c0c27d8072ff15e2b325fb5ac31b53c928306fb4912e722c5e30469ed516d0",
+      "file": "Forest_139.png",
+      "sourceBytes": 41002846,
+      "outputBytes": 1491742,
+      "repairedEdgePixels": 41990
+    },
+    {
+      "source": "合成 1_00140.png",
+      "sha256": "c7e7d7c33e8c29758b30f84708f5563d70356293b2c3b59247322ef75873a179",
+      "file": "Forest_140.png",
+      "sourceBytes": 41053578,
+      "outputBytes": 1490618,
+      "repairedEdgePixels": 42042
+    },
+    {
+      "source": "合成 1_00141.png",
+      "sha256": "1904e614486cffaddf258dcbdeda68645e252bf2beec02f3cfbf797751119487",
+      "file": "Forest_141.png",
+      "sourceBytes": 41247236,
+      "outputBytes": 1494709,
+      "repairedEdgePixels": 43276
+    },
+    {
+      "source": "合成 1_00142.png",
+      "sha256": "697c8be8720a864d1120709188cc6f8b0c1ed96cc9683ae64c3f790058f92bd6",
+      "file": "Forest_142.png",
+      "sourceBytes": 41091505,
+      "outputBytes": 1492524,
+      "repairedEdgePixels": 43346
+    },
+    {
+      "source": "合成 1_00143.png",
+      "sha256": "708979fc86240084f5d7ae6fcc937cf5857bbc7a833e52b6a600adb918b60a52",
+      "file": "Forest_143.png",
+      "sourceBytes": 41069746,
+      "outputBytes": 1488500,
+      "repairedEdgePixels": 41452
+    },
+    {
+      "source": "合成 1_00144.png",
+      "sha256": "a8813948115544892da02f1efb385b648ef831d4e61cbcc3a33f305d171f38f1",
+      "file": "Forest_144.png",
+      "sourceBytes": 41110890,
+      "outputBytes": 1493594,
+      "repairedEdgePixels": 42257
+    },
+    {
+      "source": "合成 1_00145.png",
+      "sha256": "dd1c64934c48f29986d3a6ba3c6706be8a9fb6a186ebe4a928536c2ea854dee0",
+      "file": "Forest_145.png",
+      "sourceBytes": 41278624,
+      "outputBytes": 1493376,
+      "repairedEdgePixels": 42276
+    },
+    {
+      "source": "合成 1_00146.png",
+      "sha256": "142d6185dff0ff971cc7600225e1f4dfb744066a35bc888720eb2cd1e99e7012",
+      "file": "Forest_146.png",
+      "sourceBytes": 41185138,
+      "outputBytes": 1491591,
+      "repairedEdgePixels": 42391
+    },
+    {
+      "source": "合成 1_00147.png",
+      "sha256": "ae15c43f67715a5b653b9d7d512656a9045b31bb54f3265c93b05a398a83ba0e",
+      "file": "Forest_147.png",
+      "sourceBytes": 41071636,
+      "outputBytes": 1494858,
+      "repairedEdgePixels": 43609
+    },
+    {
+      "source": "合成 1_00148.png",
+      "sha256": "b19ae1b155424581854c9335cb2666d8ccf691b57e424481b2886ba23469cbc2",
+      "file": "Forest_148.png",
+      "sourceBytes": 41173968,
+      "outputBytes": 1490692,
+      "repairedEdgePixels": 42253
+    },
+    {
+      "source": "合成 1_00149.png",
+      "sha256": "b81d81d43f1f49854ee4d096f9c0e6ae6e698d589e9aba58ae8157a5c9961b31",
+      "file": "Forest_149.png",
+      "sourceBytes": 41122943,
+      "outputBytes": 1495637,
+      "repairedEdgePixels": 43375
+    }
+  ],
+  "sourceBytes": 6145916617,
+  "outputBytes": 224065763,
+  "contentHeight": 213,
+  "edgeCorrection": "nearest-opaque-white-edge-v1"
+}

@@ -1,0 +1,17 @@
+PASS: All 150 frames play at 20 FPS
+PASS: All frames use 4096x216 BC7 without CPU copies or mipmaps (first=4096x216, BC7)
+PASS: UVs crop only the three compression-padding rows
+PASS: Original aspect and 1.15x parallax preserved
+PASS: Menu holds the first frame on the shared foreground
+PASS: Foreground animates during gameplay
+PASS: Selected animation texture reaches the renderer property block
+PASS: Supported shader receives the next frame for continuous interpolation
+PASS: Foreground blends between source frames rather than stepping at 20 FPS
+PASS: Animation wraps from the last frames to the first without a texture gap
+PASS: Pause freezes the trees
+PASS: Restart resets foreground animation
+PASS: Switching levels reuses the shared foreground and activates one level
+PASS: Animated foreground still repeats spatially
+PASS: Exit clears animation time without modifying the shared material each frame
+PASS: Resident texture memory reported by Unity: 265522800 bytes
+SUCCESS

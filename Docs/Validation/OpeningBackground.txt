@@ -1,0 +1,22 @@
+INFO: Old wide-view background phase=0.9771661
+PASS: (2560, 1080) / Looping Foreground starts after the image border, without wrapping to the tail
+PASS: Looping Foreground preserves parallax after opening
+PASS: (2560, 1080) / Looping Background starts after the image border, without wrapping to the tail
+PASS: Looping Background preserves parallax after opening
+PASS: Looping Foreground reanchors on level switch
+PASS: Looping Background reanchors on level switch
+PASS: (1920, 1080) / Looping Foreground starts after the image border, without wrapping to the tail
+PASS: Looping Foreground preserves parallax after opening
+PASS: (1920, 1080) / Looping Background starts after the image border, without wrapping to the tail
+PASS: Looping Background preserves parallax after opening
+PASS: Looping Foreground reanchors on level switch
+PASS: Looping Background reanchors on level switch
+PASS: (865, 721) / Looping Foreground starts after the image border, without wrapping to the tail
+PASS: Looping Foreground preserves parallax after opening
+PASS: (865, 721) / Looping Background starts after the image border, without wrapping to the tail
+PASS: Looping Background preserves parallax after opening
+PASS: Looping Foreground reanchors on level switch
+PASS: Looping Background reanchors on level switch
+PASS: Opening/restart/switch reuse the same level instances
+PASS: Verification leaves no session, sensor connection or persisted progress
+SUCCESS

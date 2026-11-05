@@ -35,6 +35,8 @@ namespace WingSinger.Editor {
             try {
                 switch (action) {
                     case "state": break;
+                    case "fix-opening-background": OpeningBackgroundValidation.Begin(); break;
+                    case "apply-november-art": NovemberArtSetup.ApplyAndValidateBatch(); break;
                     case "setup-hardware-ui": HardwareSettingsSetup.Apply(); break;
                     case "import-bluetooth-plugin":
                         if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play before importing the BLE plugin.");

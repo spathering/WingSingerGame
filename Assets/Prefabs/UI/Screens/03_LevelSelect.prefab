@@ -852,6 +852,7 @@ GameObject:
   - component: {fileID: 5149730235391531819}
   - component: {fileID: 2153130408116013167}
   - component: {fileID: 3600320060941483411}
+  - component: {fileID: 7734753115877750210}
   m_Layer: 0
   m_Name: Airship
   m_TagString: Untagged
@@ -875,8 +876,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -165.40485, y: -495.82315}
-  m_SizeDelta: {x: 827.02423, y: 1220.4878}
+  m_AnchoredPosition: {x: 25, y: -500}
+  m_SizeDelta: {x: 550, y: 900}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &2153130408116013167
 CanvasRenderer:
@@ -906,7 +907,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9eb0d54927847a24893bb766519dde1c, type: 3}
+  m_Sprite: {fileID: -2840418881652652257, guid: 1beabb4950001ad43b197f04cd23e02f,
+    type: 2}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -916,6 +918,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7734753115877750210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3205727524514943280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aac0b0a961b76942a9212ad46eb3ec2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clip: {fileID: 11400000, guid: 1beabb4950001ad43b197f04cd23e02f, type: 2}
 --- !u!1 &3491302366737904848
 GameObject:
   m_ObjectHideFlags: 0
@@ -1263,7 +1278,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ae12f0790a2c97f469055dc561e7532f, type: 3}
+  m_Sprite: {fileID: 2580611402502584817, guid: 6b253e7aa4b6c9e41866d53bb8b6746a,
+    type: 2}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

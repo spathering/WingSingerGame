@@ -1,0 +1,43 @@
+PASS: LevelSelect has 100 frames at 20 FPS / five-second loop, matching player timing
+PASS: LevelSelect interpolates at 12.5ms, between 20 FPS source frames
+PASS: LevelSelect uses the supported premultiplied-alpha UI blend shader
+PASS: LevelSelect animates at zero gameplay time scale
+PASS: LevelSelect resets when hidden
+PASS: ReadyForTakeoff has 100 frames at 20 FPS / five-second loop, matching player timing
+PASS: ReadyForTakeoff interpolates at 12.5ms, between 20 FPS source frames
+PASS: ReadyForTakeoff uses the supported premultiplied-alpha UI blend shader
+PASS: ReadyForTakeoff animates at zero gameplay time scale
+PASS: ReadyForTakeoff resets when hidden
+PASS: FlightPaused has 100 frames at 20 FPS / five-second loop, matching player timing
+PASS: FlightPaused interpolates at 12.5ms, between 20 FPS source frames
+PASS: FlightPaused uses the supported premultiplied-alpha UI blend shader
+PASS: FlightPaused animates at zero gameplay time scale
+PASS: FlightPaused resets when hidden
+PASS: FlightComplete has 100 frames at 20 FPS / five-second loop, matching player timing
+PASS: FlightComplete interpolates at 12.5ms, between 20 FPS source frames
+PASS: FlightComplete uses the supported premultiplied-alpha UI blend shader
+PASS: FlightComplete animates at zero gameplay time scale
+PASS: FlightComplete resets when hidden
+PASS: FlightLog has 100 frames at 20 FPS / five-second loop, matching player timing
+PASS: FlightLog interpolates at 12.5ms, between 20 FPS source frames
+PASS: FlightLog uses the supported premultiplied-alpha UI blend shader
+PASS: FlightLog animates at zero gameplay time scale
+PASS: FlightLog resets when hidden
+PASS: HomeClean has 100 frames at 20 FPS / five-second loop, matching player timing
+PASS: HomeClean interpolates at 12.5ms, between 20 FPS source frames
+PASS: HomeClean uses the supported premultiplied-alpha UI blend shader
+PASS: HomeClean shares the takeoff preparation animation
+PASS: HomeClean animates at zero gameplay time scale
+PASS: HomeClean resets when hidden
+PASS: HomeDashboard has 100 frames at 20 FPS / five-second loop, matching player timing
+PASS: HomeDashboard interpolates at 12.5ms, between 20 FPS source frames
+PASS: HomeDashboard uses the supported premultiplied-alpha UI blend shader
+PASS: HomeDashboard shares the takeoff preparation animation
+PASS: HomeDashboard animates at zero gameplay time scale
+PASS: HomeDashboard resets when hidden
+PASS: Background uses the new panorama aspect ratio without stretching
+PASS: Looping Foreground repeats after one scroll period
+PASS: Looping Background repeats after one scroll period
+PASS: Restart and switch preserve one active level and reuse instances
+PASS: Art validation exits without hardware input or saved progress
+SUCCESS

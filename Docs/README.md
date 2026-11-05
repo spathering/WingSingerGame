@@ -9,6 +9,9 @@
 
 ## 工程与素材
 
+- [动画逐渲染帧插值与前景白边修复](Art/AnimationInterpolation.md)：保持时长，提高播放连续性，说明原序列的透明边缘污染。
+- [树木动画前景与压缩说明](Art/AnimatedForeground.md)：150 帧、20 FPS、差速循环及内存/生命周期验证。
+- [11 月 2 日背景与五组 UI 动画替换](Art/NovemberArtwork.md)：新长图、页面对应、循环时序及多尺寸预览。
 - [开发指南](DevelopmentGuidelines.md)：固定工程基线与增量编译约定。
 - [工程目录整理说明](Development/ProjectStructure.md)、[迁移清单与保留 GUID](Development/StructureMigration.json)。
 - [PrimeTween 按钮交互与关卡 SO 目录](Development/UIInteractionsAndLevelCatalog.md)：现有两关、可选关卡配置和接线/验证入口。
