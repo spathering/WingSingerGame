@@ -1,5 +1,11 @@
 # 两层循环视差背景
 
+2026-11-03 开场宽屏修复：前后景启用 `Anchor To Session Viewport` 并引用共享管理器，每局首次镜头同步时，根据实际镜头宽高比确定采样起点；跳过原图最外侧四个纹理像素。避免固定 16:9 起点在更宽窗口下产生负 UV，将图尾提前循环到左侧。运行时起点不写回场景；重开/切关按新会话重新计算，仍按相机绝对位移滚动。此修改针对开场错误采样，不改动原背景图本身的内部拼接痕迹。验证和对比截图见 `Docs/Validation/OpeningBackground.txt` 与 `Docs/Images/OpeningBackground*.png`。
+
+2026-11-03：前景改为 `hc1` 的 150 帧树木动画，单帧缩至 4096×213、BC7 压缩，20 FPS；继续沿用 1.15 倍视差与现有共享对象。详见 [AnimatedForeground.md](AnimatedForeground.md)，旧静态前景仅保留用于回退。
+
+2026-11-02：远景已替换为新 `32768×1443` 长图，原素材路径和 GUID 保留；`Source Aspect Ratio` 更新为 `32768 / 1443`。透明前景及 0.65 / 1.15 差速保持，菜单背景同步替换。UI 动画与本次验证见 [NovemberArtwork.md](NovemberArtwork.md)。下文旧尺寸描述为此前素材记录。
+
 2026-10-24：BreathDemo 使用用户提供的 `背景.png` 和 `前景.png`，替换原来单张森林长图的显示。原森林素材保留供回退，游戏中只显示新的两层。
 
 - `Looping Background`：远景，默认 `Parallax Speed = 0.65`，铺满视口。

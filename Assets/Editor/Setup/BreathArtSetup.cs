@@ -116,12 +116,12 @@ namespace WingSinger.Editor {
             return material;
         }
 
-        static void ConfigureTexture(string path, bool panorama) {
+        static void ConfigureTexture(string path, bool panorama, int atlasMaxSize = 4096) {
             AssetDatabase.ImportAsset(path, ImportAssetOptions.Default);
             var importer = (TextureImporter)AssetImporter.GetAtPath(path);
             if (importer == null) throw new InvalidOperationException("Texture not found: " + path);
             // Full-resolution panorama retains its 8192:902 aspect ratio; atlases keep exact pixel rectangles.
-            int max = panorama ? 8192 : 4096;
+            int max = panorama ? 8192 : atlasMaxSize;
             var compression = panorama ? TextureImporterCompression.Uncompressed : TextureImporterCompression.CompressedHQ;
             if (importer.textureType == TextureImporterType.Default && importer.npotScale == TextureImporterNPOTScale.None
                 && importer.maxTextureSize == max && importer.wrapModeU == (panorama ? TextureWrapMode.Repeat : TextureWrapMode.Clamp)
@@ -143,12 +143,12 @@ namespace WingSinger.Editor {
             return CreateSpriteClip(info, CharacterFolder);
         }
 
-        public static CharacterSpriteClip CreateSpriteClip(ClipInfo info, string folder) {
+        public static CharacterSpriteClip CreateSpriteClip(ClipInfo info, string folder, int atlasMaxSize = 4096) {
             string path = folder + info.name + ".asset";
             var clip = AssetDatabase.LoadAssetAtPath<CharacterSpriteClip>(path);
             if (clip != null && clip.sourceSha256 == info.sourceSha256 && clip.frames != null
                 && clip.frames.Length == info.durationsMs.Length && clip.frames.All(f => f != null)) return clip;
-            ConfigureTexture(folder + info.atlas, false);
+            ConfigureTexture(folder + info.atlas, false, atlasMaxSize);
             var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(folder + info.atlas);
             if (clip == null) {
                 clip = ScriptableObject.CreateInstance<CharacterSpriteClip>();

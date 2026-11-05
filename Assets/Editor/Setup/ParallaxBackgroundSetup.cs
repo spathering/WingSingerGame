@@ -40,8 +40,9 @@ namespace WingSinger.Editor {
             float approach = settings.playerEntranceSeconds > 0 ? (float)settings.CreatePattern().Lead * settings.moveSpeed : 0;
             float anchor = manager.levels[manager.initialLevel].spawnPoint.position.x + 4 - approach;
             float left = anchor - (camera.orthographicSize * 2 + 0.02f) * camera.aspect / 2;
-            ConfigureLayer("Looping Background", "SkyPanorama", 30910f / 1568, 0.65f, 1, 10, -20, anchor, left);
+            ConfigureLayer("Looping Background", "SkyPanorama", 32768f / 1443, 0.65f, 1, 10, -20, anchor, left);
             ConfigureLayer("Looping Foreground", "ForestForeground", 30910f / 1541, 1.15f, 0.55f, 5, -10, anchor, left);
+            AnimatedForegroundSetup.ApplyToOpenDemo();
             EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
             AssetDatabase.SaveAssets();
         }
@@ -73,6 +74,8 @@ namespace WingSinger.Editor {
             var layer = go.GetComponent<LoopingPanorama>();
             if (layer == null) layer = go.AddComponent<LoopingPanorama>();
             layer.targetCamera = Camera.main; layer.backgroundRenderer = go.GetComponent<MeshRenderer>();
+            layer.anchorToSessionViewport = true;
+            layer.animationSessionSource = UnityEngine.Object.FindObjectOfType<BreathLevelManager>();
             layer.backgroundRenderer.sharedMaterial = material; layer.backgroundRenderer.sortingOrder = order;
             layer.backgroundRenderer.shadowCastingMode = ShadowCastingMode.Off; layer.backgroundRenderer.receiveShadows = false;
             layer.parallaxSpeed = speed; layer.heightFraction = height; layer.verticalAnchor = -1;
