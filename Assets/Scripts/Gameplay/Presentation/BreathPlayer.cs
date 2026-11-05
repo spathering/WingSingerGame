@@ -24,13 +24,13 @@ namespace WingSinger {
         }
         public void PlayCollectionFeedback() { collectionFlash = 0.22f; }
 
-        public void ResetPlayer(Vector3 spawn) {
+        public void ResetPlayer(Vector3 spawn, float middleHeight = 0) {
             StopAnimation();
             origin = spawn;
             transform.position = spawn;
-            body.localPosition = Vector3.zero;
+            body.localPosition = Vector3.up * middleHeight;
             visualLane = BreathLane.Middle;
-            destinationY = 0;
+            destinationY = middleHeight;
             animationMovingAllowed = false;
             collectionFlash = 0;
             entranceStartX = entranceDuration = 0; IsEntering = false;
@@ -68,7 +68,7 @@ namespace WingSinger {
             if (visualLane != session.PlayerLane) {
                 StopAnimation();
                 visualLane = session.PlayerLane;
-                float y = (int)visualLane * settings.laneSpacing;
+                float y = settings.LaneHeight((int)visualLane);
                 destinationY = y;
                 if (settings.laneTransitionSeconds <= 0 || ReduceMotion) body.localPosition = new Vector3(body.localPosition.x, y, 0);
                 else laneTween = Tween.LocalPositionY(body, y, settings.laneTransitionSeconds, Ease.InOutSine);
@@ -81,7 +81,7 @@ namespace WingSinger {
             highlight.color = collectionFlash > 0 ? new Color(0.35f, 1, 0.7f, 0.65f) : new Color(0.4f, 0.85f, 1, 0.18f);
             if (characterAnimation != null)
                 characterAnimation.Present(Time.deltaTime,
-                    !ReduceMotion && animationMovingAllowed && laneTween.isAlive ? destinationY - body.localPosition.y : 0);
+                    !ReduceMotion && animationMovingAllowed && laneTween.isAlive ? destinationY - body.localPosition.y : 0, ReduceMotion);
         }
 
         public void StopAnimation() { if (laneTween.isAlive) laneTween.Stop(); }

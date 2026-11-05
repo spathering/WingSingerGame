@@ -11,7 +11,11 @@ namespace WingSinger {
         [Min(0)] public float parallaxSpeed = 1;
         public float parallaxAnchorX;
         [Range(0.05f, 1)] public float heightFraction = 1;
+        [Tooltip("Uniform image scale relative to the viewport height fraction; bottom anchoring is preserved.")]
+        [Min(.01f)] public float sizeMultiplier = 1;
         [Range(-1, 1)] public float verticalAnchor = -1;
+        [Tooltip("Vertical offset as a fraction of this layer's displayed height.")]
+        public float verticalOffsetFraction;
         [Tooltip("Original image width / height; zero uses the imported texture dimensions.")]
         public float sourceAspectRatio;
         [Tooltip("Start each gameplay session at the left of the image using the actual viewport, rather than a saved reference aspect.")]
@@ -39,7 +43,7 @@ namespace WingSinger {
             var texture = material == null ? null : material.mainTexture;
             if (texture == null) return;
             float viewHeight = targetCamera.orthographicSize * 2 + 0.02f;
-            float height = viewHeight * Mathf.Clamp(heightFraction, 0.05f, 1);
+            float height = viewHeight * Mathf.Clamp(heightFraction, 0.05f, 1) * Mathf.Max(.01f, sizeMultiplier);
             float width = viewHeight * targetCamera.aspect;
             WorldPeriod = height * (sourceAspectRatio > 0 ? sourceAspectRatio : (float)texture.width / texture.height);
             float left = (targetCamera.transform.position.x - parallaxAnchorX) * Mathf.Max(0, parallaxSpeed)
@@ -57,7 +61,7 @@ namespace WingSinger {
             } else panoramaSession = null;
             HorizontalPhase = Mathf.Repeat((left - origin) / WorldPeriod, 1);
             transform.position = new Vector3(targetCamera.transform.position.x,
-                targetCamera.transform.position.y + (viewHeight - height) * verticalAnchor * 0.5f, depth);
+                targetCamera.transform.position.y + (viewHeight - height) * verticalAnchor * 0.5f + height * verticalOffsetFraction, depth);
             transform.localScale = new Vector3(width, height, 1);
             if (properties == null) properties = new MaterialPropertyBlock();
             float vScale = animationFrames != null && animationFrames.Length > 0 ? animationVerticalScale : 1;

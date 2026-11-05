@@ -1,0 +1,55 @@
+PASS: Menu keeps level decorations disabled
+PASS: All 18 new assets are deployed in the level Prefab
+PASS: URP decorations render above trees, below gameplay, without collisions
+PASS: Level explicitly owns the foreground lifecycle
+PASS: combo_pebbles_mushroom_fern_00 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: grass_flowers_01 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_pebble_cluster_02 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_rock_grass_purple_03 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_big_04 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: stepping_stone_05 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: fern_06 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_oval_medium_07 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_pillar_purple_flowers_08 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: mushroom_red_09 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_small_pebble_10 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_two_rocks_yellow_flowers_11 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_group_3_12 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_pebbles_white_daisies_13 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: log_moss_14 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_pillar_tall_15 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_slab_pink_flowers_16 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_flat_slab_17 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_pebbles_mushroom_fern_18 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: grass_flowers_19 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_pebble_cluster_20 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_rock_grass_purple_21 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_big_22 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: stepping_stone_23 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: fern_24 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_oval_medium_25 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_pillar_purple_flowers_26 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: mushroom_red_27 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_small_pebble_28 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_two_rocks_yellow_flowers_29 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_group_3_30 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_pebbles_white_daisies_31 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: log_moss_32 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_pillar_tall_33 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: combo_slab_pink_flowers_34 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: rock_flat_slab_35 size is 50 percent of the previous enlarged preset (1 to 1.5 times the initial size)
+PASS: Visible edge gaps vary randomly from 2.5 to 8.5 world units
+PASS: Foreground is darkened with opaque tints below 65 percent brightness
+PASS: Layout covers the full route at the matched foreground speed
+PASS: Tree height and width are exactly twice the previous dimensions
+PASS: Midground is lowered by exactly 10 percent of its displayed height, preserving size and speed
+PASS: Foreground and trees both move at 1.15x camera displacement
+PASS: Pause freezes enlarged tree animation
+PASS: Pause freezes foreground parallax
+PASS: Restart explicitly resets accumulated foreground displacement
+PASS: Restart reuses decorations at their original positions
+PASS: Switching levels disables every decoration from the previous level
+PASS: Level exit resets parallax and clears camera bindings
+PASS: Returning to the level reuses its Prefab instance and decorations
+PASS: Exit disables decorations and resets tree animation without callbacks
+SUCCESS

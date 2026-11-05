@@ -33,12 +33,22 @@ namespace WingSinger.Editor {
             if (frames.Length != 150 || frames.Any(frame => frame == null)) throw new InvalidOperationException("The compressed foreground sequence is incomplete.");
             var layer = Object.FindObjectsOfType<LoopingPanorama>().Single(item => item.name == "Looping Foreground");
             layer.animationFrames = frames; layer.animationFramesPerSecond = manifest.framesPerSecond;
+            layer.sizeMultiplier = 2;
+            layer.verticalOffsetFraction = -.15f;
             layer.animationVerticalScale = manifest.contentHeight / manifest.height;
             layer.animationSessionSource = Object.FindObjectOfType<BreathLevelManager>();
             layer.sourceAspectRatio = manifest.sourceWidth / manifest.sourceHeight;
             layer.backgroundRenderer.sharedMaterial.mainTexture = frames[0];
             EditorUtility.SetDirty(layer.backgroundRenderer.sharedMaterial); EditorUtility.SetDirty(layer); layer.Sync();
             EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
+        }
+        public static void LowerMidground() {
+            UIIntegrationSetup.RequireSavedScenes();
+            var scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+            if (scene.path != BreathDemoBuilder.ScenePath) throw new InvalidOperationException("Open BreathDemo first.");
+            var layer = Object.FindObjectsOfType<LoopingPanorama>().Single(item => item.name == "Looping Foreground");
+            layer.verticalOffsetFraction = -.15f; layer.Sync(); EditorUtility.SetDirty(layer);
+            EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
         }
         public static void ApplyAndValidateBatch() {
             try {

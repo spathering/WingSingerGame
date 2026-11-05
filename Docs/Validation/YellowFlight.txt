@@ -1,0 +1,42 @@
+PASS: Both yellow animations contain all 120 frames
+PASS: Both animations advance and loop using the existing clip sampler
+PASS: Level_001_FirstFlight uses the yellow crane at 1.5x
+PASS: Level_001_FirstFlight uses yellow stars at 1.5x, including runtime reset scale
+PASS: Level_002_SlowBreath uses the yellow crane at 1.5x
+PASS: Level_002_SlowBreath uses yellow stars at 1.5x, including runtime reset scale
+PASS: Character visual is exactly twice its previous size
+PASS: Level_001_FirstFlight preserves upper/middle lanes and raises the lower lane by half a character height
+PASS: Level_001_FirstFlight paper routes use the same lane mapping as the player
+PASS: Level_002_SlowBreath preserves upper/middle lanes and raises the lower lane by half a character height
+PASS: Level_002_SlowBreath paper routes use the same lane mapping as the player
+PASS: Idle character floats while the collision body stays at its lane anchor
+PASS: Rising begins with a gradual forward pose transition
+PASS: Reversing movement changes heading smoothly without flipping instantly
+PASS: Descending settles toward its target orientation
+PASS: Lane dwell eases back to the cruise pose
+PASS: Floating and turning only affect the visual child, preserving collision and camera anchors
+PASS: Reduce Motion disables floating and turning
+PASS: Revealed runtime collectibles use the enlarged yellow animation
+PASS: Restart cancels collection feedback and restores enlarged stars
+PASS: Pause freezes sprite playback, float and heading
+PASS: Stars within the 1.2-unit attraction range begin absorption before direct contact
+PASS: Absorption awards score once without duplicates
+PASS: Absorbed stars move toward the character and shrink over time
+PASS: Pause freezes star attraction and shrink feedback
+PASS: Restart cancels attraction and restores the pooled star visual position
+PASS: Passing an uncollected star does not hide it while still in view
+PASS: A visible uncollected star remains in the pool and on screen
+PASS: Uncollected stars recycle only after their entire visual leaves the camera on the left
+PASS: Live Upper lane movement tilts smoothly and returns to cruise without moving the collision anchor
+PASS: Upper lane screen height matches the updated layout
+PASS: Live Middle lane movement tilts smoothly and returns to cruise without moving the collision anchor
+PASS: Middle lane screen height matches the updated layout
+PASS: Live Lower lane movement tilts smoothly and returns to cruise without moving the collision anchor
+PASS: Lower lane screen height matches the updated layout
+PASS: Trees are raised 5 percent from the previous position, totaling a 15 percent downward offset
+PASS: Player is shifted right by half a character width from the previous layout
+PASS: Level_001_FirstFlight crane appears two more visible crane widths right after compensating camera framing
+PASS: Level_002_SlowBreath crane appears two more visible crane widths right after compensating camera framing
+PASS: Switching levels resets heading and preserves one active level
+PASS: Exit resets visual motion and ends the gameplay session
+SUCCESS

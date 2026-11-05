@@ -25,7 +25,9 @@
 
 分数等于收集数量乘每颗分值，不再按路线停留时间加分。实际身体接触收集物才会计分，每颗只计一次；准备段中轨和换轨中经过的中轨收集物也可得分，预览阶段不计分。收集时物体发亮并缩小消失，角色出现短暂闪光。
 
-游戏总时长只计算玩家到达路线起点后的时间，包含中轨道准备和路线过渡时间，精灵先行的预览时间另计。时间结束时玩家和精灵停止前进，按 R 重开或 N 切换下一关。计分结果保留在 Session 中，当前不显示结算弹窗。角色只在实际上下跨轨时播放上升或下降动画，抵达任意轨道后倒放对应的姿态过渡素材，再恢复平飞（默认收姿 0.28 秒）。保持在上、下轨时继续平飞；新方向输入可打断收姿。
+游戏总时长只计算玩家到达路线起点后的时间，包含中轨道准备和路线过渡时间，精灵先行的预览时间另计。时间结束时玩家和精灵停止前进，按 R 重开或 N 切换下一关。计分结果保留在 Session 中，当前不显示结算弹窗。角色实际上下跨轨时，通过连续、带阻尼的姿态参数采样对应过渡动画，平滑转向上升或下降；到达轨道后平缓回正，新方向输入从当前姿态连续反向过渡。默认转向平滑时间为 0.15 秒，回正时间参数为 0.28 秒。保持在上、下轨时恢复平飞。
+
+2026-11-05：主角外观增加常态漂浮（振幅 0.08 世界单位、频率 0.55 Hz）及轻微摆动（1.2°）。只改变 Airship 精灵子节点的位置与旋转，不改变 PrimeTween 控制的身体航道位置、收集判定或 Cinemachine 目标。暂停冻结漂浮、帧动画和转向；重开、切关或关闭角色时复位并清除姿态速度。Reduce Motion 关闭这些外观运动。沿用现有 PrimeTween 换轨、Cinemachine 跟随和角色动画资源；漂浮使用本地时钟、转向使用阻尼采样，不额外建立补间或事件订阅。实际上下换轨、反向过渡、暂停及生命周期验证见 `Docs/Validation/YellowFlight.txt`。
 
 ## 示例配置与资源
 
@@ -71,3 +73,12 @@
 2026-10-22 的当前版本已使用现有项目缓存，在 Unity 2022.3.62f2 完成编译和 Play Mode 检查，记录见 [PaperCollectionValidation.txt](../Validation/PaperCollectionValidation.txt)，画面见 [PaperCollection.png](../Images/PaperCollection.png)。`ValidationReport.txt` 和 `Images/BreathDemo.png` 保留为早期原型的历史验证记录。
 
 后续增加关卡应继续遵循 `DevelopmentGuidelines.md`，不要将本原型改为逐关加载 Unity 场景。
+
+
+2026-11-05 红箭头布局更新：共享 Airship 精灵子节点缩放由 (1,1,1) 改为 (2,2,2)，仅放大角色外观。两个关卡以 `laneCenterOffset = -0.84`、`upperLaneSpacing = 3.3`、`lowerLaneSpacing = 3.7` 表达三个目标高度；默认旧配置仍可回退 `laneSpacing`。出生与重开先将身体放在新的中轨，再执行入场，身体、鹤及星星路线都通过同一映射计算，保持镜头固定纵向构图。运行验证覆盖上下中实际换轨、屏幕高度、吸收缩小、重复计分保护、镜头外回收、暂停、重开及切关；报告为 `Docs/Validation/YellowFlight.txt`，截图为 `Docs/Images/FlightLayout_Upper.png`、`FlightLayout_Middle.png` 和 `FlightLayout_Lower.png`。
+
+
+本轮构图调整：树木中景从 -20% 调至 -15% 高度偏移，即上移自身显示高度 5%。主角屏幕位置向左移动一个平飞首帧的可见宽度（约 3.805 世界单位），通过将统一管理器的 `cameraHorizontalOffset` 及 Cinemachine Follow Offset X 从 4 调至约 7.805 实现；身体、碰撞、路线计时及星星生成位置不变。引导鹤通过关卡 `guideHorizontalOffset` 补偿上述镜头位移，再右移自身可见宽度（约 1.251 世界单位），总世界偏移约 5.056。位移根据 Alpha / 色键后的可见像素计算，不把透明画布计入身位；播放帧不会改变已保存的偏移，重开与切关继续复用。当前截图和验证见 `Docs/Images/FlightLayout_Middle.png` 及 `Docs/Validation/YellowFlight.txt`。
+
+
+最新构图微调：相对上一版，角色右移半个当前角色可见宽度（约 1.902 世界单位），最低航道抬高半个当前角色可见高度（约 1.327），鹤再向右移动两个鹤的可见宽度（约 2.502）。当前 `cameraHorizontalOffset` / Cinemachine Follow Offset X 为 5.902439，两个关卡的 `lowerLaneSpacing` 为 2.373171（下轨 Y 约 -3.213171），`guideHorizontalOffset` 为 5.655439；上、中轨高度保持原值。最低航道的引导和收集物跟随同一映射抬高，保持收集判定一致。镜头变化引起的鹤屏幕位移已补偿。尺寸采用平飞 / 鹤首帧的有效像素范围，保持动画期间稳定；验证截图与报告沿用上述路径。

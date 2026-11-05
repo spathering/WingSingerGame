@@ -11,11 +11,13 @@ namespace WingSinger {
         public int Id { get; private set; }
         public double RouteTime { get; private set; }
         Tween shrink;
+        Transform absorptionTarget;
 
         public void ResetPaper(int id, double routeTime, Vector3 localPosition) {
             StopFeedback();
             Id = id; RouteTime = routeTime; Collected = Missed = false;
             transform.localPosition = localPosition;
+            visual.transform.localPosition = Vector3.zero;
             visual.transform.localScale = Vector3.one * visualScale;
             visual.color = Color.white;
             visual.sprite = clip.Sample(0, true);
@@ -37,14 +39,25 @@ namespace WingSinger {
             return (point - (a + segment * t)).sqrMagnitude <= radius * radius;
         }
 
-        public void Collect() {
+        public void Collect(Transform target = null) {
+            if (Collected) return;
             Collected = true;
+            absorptionTarget = target;
             visual.color = new Color(1.5f, 1.4f, 1.1f);
-            shrink = Tween.Scale(visual.transform, 0, 0.18f, Ease.InQuad);
+            shrink = Tween.Scale(visual.transform, 0, 0.22f, Ease.InQuad);
+        }
+
+        void LateUpdate() {
+            if (Collected && shrink.isAlive && absorptionTarget != null)
+                visual.transform.position = Vector3.Lerp(visual.transform.position, absorptionTarget.position, 1 - Mathf.Exp(-18 * Time.deltaTime));
+        }
+
+        public void RecycleIfBehindCamera(float cameraLeft) {
+            if (!Collected && gameObject.activeInHierarchy && visual.bounds.max.x < cameraLeft - .1f) MarkMissed();
         }
 
         public void MarkMissed() { Missed = true; gameObject.SetActive(false); }
-        public void StopFeedback() { if (shrink.isAlive) shrink.Stop(); }
+        public void StopFeedback() { if (shrink.isAlive) shrink.Stop(); absorptionTarget = null; }
         void OnDisable() => StopFeedback();
     }
 }

@@ -19,11 +19,15 @@ MonoBehaviour:
   pointsPerCollectible: 10
   collectibleIntervalSeconds: 0.5
   collectionRadius: 0.55
+  attractionRadius: 1.2
   showGuideLine: 0
   guideLeadSeconds: 2
   preparationSeconds: 3
   guideTransitionSeconds: 0.65
   moveSpeed: 4
   laneSpacing: 2.2
+  laneCenterOffset: -0.84
+  upperLaneSpacing: 3.3
+  lowerLaneSpacing: 2.3731709
   laneTransitionSeconds: 0.16
   playerEntranceSeconds: 1.25

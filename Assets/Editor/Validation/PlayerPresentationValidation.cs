@@ -59,20 +59,20 @@ namespace WingSinger.Editor {
 
         static void CheckAnimation(BreathCharacterAnimator animator, float direction, CharacterSpriteClip moving, CharacterSpriteClip transition) {
             animator.ResetAnimation();
-            animator.Present(0.05f, direction);
-            Check(animator.CurrentClip == moving, "Actual movement selects " + moving.name);
-            float step = animator.returnToCruiseSeconds / 4;
-            animator.Present(step, 0);
-            Check(animator.IsReturning && animator.CurrentClip == transition
-                && animator.target.sprite == transition.Sample(transition.Duration * 0.75, false), "Arrival reverses " + transition.name);
-            animator.Present(animator.returnToCruiseSeconds, 0);
+            animator.Present(0.016f, direction);
+            Check(animator.CurrentClip == transition && Mathf.Abs(animator.Pose) < .15f, "Movement eases into " + transition.name);
+            for (int i = 0; i < 100; i++) animator.Present(.016f, direction);
+            Check(animator.CurrentClip == moving, "Sustained movement settles into " + moving.name);
+            animator.Present(.016f, 0);
+            Check(animator.IsReturning && animator.CurrentClip == transition, "Arrival smoothly reverses " + transition.name);
+            for (int i = 0; i < 100; i++) animator.Present(.016f, 0);
             Check(!animator.IsReturning && animator.CurrentClip == animator.cruise, "Return finishes in cruise");
-            animator.Present(0.5f, 0);
+            animator.Present(.5f, 0);
             Check(animator.CurrentClip == animator.cruise, "Lane dwell stays in cruise");
-            animator.Present(0.05f, direction);
-            animator.Present(step, 0);
-            animator.Present(0.01f, -direction);
-            Check(!animator.IsReturning && animator.CurrentClip == (direction > 0 ? animator.descend : animator.rise), "New opposite movement interrupts return");
+            for (int i = 0; i < 30; i++) animator.Present(.016f, direction);
+            float before = animator.Pose;
+            animator.Present(.016f, -direction);
+            Check(!animator.IsReturning && Mathf.Abs(animator.Pose - before) < .15f, "Opposite movement smoothly interrupts the previous heading");
         }
 
         static float SamplePlayerAt(double elapsed) {
@@ -125,7 +125,7 @@ namespace WingSinger.Editor {
                         CheckContinuousFlight();
                         manager.Restart();
                         startX = player.body.localPosition.x;
-                        float left = player.cameraTarget.position.x + 4 - manager.virtualCamera.m_Lens.OrthographicSize * Camera.main.aspect;
+                        float left = player.cameraTarget.position.x + manager.cameraHorizontalOffset - manager.virtualCamera.m_Lens.OrthographicSize * Camera.main.aspect;
                         Check(player.IsEntering && animator.target.bounds.max.x < left, "Restart starts the whole character outside the left edge");
                         Check(animator.CurrentClip == animator.cruise && !animator.IsReturning, "Restart clears pose transition");
                         stage = 1; started = EditorApplication.timeSinceStartup; break;
@@ -147,13 +147,13 @@ namespace WingSinger.Editor {
                         input.Submit(BreathLane.Upper);
                         stage = 3; started = EditorApplication.timeSinceStartup; break;
                     case 3:
-                        if (EditorApplication.timeSinceStartup - started < manager.CurrentLevel.settings.laneTransitionSeconds + animator.returnToCruiseSeconds + 0.15) return;
-                        Check(Mathf.Abs(player.body.localPosition.y - manager.CurrentLevel.settings.laneSpacing) < 0.001f && animator.CurrentClip == animator.cruise, "Real upper-lane arrival completes the return to cruise");
+                        if (EditorApplication.timeSinceStartup - started < manager.CurrentLevel.settings.laneTransitionSeconds + animator.returnToCruiseSeconds * 3 + 0.15) return;
+                        Check(Mathf.Abs(player.body.localPosition.y - manager.CurrentLevel.settings.LaneHeight(1)) < 0.001f && animator.CurrentClip == animator.cruise, "Real upper-lane arrival completes the return to cruise");
                         input.Submit(BreathLane.Lower);
                         stage = 4; started = EditorApplication.timeSinceStartup; break;
                     case 4:
-                        if (EditorApplication.timeSinceStartup - started < manager.CurrentLevel.settings.laneTransitionSeconds + animator.returnToCruiseSeconds + 0.15) return;
-                        Check(Mathf.Abs(player.body.localPosition.y + manager.CurrentLevel.settings.laneSpacing) < 0.001f && animator.CurrentClip == animator.cruise, "Real lower-lane arrival completes the return to cruise");
+                        if (EditorApplication.timeSinceStartup - started < manager.CurrentLevel.settings.laneTransitionSeconds + animator.returnToCruiseSeconds * 3 + 0.15) return;
+                        Check(Mathf.Abs(player.body.localPosition.y - manager.CurrentLevel.settings.LaneHeight(-1)) < 0.001f && animator.CurrentClip == animator.cruise, "Real lower-lane arrival completes the return to cruise");
                         var old = manager.CurrentLevel;
                         manager.Next();
                         Check(!old.gameObject.activeSelf && manager.levels.Count(l => l.gameObject.activeSelf) == 1 && player.IsEntering, "Switch replays entry with exactly one active level");

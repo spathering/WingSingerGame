@@ -11,6 +11,7 @@ namespace WingSinger {
         public BreathInput input;
         public BreathHud hud;
         public CinemachineVirtualCamera virtualCamera;
+        public float cameraHorizontalOffset = 4;
         public int initialLevel;
         public bool startAutomatically = true;
         public bool allowKeyboardShortcuts = true;
@@ -42,7 +43,7 @@ namespace WingSinger {
         void LateUpdate() {
             if (IsPaused || switching || Session == null || CurrentLevel == null) return;
             Vector3 current = player.body.position;
-            if (!player.IsEntering && CurrentLevel.CollectBetween(Session, previousBodyPosition, current) > 0) player.PlayCollectionFeedback();
+            if (!player.IsEntering && CurrentLevel.CollectBetween(Session, previousBodyPosition, current, player.body) > 0) player.PlayCollectionFeedback();
             previousBodyPosition = current;
         }
 
@@ -103,9 +104,9 @@ namespace WingSinger {
                 target.Prepare();
                 player.gameObject.SetActive(true);
                 IsPaused = false;
-                player.ResetPlayer(target.spawnPoint.position);
+                player.ResetPlayer(target.spawnPoint.position, target.settings.LaneHeight(0));
                 virtualCamera.PreviousStateIsValid = false;
-                Vector3 cameraPosition = player.cameraTarget.position + new Vector3(4, 0, -10);
+                Vector3 cameraPosition = player.cameraTarget.position + new Vector3(cameraHorizontalOffset, 0, -10);
                 var outputCamera = Camera.main;
                 float aspect = outputCamera != null ? outputCamera.aspect : 16f / 9f;
                 player.BeginEntrance(cameraPosition.x - virtualCamera.m_Lens.OrthographicSize * aspect, target.settings.playerEntranceSeconds);
@@ -115,7 +116,8 @@ namespace WingSinger {
                 if (hud != null) hud.ResetHud(target.settings.displayName);
                 player.Present(Session, target.settings);
                 previousBodyPosition = player.body.position;
-                virtualCamera.ForceCameraPosition(player.cameraTarget.position + new Vector3(4, 0, -10), Quaternion.identity);
+                virtualCamera.ForceCameraPosition(player.cameraTarget.position + new Vector3(cameraHorizontalOffset, 0, -10), Quaternion.identity);
+                if (target.foreground != null) target.foreground.BeginSession(outputCamera, this, player.cameraTarget.position.x + cameraHorizontalOffset);
                 target.Present(Session);
                 if (hud != null) hud.Present(Session);
                 return true;

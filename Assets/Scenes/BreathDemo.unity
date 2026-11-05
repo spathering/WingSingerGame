@@ -999,7 +999,9 @@ MonoBehaviour:
   parallaxSpeed: 1.15
   parallaxAnchorX: -4
   heightFraction: 0.55
+  sizeMultiplier: 2
   verticalAnchor: -1
+  verticalOffsetFraction: -0.15
   sourceAspectRatio: 19.206146
   anchorToSessionViewport: 1
   animationFrames:
@@ -1215,8 +1217,8 @@ Transform:
   m_GameObject: {fileID: 999728551}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4, y: -2.5695, z: 5}
-  m_LocalScale: {x: 15.226667, y: 6.281, z: 1}
+  m_LocalPosition: {x: 4, y: -1.3133, z: 5}
+  m_LocalScale: {x: 20.30785, y: 12.562, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1274,6 +1276,7 @@ MonoBehaviour:
   input: {fileID: 1100468636}
   hud: {fileID: 0}
   virtualCamera: {fileID: 1889780004}
+  cameraHorizontalOffset: 5.902439
   initialLevel: 0
   startAutomatically: 0
   allowKeyboardShortcuts: 0
@@ -1429,7 +1432,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 75974585}
@@ -5114,7 +5117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 4, y: 0, z: -10}
+  m_FollowOffset: {x: 5.902439, y: 0, z: -10}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0

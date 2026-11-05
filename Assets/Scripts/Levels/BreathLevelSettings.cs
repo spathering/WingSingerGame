@@ -15,6 +15,7 @@ namespace WingSinger {
         [Tooltip("Maximum time gap on straight sections. Each section is divided evenly with both endpoints included.")]
         [Min(0.05f)] public float collectibleIntervalSeconds = 0.5f;
         [Min(0.05f)] public float collectionRadius = 0.55f;
+        [Min(0)] public float attractionRadius = 1.2f;
         [Tooltip("Optional route visualization. Paper objects show the route by default.")]
         public bool showGuideLine;
         [Min(0)] public float guideLeadSeconds = 2;
@@ -25,6 +26,12 @@ namespace WingSinger {
         [Header("Movement")]
         [Min(0.1f)] public float moveSpeed = 4;
         [Min(0.1f)] public float laneSpacing = 2.2f;
+        public float laneCenterOffset;
+        [Min(0)] public float upperLaneSpacing;
+        [Min(0)] public float lowerLaneSpacing;
+        public float LaneHeight(float lane) => laneCenterOffset + lane * (lane >= 0
+            ? (upperLaneSpacing > 0 ? upperLaneSpacing : laneSpacing)
+            : (lowerLaneSpacing > 0 ? lowerLaneSpacing : laneSpacing));
         [Min(0)] public float laneTransitionSeconds = 0.16f;
         [Tooltip("Fly in from the left while already moving toward the route. Continues at normal speed after entry. Zero disables the entrance. Preview is extended if needed.")]
         [Min(0)] public float playerEntranceSeconds = 1.25f;
@@ -38,6 +45,9 @@ namespace WingSinger {
                 || float.IsNaN(guideLeadSeconds) || float.IsInfinity(guideLeadSeconds) || guideLeadSeconds < 0)
                 throw new System.ArgumentException("Preview and entrance durations must be nonnegative and finite.");
             CreatePattern();
+            if (float.IsNaN(laneCenterOffset) || float.IsInfinity(laneCenterOffset)
+                || !IsNonnegativeFinite(upperLaneSpacing) || !IsNonnegativeFinite(lowerLaneSpacing) || !IsNonnegativeFinite(attractionRadius))
+                throw new System.ArgumentException("Lane offsets and attraction radius must be finite; spacing overrides and radius must be nonnegative.");
             if (!IsPositiveFinite(moveSpeed) || !IsPositiveFinite(laneSpacing) || !IsPositiveFinite(guideTransitionSeconds))
                 throw new System.ArgumentException("Movement speed, lane spacing and guide transition time must be positive and finite.");
             if (!IsPositiveFinite(collectibleIntervalSeconds) || collectibleIntervalSeconds < 0.05f || !IsPositiveFinite(collectionRadius))
@@ -45,5 +55,6 @@ namespace WingSinger {
         }
 
         static bool IsPositiveFinite(float value) => value > 0 && !float.IsInfinity(value) && !float.IsNaN(value);
+        static bool IsNonnegativeFinite(float value) => value >= 0 && !float.IsInfinity(value) && !float.IsNaN(value);
     }
 }

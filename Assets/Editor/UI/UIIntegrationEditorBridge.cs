@@ -35,6 +35,13 @@ namespace WingSinger.Editor {
             try {
                 switch (action) {
                     case "state": break;
+                    case "apply-framing": YellowFlightSetup.ApplyFraming(); break;
+                    case "apply-flight-layout": YellowFlightSetup.ApplyFlightLayout(); break;
+                    case "lower-midground": AnimatedForegroundSetup.LowerMidground(); break;
+                    case "apply-yellow-flight": YellowFlightSetup.Apply(); break;
+                    case "validate-yellow-flight": YellowFlightSetup.Validate(); break;
+                    case "apply-level-foreground": LevelForegroundSetup.Apply(); break;
+                    case "validate-level-foreground": LevelForegroundSetup.Validate(); break;
                     case "fix-opening-background": OpeningBackgroundValidation.Begin(); break;
                     case "apply-november-art": NovemberArtSetup.ApplyAndValidateBatch(); break;
                     case "setup-hardware-ui": HardwareSettingsSetup.Apply(); break;
