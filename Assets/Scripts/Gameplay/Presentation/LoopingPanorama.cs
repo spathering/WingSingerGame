@@ -16,6 +16,12 @@ namespace WingSinger {
         [Range(-1, 1)] public float verticalAnchor = -1;
         [Tooltip("Vertical offset as a fraction of this layer's displayed height.")]
         public float verticalOffsetFraction;
+        [Header("World-space vertical framing")]
+        [Tooltip("Keep image height and Y fixed in the world so the camera reveals different parts when following the player.")]
+        public bool worldSpaceVertical;
+        [Min(1)] public float referenceOrthographicSize = 6.8f;
+        [Min(1)] public float verticalOverscan = 1;
+        public float worldOriginY;
         [Tooltip("Original image width / height; zero uses the imported texture dimensions.")]
         public float sourceAspectRatio;
         [Tooltip("Start each gameplay session at the left of the image using the actual viewport, rather than a saved reference aspect.")]
@@ -43,7 +49,9 @@ namespace WingSinger {
             var texture = material == null ? null : material.mainTexture;
             if (texture == null) return;
             float viewHeight = targetCamera.orthographicSize * 2 + 0.02f;
-            float height = viewHeight * Mathf.Clamp(heightFraction, 0.05f, 1) * Mathf.Max(.01f, sizeMultiplier);
+            float referenceHeight = worldSpaceVertical ? referenceOrthographicSize * 2 + .02f : viewHeight;
+            float layoutHeight = referenceHeight * Mathf.Clamp(heightFraction, 0.05f, 1) * Mathf.Max(.01f, sizeMultiplier);
+            float height = layoutHeight * (worldSpaceVertical ? Mathf.Max(1, verticalOverscan) : 1);
             float width = viewHeight * targetCamera.aspect;
             WorldPeriod = height * (sourceAspectRatio > 0 ? sourceAspectRatio : (float)texture.width / texture.height);
             float left = (targetCamera.transform.position.x - parallaxAnchorX) * Mathf.Max(0, parallaxSpeed)
@@ -60,8 +68,9 @@ namespace WingSinger {
                 origin = sessionOriginWorldX;
             } else panoramaSession = null;
             HorizontalPhase = Mathf.Repeat((left - origin) / WorldPeriod, 1);
+            float originY = worldSpaceVertical ? worldOriginY : targetCamera.transform.position.y;
             transform.position = new Vector3(targetCamera.transform.position.x,
-                targetCamera.transform.position.y + (viewHeight - height) * verticalAnchor * 0.5f + height * verticalOffsetFraction, depth);
+                originY + (referenceHeight - layoutHeight) * verticalAnchor * 0.5f + layoutHeight * verticalOffsetFraction, depth);
             transform.localScale = new Vector3(width, height, 1);
             if (properties == null) properties = new MaterialPropertyBlock();
             float vScale = animationFrames != null && animationFrames.Length > 0 ? animationVerticalScale : 1;

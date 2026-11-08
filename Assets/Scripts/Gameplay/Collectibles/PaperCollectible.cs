@@ -43,7 +43,7 @@ namespace WingSinger {
             if (Collected) return;
             Collected = true;
             absorptionTarget = target;
-            visual.color = new Color(1.5f, 1.4f, 1.1f);
+            visual.color = Color.white;
             shrink = Tween.Scale(visual.transform, 0, 0.22f, Ease.InQuad);
         }
 

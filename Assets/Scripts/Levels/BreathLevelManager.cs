@@ -43,7 +43,7 @@ namespace WingSinger {
         void LateUpdate() {
             if (IsPaused || switching || Session == null || CurrentLevel == null) return;
             Vector3 current = player.body.position;
-            if (!player.IsEntering && CurrentLevel.CollectBetween(Session, previousBodyPosition, current, player.body) > 0) player.PlayCollectionFeedback();
+            if (!player.IsEntering) CurrentLevel.CollectBetween(Session, previousBodyPosition, current, player.body);
             previousBodyPosition = current;
         }
 
@@ -109,7 +109,10 @@ namespace WingSinger {
                 Vector3 cameraPosition = player.cameraTarget.position + new Vector3(cameraHorizontalOffset, 0, -10);
                 var outputCamera = Camera.main;
                 float aspect = outputCamera != null ? outputCamera.aspect : 16f / 9f;
-                player.BeginEntrance(cameraPosition.x - virtualCamera.m_Lens.OrthographicSize * aspect, target.settings.playerEntranceSeconds);
+                var framing = virtualCamera.GetComponent<BreathCameraFraming>();
+                float entranceLeft = framing != null ? framing.EntranceLeftEdge(target, aspect)
+                    : cameraPosition.x - virtualCamera.m_Lens.OrthographicSize * aspect;
+                player.BeginEntrance(entranceLeft, target.settings.playerEntranceSeconds);
                 target.gameObject.SetActive(true);
                 CurrentIndex = index;
                 Session = new BreathSession(target.settings.CreatePattern());

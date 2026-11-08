@@ -12,6 +12,9 @@ from repair_foreground_edges import clean_edges, VERSION
 SOURCE = Path('H:/PolyU/PM/WindSinger素材/11.2/hc1/hc1')
 TARGET = Path('Assets/Art/Background/AnimatedForeground')
 TARGET.mkdir(parents=True, exist_ok=True)
+WIDTH = 8192
+CONTENT_HEIGHT = round(WIDTH * 1562 / 30000)
+HEIGHT = (CONTENT_HEIGHT + 3) // 4 * 4
 if '--pad-existing' in sys.argv:
     manifest_path = TARGET / 'Manifest.json'
     manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
@@ -39,27 +42,33 @@ def convert(item):
     with Image.open(path) as source:
         original_size = source.size
         assert original_size == (30000, 1562) and source.mode == 'RGBA'
-        size = (4096, round(4096 * source.height / source.width))
+        size = (WIDTH, CONTENT_HEIGHT)
         # Pillow's RGBA resize filters in premultiplied alpha, retaining transparent edges.
         content = source.resize(size, Image.Resampling.LANCZOS)
         content, repaired = clean_edges(content)
-        frame = Image.new('RGBA', (4096, 216))
-        frame.paste(content, (0, 0)) # Three transparent rows align BC7 blocks; runtime UVs exclude them.
+        frame = Image.new('RGBA', (WIDTH, HEIGHT))
+        frame.paste(content, (0, 0)) # Pad to BC7 blocks; runtime UVs exclude padding.
         destination = TARGET / f'Forest_{index:03}.png'
         frame.save(destination, compress_level=6)
         meta = destination.with_suffix('.png.meta')
-        if not meta.exists():
+        if meta.exists():
+            template = meta.read_text(encoding='utf-8')
+        else:
             template = Path('Assets/Art/Background/ForestForeground.png.meta').read_text(encoding='utf-8')
             template = re.sub(r'^guid: .*$', 'guid: ' + uuid.uuid4().hex, template, count=1, flags=re.M)
-            template = re.sub(r'maxTextureSize: \d+', 'maxTextureSize: 4096', template)
-            meta.write_text(template, encoding='utf-8')
+        template = re.sub(r'maxTextureSize: \d+', f'maxTextureSize: {WIDTH}', template)
+        meta.write_text(template, encoding='utf-8')
     return dict(source=path.name, sha256=hashlib.sha256(data).hexdigest(), file=destination.name,
                 sourceBytes=len(data), outputBytes=destination.stat().st_size, repairedEdgePixels=repaired)
 
 with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
-    frames = list(pool.map(convert, enumerate(paths)))
+    frames = []
+    for entry in pool.map(convert, enumerate(paths)):
+        frames.append(entry)
+        if len(frames) % 15 == 0:
+            print(f'Converted {len(frames)}/150', flush=True)
 manifest = dict(source=str(SOURCE), sourceWidth=30000, sourceHeight=1562,
-                width=4096, height=216, contentHeight=213, framesPerSecond=20, frames=frames,
+                width=WIDTH, height=HEIGHT, contentHeight=CONTENT_HEIGHT, framesPerSecond=20, frames=frames,
                 sourceBytes=sum(frame['sourceBytes'] for frame in frames),
                 outputBytes=sum(frame['outputBytes'] for frame in frames), edgeCorrection=VERSION)
 (TARGET / 'Manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')

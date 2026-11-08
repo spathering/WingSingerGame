@@ -55,7 +55,9 @@ namespace WingSinger.Editor {
             if (scene.path != BreathDemoBuilder.ScenePath) throw new InvalidOperationException("Open BreathDemo first.");
             var manager = Object.FindObjectOfType<BreathLevelManager>();
             foreach (var level in manager.levels) {
-                level.settings.laneCenterOffset = -.84f; level.settings.upperLaneSpacing = 3.3f; level.settings.lowerLaneSpacing = 3.7f;
+                level.settings.laneCenterOffset = -1.4f; level.settings.laneSpacing = 7.2f;
+                level.settings.laneTransitionSeconds = .38f;
+                level.settings.upperLaneSpacing = level.settings.lowerLaneSpacing = 0;
                 level.settings.attractionRadius = 1.2f; level.settings.Validate(); EditorUtility.SetDirty(level.settings);
             }
             var visual = manager.player.characterAnimation.target.transform;
@@ -72,14 +74,13 @@ namespace WingSinger.Editor {
             var manager = Object.FindObjectOfType<BreathLevelManager>();
             float playerWidth = VisibleWidth(manager.player.characterAnimation.cruise.frames[0],
                 manager.player.characterAnimation.target.transform.lossyScale.x, true);
-            float halfPlayerHeight = VisibleHeight(manager.player.characterAnimation.cruise.frames[0],
-                manager.player.characterAnimation.target.transform.lossyScale.y, true) * .5f;
             manager.cameraHorizontalOffset = 4 + playerWidth * .5f;
             var transposer = manager.virtualCamera.GetCinemachineComponent<Cinemachine.CinemachineTransposer>();
             var offset = transposer.m_FollowOffset; offset.x = manager.cameraHorizontalOffset; transposer.m_FollowOffset = offset;
             EditorUtility.SetDirty(manager); EditorUtility.SetDirty(transposer);
             foreach (var level in manager.levels) {
-                level.settings.lowerLaneSpacing = 3.7f - halfPlayerHeight;
+                level.settings.laneCenterOffset = -1.4f; level.settings.laneSpacing = 7.2f; level.settings.laneTransitionSeconds = .38f;
+                level.settings.upperLaneSpacing = level.settings.lowerLaneSpacing = 0;
                 level.settings.Validate(); EditorUtility.SetDirty(level.settings);
                 string path = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(level.gameObject);
                 var root = PrefabUtility.LoadPrefabContents(path);
@@ -94,7 +95,7 @@ namespace WingSinger.Editor {
             var trees = Object.FindObjectsOfType<LoopingPanorama>().Single(layer => layer.name == "Looping Foreground");
             trees.verticalOffsetFraction = -.15f; trees.Sync(); EditorUtility.SetDirty(trees);
             EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene); AssetDatabase.SaveAssets();
-            Debug.Log("Framing: player moved right half a width; lower lane raised by " + halfPlayerHeight + " world units; crane moved right two more widths.");
+            Debug.Log("Framing: sky/canopy/ground lanes with equal 7.2-unit spacing; player/crane horizontal composition preserved.");
         }
 
         static float VisibleWidth(Sprite sprite, float scale, bool chromaKey) => VisibleExtent(sprite, scale, chromaKey, false);

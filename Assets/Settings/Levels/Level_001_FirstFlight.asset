@@ -25,9 +25,9 @@ MonoBehaviour:
   preparationSeconds: 3
   guideTransitionSeconds: 0.65
   moveSpeed: 4
-  laneSpacing: 2.2
-  laneCenterOffset: -0.84
-  upperLaneSpacing: 3.3
-  lowerLaneSpacing: 2.3731709
-  laneTransitionSeconds: 0.16
+  laneSpacing: 7.2
+  laneCenterOffset: -1.4
+  upperLaneSpacing: 0
+  lowerLaneSpacing: 0
+  laneTransitionSeconds: 0.38
   playerEntranceSeconds: 1.25

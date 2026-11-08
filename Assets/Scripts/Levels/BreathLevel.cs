@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace WingSinger {
+    // Recycle only after Cinemachine has finalized the actual output camera for this frame.
+    [DefaultExecutionOrder(10002)]
     public sealed class BreathLevel : MonoBehaviour {
         public BreathLevelSettings settings;
         public Transform spawnPoint;
@@ -52,7 +54,8 @@ namespace WingSinger {
             routeNodes = nodes.ToArray();
             visibleNodes = new Vector3[routeNodes.Length + 1];
             routeCore.positionCount = routeGlow.positionCount = 0;
-            guide.localPosition = Point(0, pattern.HeightAt(0)) + Vector3.right * guideHorizontalOffset;
+            double initialGuideTime = System.Math.Min(GuideOffsetSeconds, pattern.Duration);
+            guide.localPosition = Point(initialGuideTime, pattern.HeightAt(initialGuideTime));
             prepared = true;
         }
 
@@ -69,18 +72,19 @@ namespace WingSinger {
         Vector3 Point(double time, double height) => new Vector3(spawnPoint.localPosition.x
             + (float)time * settings.moveSpeed, spawnPoint.localPosition.y + settings.LaneHeight((float)height), -0.2f);
 
+        // The composition offset is a time lead along the shared route, not a separate translated path.
+        double GuideOffsetSeconds => System.Math.Max(0, guideHorizontalOffset) / settings.moveSpeed;
+
         public void Present(BreathSession session) {
             if (!prepared) return;
-            double guideTime = System.Math.Min(session.Elapsed, session.Pattern.Duration);
+            double guideClock = session.Elapsed + GuideOffsetSeconds;
+            double guideTime = System.Math.Min(guideClock, session.Pattern.Duration);
             float x = spawnPoint.localPosition.x + (float)guideTime * settings.moveSpeed;
             var head = Point(guideTime, session.Pattern.HeightAt(guideTime));
-            guide.localPosition = head + Vector3.right * guideHorizontalOffset;
+            guide.localPosition = head;
             guideVisual.sprite = guideClip.Sample(session.Elapsed, true);
-            var camera = Camera.main;
-            float cameraLeft = camera != null ? camera.transform.position.x - camera.orthographicSize * camera.aspect : float.NegativeInfinity;
             for (int i = 0; i < PaperLayout.Length; i++) {
-                papers[i].Present(guideTime, session.Elapsed);
-                papers[i].RecycleIfBehindCamera(cameraLeft);
+                papers[i].Present(guideTime, guideClock);
             }
             guide.localScale = reduceMotion ? Vector3.one : Vector3.one * (1 + 0.08f * Mathf.Sin((float)session.Elapsed * 5));
             int count = 0;
@@ -92,6 +96,15 @@ namespace WingSinger {
                 routeCore.SetPosition(i, visibleNodes[i]);
                 routeGlow.SetPosition(i, visibleNodes[i]);
             }
+        }
+
+        void LateUpdate() {
+            if (!prepared) return;
+            var camera = Camera.main;
+            if (camera == null || !camera.orthographic) return;
+            float cameraLeft = camera.transform.position.x - camera.orthographicSize * camera.aspect;
+            // Passing the player is not a reason to hide a star. Its entire visual must leave the viewport.
+            for (int i = 0; i < PaperLayout.Length; i++) papers[i].RecycleIfBehindCamera(cameraLeft);
         }
 
         public int CollectBetween(BreathSession session, Vector3 from, Vector3 to, Transform absorptionTarget = null) {
