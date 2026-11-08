@@ -12,7 +12,6 @@ namespace WingSinger {
         Vector3 origin;
         float destinationY;
         bool animationMovingAllowed;
-        float collectionFlash;
         float entranceStartX, entranceDuration;
         public bool IsEntering { get; private set; }
         public bool ReduceMotion { get; private set; }
@@ -22,7 +21,6 @@ namespace WingSinger {
             StopAnimation(); IsEntering = false;
             var position = body.localPosition; position.x = 0; position.y = destinationY; body.localPosition = position;
         }
-        public void PlayCollectionFeedback() { collectionFlash = 0.22f; }
 
         public void ResetPlayer(Vector3 spawn, float middleHeight = 0) {
             StopAnimation();
@@ -32,11 +30,10 @@ namespace WingSinger {
             visualLane = BreathLane.Middle;
             destinationY = middleHeight;
             animationMovingAllowed = false;
-            collectionFlash = 0;
             entranceStartX = entranceDuration = 0; IsEntering = false;
             if (characterAnimation != null) characterAnimation.ResetAnimation();
             cameraTarget.position = new Vector3(spawn.x, spawn.y, 0);
-            highlight.color = new Color(0.4f, 0.85f, 1, 0.18f);
+            if (highlight != null) highlight.enabled = false;
         }
 
         public void BeginEntrance(float viewportLeftX, float duration) {
@@ -77,8 +74,6 @@ namespace WingSinger {
 
         // PrimeTween updates the body first; arrival begins the tilt-to-cruise transition.
         void LateUpdate() {
-            collectionFlash = Mathf.Max(0, collectionFlash - Time.deltaTime);
-            highlight.color = collectionFlash > 0 ? new Color(0.35f, 1, 0.7f, 0.65f) : new Color(0.4f, 0.85f, 1, 0.18f);
             if (characterAnimation != null)
                 characterAnimation.Present(Time.deltaTime,
                     !ReduceMotion && animationMovingAllowed && laneTween.isAlive ? destinationY - body.localPosition.y : 0, ReduceMotion);

@@ -17,7 +17,7 @@ namespace WingSinger.Editor {
         static IEnumerator routine;
         static readonly List<string> checks = new List<string>();
         [Serializable] class Frame { public string file; }
-        [Serializable] class Manifest { public float sourceWidth, sourceHeight, framesPerSecond, height, contentHeight; public Frame[] frames; }
+        [Serializable] class Manifest { public float sourceWidth, sourceHeight, framesPerSecond, width, height, contentHeight; public Frame[] frames; }
         static AnimatedForegroundSetup() { EditorApplication.update += Tick; }
 
         [MenuItem("WingSinger/Apply Animated Foreground")]
@@ -40,6 +40,28 @@ namespace WingSinger.Editor {
             layer.sourceAspectRatio = manifest.sourceWidth / manifest.sourceHeight;
             layer.backgroundRenderer.sharedMaterial.mainTexture = frames[0];
             EditorUtility.SetDirty(layer.backgroundRenderer.sharedMaterial); EditorUtility.SetDirty(layer); layer.Sync();
+            AlignToBackgroundBottom();
+            EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
+        }
+
+        public static void AlignToBackgroundBottom() {
+            var layers = Object.FindObjectsOfType<LoopingPanorama>();
+            var background = layers.SingleOrDefault(item => item.name == "Looping Background");
+            var trees = layers.SingleOrDefault(item => item.name == "Looping Foreground");
+            if (background == null || trees == null || !background.worldSpaceVertical || !trees.worldSpaceVertical) return;
+            background.Sync(); trees.Sync();
+            float bottom = background.transform.position.y - background.transform.localScale.y * .5f;
+            float treeBottom = trees.transform.position.y - trees.transform.localScale.y * .5f;
+            trees.worldOriginY += bottom - treeBottom;
+            trees.Sync(); EditorUtility.SetDirty(trees); EditorUtility.SetDirty(trees.transform);
+            var manager = Object.FindObjectOfType<BreathLevelManager>();
+            if (manager != null) foreach (var level in manager.levels) {
+                if (level.foreground == null) continue;
+                // The authored decoration bases are at -6.1, with 0.15 world units of ground clearance.
+                level.foreground.worldVerticalOffset = bottom + 6.25f;
+                EditorUtility.SetDirty(level.foreground);
+                PrefabUtility.RecordPrefabInstancePropertyModifications(level.foreground);
+            }
             EditorSceneManager.MarkSceneDirty(UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         }
         public static void LowerMidground() {
@@ -48,6 +70,7 @@ namespace WingSinger.Editor {
             if (scene.path != BreathDemoBuilder.ScenePath) throw new InvalidOperationException("Open BreathDemo first.");
             var layer = Object.FindObjectsOfType<LoopingPanorama>().Single(item => item.name == "Looping Foreground");
             layer.verticalOffsetFraction = -.15f; layer.Sync(); EditorUtility.SetDirty(layer);
+            AlignToBackgroundBottom();
             EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
         }
         public static void ApplyAndValidateBatch() {
@@ -87,9 +110,10 @@ namespace WingSinger.Editor {
             var flow = Object.FindObjectOfType<BreathUIFlowController>(); var manager = flow.levelManager;
             var layer = Object.FindObjectsOfType<LoopingPanorama>().Single(item => item.name == "Looping Foreground");
             Check(layer.animationFrames.Length == 150 && layer.animationFramesPerSecond == 20, "All 150 frames play at 20 FPS");
-            Check(layer.animationFrames.All(frame => frame.width == 4096 && frame.height == 216 && frame.format == TextureFormat.BC7 && !frame.isReadable && frame.mipmapCount == 1),
-                "All frames use 4096x216 BC7 without CPU copies or mipmaps (first=" + layer.animationFrames[0].width + "x" + layer.animationFrames[0].height + ", " + layer.animationFrames[0].format + ")");
-            Check(Mathf.Abs(layer.animationVerticalScale - 213f/216) < .0001f, "UVs crop only the three compression-padding rows");
+            var manifest = JsonUtility.FromJson<Manifest>(File.ReadAllText(Folder + "Manifest.json"));
+            Check(layer.animationFrames.All(frame => frame.width == manifest.width && frame.height == manifest.height && frame.format == TextureFormat.BC7 && !frame.isReadable && frame.mipmapCount == 1),
+                "All frames use the manifest resolution and BC7 without CPU copies or mipmaps (first=" + layer.animationFrames[0].width + "x" + layer.animationFrames[0].height + ", " + layer.animationFrames[0].format + ")");
+            Check(Mathf.Abs(layer.animationVerticalScale - manifest.contentHeight/manifest.height) < .0001f, "UVs crop only the compression-padding rows");
             Check(Mathf.Abs(layer.sourceAspectRatio - 30000f / 1562) < .001f && layer.parallaxSpeed == 1.15f, "Original aspect and 1.15x parallax preserved");
             Check(layer.AnimationFrame == 0 && layer.animationSessionSource == manager, "Menu holds the first frame on the shared foreground");
             manager.input = new GameObject("Foreground test input", typeof(ExternalBreathInput)).GetComponent<ExternalBreathInput>();

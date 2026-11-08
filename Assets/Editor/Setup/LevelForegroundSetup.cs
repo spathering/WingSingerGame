@@ -85,6 +85,8 @@ namespace WingSinger.Editor {
                 EditorSceneManager.MarkSceneDirty(scene); EditorSceneManager.SaveScene(scene);
             }
             AssetDatabase.SaveAssets();
+            AnimatedForegroundSetup.AlignToBackgroundBottom();
+            EditorSceneManager.SaveScene(scene);
             Debug.Log("WingSinger: deployed 18 foreground variants to " + prefabPath + "; tree image scale = 2.");
         }
 
@@ -166,13 +168,15 @@ namespace WingSinger.Editor {
             yield return null; yield return null;
             var trees = Object.FindObjectsOfType<LoopingPanorama>().Single(layer => layer.name == "Looping Foreground");
             trees.Sync();
-            float originalHeight = (Camera.main.orthographicSize * 2 + .02f) * .55f;
+            float originalHeight = ((trees.worldSpaceVertical ? trees.referenceOrthographicSize : Camera.main.orthographicSize) * 2 + .02f) * .55f;
             Check(Mathf.Abs(trees.transform.localScale.y - originalHeight * 2) < .001f
                 && Mathf.Abs(trees.WorldPeriod - originalHeight * 2 * trees.sourceAspectRatio) < .001f, "Tree height and width are exactly twice the previous dimensions");
-            float shiftedBottom = Camera.main.transform.position.y - originalHeight / .55f / 2 - trees.transform.localScale.y * .15f;
+            var background = Object.FindObjectsOfType<LoopingPanorama>().Single(layer => layer.name == "Looping Background");
+            float shiftedBottom = trees.worldSpaceVertical ? background.transform.position.y - background.transform.localScale.y / 2
+                : Camera.main.transform.position.y - originalHeight / .55f / 2 - trees.transform.localScale.y * .15f;
             Check(Mathf.Approximately(trees.verticalOffsetFraction, -.15f)
                 && Mathf.Abs(trees.transform.position.y - trees.transform.localScale.y / 2 - shiftedBottom) < .002f,
-                "Midground is lowered by exactly 15 percent of its displayed height, preserving size and speed");
+                "Midground preserves its authored size and aligns to the background bottom in world-space framing");
             var camera = Camera.main; var cameraPosition = camera.transform.position;
             parallax.Sync(); float before = decorations.position.x - cameraPosition.x;
             camera.transform.position += Vector3.right * 3; parallax.Sync();

@@ -5,6 +5,8 @@ namespace WingSinger {
     [DefaultExecutionOrder(10001)]
     public sealed class LevelForegroundParallax : MonoBehaviour {
         [Min(1)] public float parallaxSpeed = 1.65f;
+        [Tooltip("Fixed world offset aligning the decorative ground with the tree layer. Does not follow camera Y or zoom.")]
+        public float worldVerticalOffset = -2.8f;
         Camera targetCamera;
         BreathLevelManager sessionSource;
         float originCameraX;
@@ -23,6 +25,7 @@ namespace WingSinger {
             if (targetCamera == null || sessionSource == null || sessionSource.Session == null || sessionSource.IsPaused) return;
             float offset = (targetCamera.transform.position.x - originCameraX) * (Mathf.Max(1, parallaxSpeed) - 1);
             Vector3 displacement = Vector3.left * offset;
+            displacement.y = worldVerticalOffset;
             transform.localPosition = transform.parent != null ? transform.parent.InverseTransformVector(displacement) : displacement;
         }
 

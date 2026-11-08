@@ -13,23 +13,14 @@ namespace WingSinger {
             if (double.IsNaN(interval) || double.IsInfinity(interval) || interval < 0.05)
                 throw new ArgumentOutOfRangeException(nameof(interval));
             var points = new List<PaperRoutePoint>();
-            Add(points, 0, BreathLane.Middle);
-            AddStraight(points, pattern, 0, pattern.Preparation, BreathLane.Middle, interval);
             double start = pattern.Preparation + pattern.GuideTransition;
             while (start <= pattern.Duration) {
                 AddStraight(points, pattern, start, start + pattern.Inhale, BreathLane.Upper, interval);
-                AddMiddleCrossing(points, pattern, start + pattern.Inhale);
                 double lower = start + pattern.Inhale + pattern.GuideTransition;
                 AddStraight(points, pattern, lower, lower + pattern.Exhale, BreathLane.Lower, interval);
-                AddMiddleCrossing(points, pattern, lower + pattern.Exhale);
                 start += pattern.Cycle;
             }
             return points.ToArray();
-        }
-
-        static void AddMiddleCrossing(List<PaperRoutePoint> points, BreathPattern p, double start) {
-            double middle = start + p.GuideTransition / 2;
-            if (middle <= p.Duration && p.GuideTransition > 0) Add(points, middle, BreathLane.Middle);
         }
 
         static void AddStraight(List<PaperRoutePoint> points, BreathPattern p, double start, double end, BreathLane lane, double interval) {

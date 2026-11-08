@@ -25,7 +25,7 @@ namespace WingSinger {
         [Min(0.01f)] public float guideTransitionSeconds = 0.65f;
         [Header("Movement")]
         [Min(0.1f)] public float moveSpeed = 4;
-        [Min(0.1f)] public float laneSpacing = 2.2f;
+        [Min(0.1f)] public float laneSpacing = 3;
         public float laneCenterOffset;
         [Min(0)] public float upperLaneSpacing;
         [Min(0)] public float lowerLaneSpacing;

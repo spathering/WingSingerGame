@@ -4,6 +4,8 @@
 
 ## 1. 项目基线与当前状态
 
+- 2026-11-07：主场景 Cinemachine 增加第一方 `BreathCameraFraming` 扩展，基础视野 5.6，平滑跟随玩家升降；保护玩家完整入镜，千纸鹤只保护横向，纵向不参与镜头取景。背景、树木和星星固定世界高度，树木底边对齐背景底边；镜头上移看背景上部、下移看下部，显示部分背景；中景树木提高到 8192×428 BC7，见 `Docs/Art/CameraFraming.md`。三轨按天空/树冠/地面分布，等距 7.2（高度 +5.8、-1.4、-8.6），仅上下轨道生成星星；无拾取闪光，漏星离开镜头后回收，见 `Docs/Design/PaperCollection.md`。
+
 - 2026-10-29 默认硬件输入改为 Windows x64 BLE，继续复用共享 `ArduinoBreathInput` 与原阈值，USB 可选调试。按用户提供的 sketch_oct27b 对接 ESP32_C3_Mini 的无握手 CSV Notify，以 5 点 ADC 均值及可调基准 ± 偏差映射；连接及验证范围见 `Docs/Hardware/BluetoothInput.md`。参数抽离到 `Assets/Settings/Input/WingSingerHardwareSettings.asset`，游戏内从 Settings 进入硬件页并保存本机 JSON，HUD 显示 ADC 与吸气/默认/呼气。见 `Docs/Hardware/HardwareSettings.md`。暂停时 BLE 接收继续，未知电量保持 `--`。
 
 - Unity：2022.3.62f2，以 `ProjectSettings/ProjectVersion.txt` 为准。
