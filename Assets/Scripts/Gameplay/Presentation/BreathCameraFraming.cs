@@ -56,7 +56,11 @@ namespace WingSinger {
             if (reset || requiredSize >= size) { size = requiredSize; sizeVelocity = 0; }
             else if (!manager.IsPaused && deltaTime > 0)
                 size = Mathf.SmoothDamp(size, requiredSize, ref sizeVelocity, .4f, Mathf.Infinity, deltaTime);
-            var lens = state.Lens; lens.OrthographicSize = size; state.Lens = lens;
+            var sequence=manager.Sequence;
+            float overview=sequence!=null&&sequence.IsActive?sequence.OverviewBlend:0;
+            float overviewSize=sequence!=null?sequence.overviewSize:minimumOrthographicSize;
+            float outputSize=Mathf.Lerp(size,overviewSize,overview);
+            var lens = state.Lens; lens.OrthographicSize = outputSize; state.Lens = lens;
             float halfY = size * safeFraction, halfX = halfY * aspect;
             var position = state.CorrectedPosition;
             position.x = Mathf.Clamp(position.x, bounds.max.x - halfX, bounds.min.x + halfX);
@@ -71,6 +75,7 @@ namespace WingSinger {
                 if (coveredMin <= coveredMax) { minY = coveredMin; maxY = coveredMax; }
             }
             position.y = Mathf.Clamp(centerY, minY, maxY);
+            position.y = Mathf.Lerp(position.y,worldBackground!=null?worldBackground.transform.position.y:0,overview);
             centerY = position.y;
             state.PositionCorrection += position - state.CorrectedPosition;
         }

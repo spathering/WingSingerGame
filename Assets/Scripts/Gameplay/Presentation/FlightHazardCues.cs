@@ -35,12 +35,14 @@ namespace WingSinger {
             var p = owner.settings.CreatePattern();
             double delay = Math.Max(0, switchDelaySeconds);
             var upper = new List<Cue>(); var lower = new List<Cue>();
-            for (double t = p.Preparation + p.GuideTransition + p.Inhale; t + p.GuideTransition < p.Duration; t += p.Cycle) {
+            for(int loop=0;loop<p.LoopCount;loop++)
+            for (double t = loop*p.LoopSeconds+p.Preparation+p.GuideTransition+p.Inhale;
+                t+p.GuideTransition < loop*p.LoopSeconds+(p.Segmented?p.ReturnStart:p.Duration); t += p.Cycle) {
                 double upperTime=t+p.GuideTransition*.6+delay;
                 if(upperTime<p.Duration)upper.Add(new Cue { Time=upperTime, Lane=BreathLane.Upper, Kind=0 });
                 double down = t+p.GuideTransition+p.Exhale;
                 double lowerTime=down+p.GuideTransition*.6+delay;
-                if (down+p.GuideTransition < p.Duration && lowerTime<p.Duration)
+                if (down+p.GuideTransition < loop*p.LoopSeconds+(p.Segmented?p.ReturnStart:p.Duration) && lowerTime<p.Duration)
                     lower.Add(new Cue {Time=lowerTime,Lane=BreathLane.Lower});
             }
             var chosen = new List<Cue>();

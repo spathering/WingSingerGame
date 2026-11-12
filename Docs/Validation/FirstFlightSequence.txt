@@ -1,0 +1,36 @@
+PASS: Level 1 has two 50-second loops and 2/3-second dwell times
+PASS: Matching time excludes middle sections and transitions across both loops
+PASS: Each loop begins on the middle lane
+PASS: Each loop ends on the middle lane
+PASS: No stars appear in the ending middle section
+PASS: Each loop begins on the middle lane
+PASS: Each loop ends on the middle lane
+PASS: No stars appear in the ending middle section
+PASS: Opening prepares without decoder errors
+PASS: Opening holds route time at zero
+PASS: Opening uses overview camera and stationary player
+PASS: Pause freezes opening video and route clock
+PASS: Opening completes before the zoom begins
+PASS: Camera smoothly interpolates from overview to gameplay
+PASS: Gameplay starts directly after the zoom
+PASS: Offscreen crane above the viewport shows an upward arrow
+PASS: Offscreen crane below the viewport shows a downward arrow
+PASS: Arrow hides when crane returns on screen
+PASS: First loop overrides held hardware input on the middle sections
+PASS: Continuous first-loop play collects actual paper stars
+PASS: Actual first loop runs for 50 seconds before intermission
+PASS: Loop 1 enters intermission without exposing Finished to the existing UI
+PASS: Fullscreen intermission fades in while gameplay stays frozen at 50 seconds
+PASS: Pause freezes the intermission video too
+PASS: Intermission continues without decoder errors
+PASS: Full source video fades out and seamlessly resumes loop 2
+PASS: Intermission does not settle or alter accumulated score
+PASS: Second loop forces middle lane even while lower input remains held
+PASS: Second loop adds real collections to the same score
+PASS: Crane is on the middle lane before final completion
+PASS: Player is on the middle lane before final completion
+PASS: Existing UI settles exactly once after loop 2
+PASS: Level 2 retains its original single-loop configuration
+PASS: Restarting Level 1 resets opening and route clocks
+PASS: Exit cleans both video players, arrow and player presentation override
+SUCCESS

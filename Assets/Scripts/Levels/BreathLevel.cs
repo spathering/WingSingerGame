@@ -16,6 +16,7 @@ namespace WingSinger {
         public PaperCollectible collectiblePrefab;
         public LevelForegroundParallax foreground;
         public bool reduceMotion;
+        public FirstFlightSequence sequence;
         readonly List<PaperCollectible> papers = new List<PaperCollectible>();
         public IReadOnlyList<PaperCollectible> Papers => papers;
         public PaperRoutePoint[] PaperLayout { get; private set; }
@@ -53,6 +54,11 @@ namespace WingSinger {
                 AddSegment(nodes, pattern, ref t, length, pattern.Exhale, 1);
                 AddSegment(nodes, pattern, ref t, length, pattern.GuideTransition, 24);
             }
+            if(pattern.Segmented){
+                nodes.Clear();
+                for(double sample=0;sample<length;sample+=.05)nodes.Add(Point(sample,pattern.HeightAt(sample)));
+                nodes.Add(Point(length,pattern.HeightAt(length)));
+            }
             routeNodes = nodes.ToArray();
             visibleNodes = new Vector3[routeNodes.Length + 1];
             routeCore.positionCount = routeGlow.positionCount = 0;
@@ -82,7 +88,10 @@ namespace WingSinger {
             var cues = GetComponent<FlightHazardCues>();
             if (cues != null) cues.Present(session);
             double guideClock = session.Elapsed + GuideOffsetSeconds;
-            double guideTime = System.Math.Min(guideClock, session.Pattern.Duration);
+            double limit = session.Pattern.Segmented
+                ? System.Math.Min(session.Pattern.Duration, ((int)(session.PlayTime / session.Pattern.LoopSeconds) + 1) * session.Pattern.LoopSeconds)
+                : session.Pattern.Duration;
+            double guideTime = System.Math.Min(guideClock, limit);
             float x = spawnPoint.localPosition.x + (float)guideTime * settings.moveSpeed;
             var head = Point(guideTime, session.Pattern.HeightAt(guideTime));
             guide.localPosition = head;

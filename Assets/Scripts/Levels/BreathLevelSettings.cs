@@ -8,6 +8,10 @@ namespace WingSinger {
         [Header("Breathing pattern (seconds)")]
         [Min(0.1f)] public float inhaleSeconds = 3;
         [Min(0.1f)] public float exhaleSeconds = 4;
+        [Header("Segmented route (optional)")]
+        [Min(1)] public int loopCount = 1;
+        [Min(1)] public float loopSeconds = 50;
+        [Min(0)] public float middleTailSeconds = 2;
         [Header("Session")]
         [Min(1)] public float durationSeconds = 45;
         [Header("Paper collection")]
@@ -38,7 +42,7 @@ namespace WingSinger {
 
         public BreathPattern CreatePattern() => new BreathPattern(inhaleSeconds, exhaleSeconds,
             durationSeconds, pointsPerCollectible, Mathf.Max(guideLeadSeconds, playerEntranceSeconds), laneTransitionSeconds,
-            preparationSeconds, guideTransitionSeconds);
+            preparationSeconds, guideTransitionSeconds, loopCount, loopSeconds, middleTailSeconds);
 
         public void Validate() {
             if (float.IsNaN(playerEntranceSeconds) || float.IsInfinity(playerEntranceSeconds) || playerEntranceSeconds < 0
