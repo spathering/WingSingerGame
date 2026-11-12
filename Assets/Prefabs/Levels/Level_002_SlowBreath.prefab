@@ -76,7 +76,7 @@ SpriteRenderer:
   m_Sprite: {fileID: 7700098050343007059, guid: a44e49100626e4146be9f45207adcce1,
     type: 2}
   m_Color: {r: 1.3, g: 1.3, b: 1.3, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 2, y: 2}
@@ -395,6 +395,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3228170998404772354}
   - component: {fileID: 1859265617997825646}
+  - component: {fileID: 1853516458366737839}
+  - component: {fileID: 5683832948899412316}
   m_Layer: 0
   m_Name: Level_002_SlowBreath
   m_TagString: Untagged
@@ -436,7 +438,7 @@ MonoBehaviour:
   settings: {fileID: 11400000, guid: 747371fa81c4ab24886477bf286cf18c, type: 2}
   spawnPoint: {fileID: 5045111990632628472}
   guide: {fileID: 2503048077343991641}
-  guideHorizontalOffset: 5.6554394
+  guideHorizontalOffset: 1.2
   routeCore: {fileID: 2159024255347205328}
   routeGlow: {fileID: 7785030671944284646}
   guideVisual: {fileID: 42611463651496186}
@@ -445,6 +447,187 @@ MonoBehaviour:
     type: 3}
   foreground: {fileID: 0}
   reduceMotion: 0
+--- !u!114 &1853516458366737839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4775832549357036936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad83343ab996bb144a19ea29ef6d55d8, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  eagle: {fileID: 11400000, guid: 29c66e8b48288924eb5691f5ad47d675, type: 2}
+  fox: {fileID: 11400000, guid: 7a507abea343faf448d39635ebdd47fd, type: 2}
+  trap: {fileID: 11400000, guid: d72ce3b79a7b21141a2edf15695e9abe, type: 2}
+  hive: {fileID: 11400000, guid: 027c1fd18e877394da5141b2c95ad52e, type: 2}
+  spriteMaterial: {fileID: 2100000, guid: 4e3e21d4a8994034caf1b58d8385b9cb, type: 2}
+  eagleFlightSpeed: 3
+  switchDelaySeconds: 0.35
+--- !u!114 &5683832948899412316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4775832549357036936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7f5e4033fcb71c4d8a0f6b4992aadd5, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  gaps:
+  - center: 0.0012817383
+    width: 0.0048828125
+  - center: 0.016418457
+    width: 0.005126953
+  - center: 0.05078125
+    width: 0.0037841797
+  - center: 0.05908203
+    width: 0.00793457
+  - center: 0.068115234
+    width: 0.00793457
+  - center: 0.07305908
+    width: 0.0034179688
+  - center: 0.08312988
+    width: 0.003540039
+  - center: 0.10028076
+    width: 0.0063476562
+  - center: 0.107788086
+    width: 0.0032958984
+  - center: 0.12017822
+    width: 0.009765625
+  - center: 0.12805176
+    width: 0.0028076172
+  - center: 0.14221191
+    width: 0.0040283203
+  - center: 0.16607666
+    width: 0.0068359375
+  - center: 0.1743164
+    width: 0.008666992
+  - center: 0.2341919
+    width: 0.0043945312
+  - center: 0.24523926
+    width: 0.004272461
+  - center: 0.25097656
+    width: 0.005493164
+  - center: 0.2581787
+    width: 0.0028076172
+  - center: 0.2894287
+    width: 0.005493164
+  - center: 0.2970581
+    width: 0.008300781
+  - center: 0.31549072
+    width: 0.0078125
+  - center: 0.3209839
+    width: 0.0036621094
+  - center: 0.3470459
+    width: 0.0064697266
+  - center: 0.35498047
+    width: 0.004272461
+  - center: 0.36584473
+    width: 0.00793457
+  - center: 0.37554932
+    width: 0.00390625
+  - center: 0.38250732
+    width: 0.0043945312
+  - center: 0.39178467
+    width: 0.0029296875
+  - center: 0.39782715
+    width: 0.0037841797
+  - center: 0.40264893
+    width: 0.0075683594
+  - center: 0.42633057
+    width: 0.0036621094
+  - center: 0.44750977
+    width: 0.0028076172
+  - center: 0.45367432
+    width: 0.0073242188
+  - center: 0.4645996
+    width: 0.003540039
+  - center: 0.4729004
+    width: 0.004760742
+  - center: 0.4857788
+    width: 0.0053710938
+  - center: 0.5165405
+    width: 0.005126953
+  - center: 0.52526855
+    width: 0.009643555
+  - center: 0.58947754
+    width: 0.0032958984
+  - center: 0.5994873
+    width: 0.004760742
+  - center: 0.61187744
+    width: 0.0056152344
+  - center: 0.6362915
+    width: 0.0036621094
+  - center: 0.65008545
+    width: 0.0043945312
+  - center: 0.65563965
+    width: 0.0032958984
+  - center: 0.6604614
+    width: 0.0036621094
+  - center: 0.66656494
+    width: 0.004638672
+  - center: 0.6732788
+    width: 0.0034179688
+  - center: 0.6804199
+    width: 0.005004883
+  - center: 0.7050781
+    width: 0.0032958984
+  - center: 0.7246094
+    width: 0.005004883
+  - center: 0.7373047
+    width: 0.0059814453
+  - center: 0.74713135
+    width: 0.00390625
+  - center: 0.7615967
+    width: 0.0037841797
+  - center: 0.7697754
+    width: 0.0032958984
+  - center: 0.7822876
+    width: 0.0078125
+  - center: 0.79382324
+    width: 0.0037841797
+  - center: 0.82598877
+    width: 0.008544922
+  - center: 0.8375244
+    width: 0.0040283203
+  - center: 0.84552
+    width: 0.0068359375
+  - center: 0.85461426
+    width: 0.0040283203
+  - center: 0.86138916
+    width: 0.0043945312
+  - center: 0.86621094
+    width: 0.0028076172
+  - center: 0.8708496
+    width: 0.0030517578
+  - center: 0.8817749
+    width: 0.0075683594
+  - center: 0.8966675
+    width: 0.0041503906
+  - center: 0.9286499
+    width: 0.0031738281
+  - center: 0.9482422
+    width: 0.0052490234
+  - center: 0.9550781
+    width: 0.0032958984
+  - center: 0.96221924
+    width: 0.0029296875
+  - center: 0.9793091
+    width: 0.0061035156
+  - center: 0.99108887
+    width: 0.004760742
+  - center: 0.9972534
+    width: 0.0078125
+  sprites:
+  - {fileID: 21300000, guid: 9d70fdd304543d84fb494eb771d30cd6, type: 3}
+  - {fileID: 21300000, guid: adeda974df714254e82f6215ee97da5b, type: 3}
+  - {fileID: 21300000, guid: f4fbfea7afe23794cb4e6dbc949a2153, type: 3}
+  spriteMaterial: {fileID: 2100000, guid: 4e3e21d4a8994034caf1b58d8385b9cb, type: 2}
 --- !u!1 &5007690948272794797
 GameObject:
   m_ObjectHideFlags: 0

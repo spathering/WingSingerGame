@@ -31,6 +31,8 @@ namespace WingSinger {
             if (guideVisual == null || guideClip == null || collectiblePrefab == null)
                 throw new System.InvalidOperationException($"Level {name} needs paper and guide animation assets.");
             var pattern = settings.CreatePattern();
+            var cues = GetComponent<FlightHazardCues>();
+            if (cues != null) cues.Prepare(this);
             routeCore.enabled = routeGlow.enabled = settings.showGuideLine;
             PaperLayout = BreathCollectibleLayout.Create(pattern, settings.collectibleIntervalSeconds);
             while (papers.Count < PaperLayout.Length) papers.Add(Instantiate(collectiblePrefab, transform));
@@ -77,6 +79,8 @@ namespace WingSinger {
 
         public void Present(BreathSession session) {
             if (!prepared) return;
+            var cues = GetComponent<FlightHazardCues>();
+            if (cues != null) cues.Present(session);
             double guideClock = session.Elapsed + GuideOffsetSeconds;
             double guideTime = System.Math.Min(guideClock, session.Pattern.Duration);
             float x = spawnPoint.localPosition.x + (float)guideTime * settings.moveSpeed;
@@ -120,6 +124,8 @@ namespace WingSinger {
         }
 
         public void Exit() {
+            var cues = GetComponent<FlightHazardCues>();
+            if (cues != null) cues.ResetPresentation();
             if (foreground != null) foreground.ResetPresentation();
             prepared = false;
             routeCore.positionCount = routeGlow.positionCount = 0;

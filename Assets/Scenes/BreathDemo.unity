@@ -1227,7 +1227,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4, y: -4.7669997, z: 5}
-  m_LocalScale: {x: 19.944946, y: 14.982001, z: 1}
+  m_LocalScale: {x: 19.939722, y: 14.982001, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1664,7 +1664,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4, y: 0, z: 10}
-  m_LocalScale: {x: 19.944946, y: 24.516, z: 1}
+  m_LocalScale: {x: 19.939722, y: 24.516, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -4912,7 +4912,7 @@ Camera:
   far clip plane: 5000
   field of view: 40
   orthographic: 1
-  orthographic size: 5.6
+  orthographic size: 3.8
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -5197,7 +5197,7 @@ MonoBehaviour:
   m_Follow: {fileID: 2043903515}
   m_Lens:
     FieldOfView: 40
-    OrthographicSize: 5.6
+    OrthographicSize: 3.8
     NearClipPlane: 0.1
     FarClipPlane: 5000
     Dutch: 0
@@ -5244,8 +5244,9 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   manager: {fileID: 1100468633}
   worldBackground: {fileID: 1269957852}
-  minimumOrthographicSize: 5.6
-  verticalFollow: 0.65
+  verticalCenterOffset: -1
+  minimumOrthographicSize: 3.8
+  verticalFollow: 1
   followSmoothSeconds: 0.22
   viewportMargin: 0.08
 --- !u!114 &1897610756

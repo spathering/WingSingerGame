@@ -7,6 +7,7 @@ namespace WingSinger {
     public sealed class BreathCameraFraming : CinemachineExtension {
         public BreathLevelManager manager;
         public LoopingPanorama worldBackground;
+        public float verticalCenterOffset;
         [Min(1)] public float minimumOrthographicSize = 5.6f;
         [Range(0, 1)] public float verticalFollow = .65f;
         [Min(.01f)] public float followSmoothSeconds = .22f;
@@ -36,7 +37,7 @@ namespace WingSinger {
             var player = manager.player;
             bool reset = !ReferenceEquals(previousSession, session) || deltaTime < 0 || !vcam.PreviousStateIsValid;
             previousSession = session;
-            float desiredY = level.spawnPoint.position.y + (player.body.position.y
+            float desiredY = verticalCenterOffset + level.spawnPoint.position.y + (player.body.position.y
                 - level.spawnPoint.position.y - level.settings.LaneHeight(0)) * verticalFollow;
             if (reset) { centerY = desiredY; velocityY = sizeVelocity = 0; size = minimumOrthographicSize; }
             else if (!manager.IsPaused && deltaTime > 0)
