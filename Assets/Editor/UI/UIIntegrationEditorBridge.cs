@@ -23,9 +23,11 @@ namespace WingSinger.Editor {
             if (!File.Exists(Request) || EditorApplication.isCompiling || EditorApplication.isUpdating) return;
             string action = File.ReadAllText(Request).Trim();
             var compiledAt = File.GetLastWriteTimeUtc(typeof(UIIntegrationEditorBridge).Assembly.Location);
+            var runtimeCompiledAt = File.GetLastWriteTimeUtc("Library/ScriptAssemblies/Main.dll");
             var pendingScripts = Directory.EnumerateFiles("Assets/Scripts", "*.cs", SearchOption.AllDirectories)
                 .Concat(Directory.EnumerateFiles("Assets/Editor", "*.cs", SearchOption.AllDirectories))
-                .Where(path => File.GetLastWriteTimeUtc(path) > compiledAt).ToArray();
+                .Where(path => File.GetLastWriteTimeUtc(path) > (path.StartsWith("Assets/Scripts", StringComparison.Ordinal)
+                    ? runtimeCompiledAt : compiledAt)).ToArray();
             if (pendingScripts.Length > 0 && action != "import-pending") return;
             File.Delete(Request);
             var result = new State { action = action, playing = EditorApplication.isPlayingOrWillChangePlaymode,
@@ -35,6 +37,7 @@ namespace WingSinger.Editor {
             try {
                 switch (action) {
                     case "state": break;
+                    case "apply-nov11": November11Setup.ApplyAndValidateBatch(); break;
                     case "apply-framing": YellowFlightSetup.ApplyFraming(); break;
                     case "apply-flight-layout": YellowFlightSetup.ApplyFlightLayout(); break;
                     case "lower-midground": AnimatedForegroundSetup.LowerMidground(); break;

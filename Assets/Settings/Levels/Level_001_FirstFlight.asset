@@ -21,7 +21,7 @@ MonoBehaviour:
   collectionRadius: 0.55
   attractionRadius: 1.2
   showGuideLine: 0
-  guideLeadSeconds: 2
+  guideLeadSeconds: 1.5
   preparationSeconds: 3
   guideTransitionSeconds: 0.65
   moveSpeed: 4
