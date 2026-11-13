@@ -19,3 +19,15 @@
 - 仍需用户提供的素材/策划、未完成和待集成项：待登记。
 
 后续按日期追加简短更新；不要覆盖对方代码或把待确认项描述成已完成。
+
+## 2026-11-13：A 组接手与基线核对
+
+- 操作者：Codex，本聊天按用户指定承担 A 组，负责需求 1/2。已阅读根 AGENTS、开发指南、ParallelAgentWorkflow 及双方交接记录。
+- 同步基线：本地 `spathering` 已快进合入 `origin/master` 的 `0e45fd2`，并经用户明确授权推送至 `origin/spathering`。用户现已授权补交本交接记录并合入主分支 `master`。原有本机 Unity 设置和镜头实验 stash 保留。
+- 本次修改文件：仅本交接记录。已只读检查 UI 流程、绑定、现有练习页面及硬件快照接口，尚未修改教程或 HUD 实现。
+- 可复用基线：现有 `PracticeInhale/PracticeExhale/PracticeFollow/PracticeComplete` 页面和 `BreathUIFlowController`；硬件读取沿用 `ArduinoBreathInput.ReceiverSnapshot`、快照 `IsFresh()` / `SampleSequence`、`ThresholdsValid`、`DecisionLabel`，不改变输入协议或接收器生命周期。
+- 差异与待适配项：当前 `TickPractice()` 直接使用 `ReadLane()`，且入口允许断连键盘回退，不能直接作为真实硬件教程的完成判据。现有练习依附关卡 Session、完成时写入 practice 记录，新教程自身进度及成绩隔离需要在 A 组实现中明确区分。
+- 向 B 请求：请优先发布实际阶段状态、通知、各阶段时间/输入语义及最终完成判据。当前 UI 仍在 `BreathPhase.Finished` 时立即结算，待 B 提供可用契约后由 A 适配，避免提前中断回中轨和收尾动画。公共契约尚未接入。
+- 需明确的需求：硬件教程具体步骤/持续时间、断连与重进表现、是否保留独立键盘练习，以及关卡内 UI 的目标稿、素材和展示字段。文档中的五项标题不代表这些细节已确认。
+- 编辑器状态：A 本次未申请、未占用，也未通过 MCP/本地队列执行导入、Play/Stop、切场景、setup 或截图。实际编辑器状态待 B 协调确认；A 需要验证时先登记请求并交接。
+- 验证：仅文件/源码只读核对及 Git 同步检查。未进行 Unity 编译、运行或真实硬件验收。待具体需求明确后在 A 组目录实施；主场景接线交由 B，双方文件归属按工作流执行。
