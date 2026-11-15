@@ -92,8 +92,10 @@ namespace WingSinger {
                 ? System.Math.Min(session.Pattern.Duration, ((int)(session.PlayTime / session.Pattern.LoopSeconds) + 1) * session.Pattern.LoopSeconds)
                 : session.Pattern.Duration;
             double guideTime = System.Math.Min(guideClock, limit);
-            float x = spawnPoint.localPosition.x + (float)guideTime * settings.moveSpeed;
-            var head = Point(guideTime, session.Pattern.HeightAt(guideTime));
+            // Keep flight continuous after the route cutoff. Only height sampling and paper
+            // reveal are capped, so the middle-lane ending cannot leak next-loop stars.
+            float x = spawnPoint.localPosition.x + (float)guideClock * settings.moveSpeed;
+            var head = Point(guideClock, session.Pattern.HeightAt(guideTime));
             guide.localPosition = head;
             guideVisual.sprite = guideClip.Sample(session.Elapsed, true);
             for (int i = 0; i < PaperLayout.Length; i++) {

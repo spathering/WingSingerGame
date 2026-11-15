@@ -1,0 +1,19 @@
+PASS: Guide continues at normal speed after reaching loop 50 cutoff
+PASS: Ending flight remains on middle lane
+PASS: Ending flight reveals no new stars
+PASS: Paused route clock freezes guide flight
+PASS: Guide never parks while the player catches up at loop end
+PASS: Next-loop stars stay hidden until the next loop
+PASS: Crossing into loop 2 does not snap or accelerate the guide
+PASS: Guide continues at normal speed after reaching loop 100 cutoff
+PASS: Ending flight remains on middle lane
+PASS: Ending flight reveals no new stars
+PASS: Paused route clock freezes guide flight
+PASS: Guide never parks while the player catches up at loop end
+PASS: Restart clears ending flight progress
+PASS: Guide continues at normal speed after reaching loop 60 cutoff
+PASS: Paused route clock freezes guide flight
+PASS: Guide never parks while the player catches up at loop end
+PASS: Restart clears ending flight progress
+PASS: Exit clears guide and paper presentation
+SUCCESS

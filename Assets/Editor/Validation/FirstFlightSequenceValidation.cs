@@ -15,12 +15,13 @@ namespace WingSinger.Editor {
         const string Key="WingSinger.B.SequenceValidation";
         static IEnumerator routine;static double started;static readonly List<string> checks=new List<string>();
         static FirstFlightSequenceValidation(){EditorApplication.update+=Tick;}
-        public static void Begin(bool fullPlaythrough=false){
+        public static void Begin(bool fullPlaythrough=false,bool guideOnly=false){
             if(EditorApplication.isPlayingOrWillChangePlaymode)throw new InvalidOperationException("Stop Play before B validation.");
             if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty)throw new InvalidOperationException("Save scene before isolated B validation.");
             var flow=Object.FindObjectOfType<BreathUIFlowController>();flow.profileKey="";flow.sensorInput.enabled=false;
             SessionState.SetBool(Key,true);SessionState.SetBool(Key+"Restore",false);SessionState.SetBool(Key+"Background",Application.runInBackground);
             SessionState.SetBool(Key+"Full",fullPlaythrough);
+            SessionState.SetBool(Key+"GuideOnly",guideOnly);
             EditorApplication.isPlaying=true;
         }
         static void Check(bool ok,string message){
@@ -44,6 +45,41 @@ namespace WingSinger.Editor {
             Application.runInBackground=true;for(int i=0;i<5;i++)yield return null;
             var flow=Object.FindObjectOfType<BreathUIFlowController>();var manager=flow.levelManager;
             var input=new GameObject("B test input",typeof(ExternalBreathInput)).GetComponent<ExternalBreathInput>();manager.input=input;
+            if(SessionState.GetBool(Key+"GuideOnly",false)){
+                flow.router.Route(UIRouteAction.SelectLevel,level:1);flow.router.Route(UIRouteAction.TryRhythm);
+                manager.player.SetReduceMotion(true);
+                foreach(int index in new[]{0,1}){
+                    manager.SwitchLevel(index);
+                    foreach(double end in index==0?new[]{50d,100d}:new[]{60d}){
+                        manager.Restart();manager.SetPaused(true);
+                        var current=manager.CurrentLevel;var s=manager.Session;
+                        s.Advance(s.Pattern.Lead+end-1.7,BreathLane.Middle);current.Present(s);
+                        float before=current.guide.position.x;
+                        var revealed=current.Papers.Select(p=>p.gameObject.activeSelf).ToArray();
+                        s.Advance(.5,BreathLane.Middle);current.Present(s);
+                        Check(Math.Abs(current.guide.position.x-before-current.settings.moveSpeed*.5f)<.001,
+                            "Guide continues at normal speed after reaching loop "+end+" cutoff");
+                        if(index==0){
+                            Check(Math.Abs(current.guide.position.y-current.spawnPoint.position.y-current.settings.LaneHeight(0))<.001,"Ending flight remains on middle lane");
+                            Check(current.Papers.Select(p=>p.gameObject.activeSelf).SequenceEqual(revealed),"Ending flight reveals no new stars");
+                        }
+                        float paused=current.guide.position.x;current.Present(s);
+                        Check(current.guide.position.x==paused,"Paused route clock freezes guide flight");
+                        s.Advance(1.19,BreathLane.Middle);current.Present(s);float nearEnd=current.guide.position.x;
+                        Check(nearEnd>paused,"Guide never parks while the player catches up at loop end");
+                        if(index==0&&end==50){
+                            Check(!current.Papers.Where((p,i)=>current.PaperLayout[i].Time>50).Any(p=>p.gameObject.activeSelf),"Next-loop stars stay hidden until the next loop");
+                            s.Advance(.03,BreathLane.Middle);current.Present(s);
+                            Check(current.guide.position.x>nearEnd&&Math.Abs(current.guide.position.x-nearEnd-current.settings.moveSpeed*.03f)<.001,"Crossing into loop 2 does not snap or accelerate the guide");
+                        }
+                        yield return null;
+                    }
+                    manager.Restart();manager.SetPaused(true);
+                    Check(manager.CurrentLevel.guide.localPosition.x<manager.CurrentLevel.spawnPoint.localPosition.x+10,"Restart clears ending flight progress");
+                }
+                flow.ExitSession();yield return null;
+                Check(manager.levels.All(l=>!l.gameObject.activeSelf),"Exit clears guide and paper presentation");yield break;
+            }
             flow.router.Route(UIRouteAction.SelectLevel,level:1);flow.router.Route(UIRouteAction.StartFlight);
             var level=manager.CurrentLevel;var sequence=level.sequence;var pattern=manager.Session.Pattern;var camera=Camera.main;
             Check(pattern.Segmented&&pattern.LoopCount==2&&pattern.Duration==100&&pattern.Inhale==2&&pattern.Exhale==3,"Level 1 has two 50-second loops and 2/3-second dwell times");
@@ -163,7 +199,7 @@ namespace WingSinger.Editor {
         static void Finish(string error){
             var flow=Object.FindObjectOfType<BreathUIFlowController>();if(flow!=null)flow.ExitSession();
             Time.timeScale=1;Application.runInBackground=SessionState.GetBool(Key+"Background",false);
-            Directory.CreateDirectory("Docs/Validation");File.WriteAllText("Docs/Validation/FirstFlightSequence.txt",string.Join("\n",checks)+"\n"+(error??"SUCCESS"));
+            Directory.CreateDirectory("Docs/Validation");File.WriteAllText(SessionState.GetBool(Key+"GuideOnly",false)?"Docs/Validation/GuideContinuation.txt":"Docs/Validation/FirstFlightSequence.txt",string.Join("\n",checks)+"\n"+(error??"SUCCESS"));
             if(error!=null)Debug.LogError(error);routine=null;SessionState.SetBool(Key+"Restore",true);EditorApplication.isPlaying=false;
         }
     }

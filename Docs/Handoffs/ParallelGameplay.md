@@ -48,3 +48,9 @@
 - `Docs/Validation/FirstFlightSequence.txt` 最终为 SUCCESS；截图 `Docs/Images/BSequence/Opening.png`、`Zoom.png`、`Intermission.png`、`Arrow.png`、`Ending.png` 已复查。当前日志无 C# 或 Shader 编译错误；开场源视频缺色彩标记会出现 WindowsMediaFoundation 回退警告，已复查可见画面，视频均正常解码。
 - B 实际交付：Levels/Gameplay 的分段会话、统一流程、镜头/玩家适配与箭头；两份关卡 Prefab（第二关仅新增箭头）；第一关配置/说明；独立视频、材质和 Shader；B 专用 Setup/Validation 和设计文档。A 的 UI/Input 文件、主场景引用与原资源 GUID 保留。
 - A 接线待办：按 Stage 隐藏/替换过场 HUD 文案、将视频音源接入统一音量设置，并在新 HUD 顶部给出镜箭头预留空间。不要另建一套阶段时钟或重新更改结算判据。
+
+### 2026-11-15 循环收尾纸鹤持续飞行
+
+- B 接手本次定向修改及编辑器验证，A 最新记录未占用编辑器。仅改 B 拥有的关卡表现、验证工具和文档。
+- 将纸鹤横向位置与星星揭示时间分开：X 使用连续 guideClock；高度及星星仍使用当前循环截止时间。循环末继续在中轨飞行，不提前揭示下一循环星星。全屏中场期间路线时钟与画面仍暂停，恢复后连续衔接。
+- 定向运行验证已通过，`Docs/Validation/GuideContinuation.txt` 为 SUCCESS：第 1 关 50/100 秒尾段保持原速度前进且处于中轨、不新增星星、下一循环星星不提前显示，跨入第二循环无回跳或加速；另检查第 2 关终点、暂停、重开和退出。复用 Library 增量编译，无 A 组代码或资源修改。验证后释放编辑器，BreathDemo 回到编辑状态。

@@ -28,6 +28,7 @@ namespace WingSinger.Editor {
                 else if(action=="setup"){Apply();File.WriteAllText(Response,"SETUP SUCCESS");}
                 else if(action=="validate"){FirstFlightSequenceValidation.Begin();File.WriteAllText(Response,"VALIDATION STARTED");}
                 else if(action=="validate-full"){FirstFlightSequenceValidation.Begin(true);File.WriteAllText(Response,"FULL PLAYTHROUGH STARTED");}
+                else if(action=="validate-guide"){FirstFlightSequenceValidation.Begin(false,true);File.WriteAllText(Response,"GUIDE VALIDATION STARTED");}
                 else throw new ArgumentException("Unknown B request "+action);
             }catch(Exception e){File.WriteAllText(Response,e.ToString());Debug.LogException(e);}
         }
