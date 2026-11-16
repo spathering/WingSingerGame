@@ -20,6 +20,7 @@ namespace WingSinger {
         readonly List<PaperCollectible> papers = new List<PaperCollectible>();
         public IReadOnlyList<PaperCollectible> Papers => papers;
         public PaperRoutePoint[] PaperLayout { get; private set; }
+        public double SampledGuideTime { get; private set; }
         Vector3[] routeNodes;
         Vector3[] visibleNodes;
         bool prepared;
@@ -63,6 +64,7 @@ namespace WingSinger {
             visibleNodes = new Vector3[routeNodes.Length + 1];
             routeCore.positionCount = routeGlow.positionCount = 0;
             double initialGuideTime = System.Math.Min(GuideOffsetSeconds, pattern.Duration);
+            SampledGuideTime = initialGuideTime;
             guide.localPosition = Point(initialGuideTime, pattern.HeightAt(initialGuideTime));
             prepared = true;
         }
@@ -92,6 +94,7 @@ namespace WingSinger {
                 ? System.Math.Min(session.Pattern.Duration, ((int)(session.PlayTime / session.Pattern.LoopSeconds) + 1) * session.Pattern.LoopSeconds)
                 : session.Pattern.Duration;
             double guideTime = System.Math.Min(guideClock, limit);
+            SampledGuideTime = guideTime;
             // Keep flight continuous after the route cutoff. Only height sampling and paper
             // reveal are capped, so the middle-lane ending cannot leak next-loop stars.
             float x = spawnPoint.localPosition.x + (float)guideClock * settings.moveSpeed;
@@ -139,6 +142,7 @@ namespace WingSinger {
             if (cues != null) cues.ResetPresentation();
             if (foreground != null) foreground.ResetPresentation();
             prepared = false;
+            SampledGuideTime = 0;
             routeCore.positionCount = routeGlow.positionCount = 0;
             guide.localScale = Vector3.one;
             foreach (var paper in papers) { paper.StopFeedback(); paper.gameObject.SetActive(false); }

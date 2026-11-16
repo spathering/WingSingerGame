@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Video;
 using WingSinger.UI;
 using Object=UnityEngine.Object;
 
@@ -15,18 +17,19 @@ namespace WingSinger.Editor {
         const string Key="WingSinger.B.SequenceValidation";
         static IEnumerator routine;static double started;static readonly List<string> checks=new List<string>();
         static FirstFlightSequenceValidation(){EditorApplication.update+=Tick;}
-        public static void Begin(bool fullPlaythrough=false,bool guideOnly=false){
+        public static void Begin(bool fullPlaythrough=false,bool guideOnly=false,bool playbackStateOnly=false){
             if(EditorApplication.isPlayingOrWillChangePlaymode)throw new InvalidOperationException("Stop Play before B validation.");
             if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().isDirty)throw new InvalidOperationException("Save scene before isolated B validation.");
             var flow=Object.FindObjectOfType<BreathUIFlowController>();flow.profileKey="";flow.sensorInput.enabled=false;
             SessionState.SetBool(Key,true);SessionState.SetBool(Key+"Restore",false);SessionState.SetBool(Key+"Background",Application.runInBackground);
             SessionState.SetBool(Key+"Full",fullPlaythrough);
             SessionState.SetBool(Key+"GuideOnly",guideOnly);
-            EditorApplication.isPlaying=true;
+            SessionState.SetBool(Key+"PlaybackStateOnly",playbackStateOnly);
+            EditorApplication.isPaused=false;EditorApplication.isPlaying=true;
         }
         static void Check(bool ok,string message){
             if(!ok)throw new Exception(message);
-            if(checks.Count==0||checks[checks.Count-1]!="PASS: "+message){checks.Add("PASS: "+message);File.WriteAllText("Temp/WingSingerB.validation-progress.txt",message);}
+            if(!checks.Contains("PASS: "+message)){checks.Add("PASS: "+message);File.WriteAllText("Temp/WingSingerB.validation-progress.txt",message);}
         }
         static void Tick(){
             if(!SessionState.GetBool(Key,false))return;
@@ -45,6 +48,11 @@ namespace WingSinger.Editor {
             Application.runInBackground=true;for(int i=0;i<5;i++)yield return null;
             var flow=Object.FindObjectOfType<BreathUIFlowController>();var manager=flow.levelManager;
             var input=new GameObject("B test input",typeof(ExternalBreathInput)).GetComponent<ExternalBreathInput>();manager.input=input;
+            if(SessionState.GetBool(Key+"PlaybackStateOnly",false)){
+                var stateChecks=PlaybackStateChecks(flow,manager);
+                while(stateChecks.MoveNext())yield return stateChecks.Current;
+                yield break;
+            }
             if(SessionState.GetBool(Key+"GuideOnly",false)){
                 flow.router.Route(UIRouteAction.SelectLevel,level:1);flow.router.Route(UIRouteAction.TryRhythm);
                 manager.player.SetReduceMotion(true);
@@ -95,10 +103,12 @@ namespace WingSinger.Editor {
             Check(sequence.Stage==LevelPresentationStage.Opening&&manager.Session.Elapsed==0,"Opening holds route time at zero");
             Check(camera.orthographicSize>11&&Vector3.Distance(position,manager.player.transform.position)<.001,"Opening uses overview camera and stationary player");
             Capture("Opening");
+            double openingDeadline=EditorApplication.timeSinceStartup+30;
+            while(sequence.StageTime<.5){Check(EditorApplication.timeSinceStartup<openingDeadline,"Opening playback advances from its decoded first frame");yield return null;}
             manager.SetPaused(true);double videoTime=sequence.StageTime;double until=EditorApplication.timeSinceStartup+.35;
             while(EditorApplication.timeSinceStartup<until)yield return null;
             Check(Math.Abs(sequence.StageTime-videoTime)<.1&&manager.Session.Elapsed==0,"Pause freezes opening video and route clock");manager.SetPaused(false);
-            while(sequence.Stage==LevelPresentationStage.Opening)yield return null;
+            while(sequence.Stage==LevelPresentationStage.Opening){Check(EditorApplication.timeSinceStartup<openingDeadline,"Opening resumes and completes after pause");yield return null;}
             Check(sequence.Stage==LevelPresentationStage.ZoomIn,"Opening completes before the zoom begins");
             until=EditorApplication.timeSinceStartup+.6;while(EditorApplication.timeSinceStartup<until)yield return null;
             Check(camera.orthographicSize>3.8&&camera.orthographicSize<12.3,"Camera smoothly interpolates from overview to gameplay");Capture("Zoom");
@@ -116,11 +126,11 @@ namespace WingSinger.Editor {
             if(SessionState.GetBool(Key+"Full",false)){
                 manager.SetPaused(false);
                 bool capturedArrow=false;
-                while(sequence.Stage!=LevelPresentationStage.Intermission){
+                while(sequence.Stage!=LevelPresentationStage.Intermission&&sequence.Stage!=LevelPresentationStage.CloudToIntermission){
                     double local=pattern.LocalTime(manager.Session.PlayTime);
                     input.Submit(pattern.IsPreparing(manager.Session.PlayTime)?BreathLane.Upper:pattern.LaneAt(manager.Session.PlayTime));
                     yield return null;
-                    if(sequence.Stage==LevelPresentationStage.Intermission)break;
+                    if(sequence.Stage==LevelPresentationStage.Intermission||sequence.Stage==LevelPresentationStage.CloudToIntermission)break;
                     if(local<pattern.Preparation-.1||local>pattern.ReturnStart+.5)
                         Check(manager.Session.PlayerLane==BreathLane.Middle,"First loop overrides held hardware input on the middle sections");
                     if(!capturedArrow&&local>5){
@@ -137,19 +147,59 @@ namespace WingSinger.Editor {
                 manager.Session.Advance(pattern.Lead+50-manager.Session.Elapsed,BreathLane.Middle);manager.player.Present(manager.Session,level.settings);level.Present(manager.Session);sequence.AfterRouteAdvance();
             }
             int firstScore=manager.Session.CollectedCount;
+            bool hasCloud=sequence.cloudTransition!=null&&sequence.cloudTransition.IsConfigured;
+            if(hasCloud){
+                Check(sequence.Stage==LevelPresentationStage.CloudToIntermission&&sequence.IsBlocking,"Loop 1 starts the cloud transition while preserving Running state");
+                manager.SetPaused(false);
+                until=EditorApplication.timeSinceStartup+.6;while(EditorApplication.timeSinceStartup<until)yield return null;
+                manager.SetPaused(true);float cloudTime=sequence.cloudTransition.Elapsed;
+                until=EditorApplication.timeSinceStartup+.3;while(EditorApplication.timeSinceStartup<until)yield return null;
+                Check(sequence.cloudTransition.Elapsed==cloudTime&&Math.Abs(manager.Session.PlayTime-50)<.001,"Pause freezes cloud frames and the route at the loop boundary");manager.SetPaused(false);
+                bool covered=false;
+                while(sequence.Stage==LevelPresentationStage.CloudToIntermission){
+                    Check(sequence.PlaybackError==null&&Math.Abs(manager.Session.PlayTime-50)<.001,"Cloud-to-video transition keeps gameplay and score frozen");
+                    if(!covered&&sequence.cloudTransition.CoverAlpha>.99f){covered=true;Capture("CloudToVideo");}
+                    yield return null;
+                }
+                Check(covered&&!sequence.cloudTransition.IsPlaying,"Clouds fully cover the switch and finish before the full video begins");
+            }
             Check(manager.Session.Phase==BreathPhase.Running&&sequence.Stage==LevelPresentationStage.Intermission,"Loop 1 enters intermission without exposing Finished to the existing UI");
+            Check(sequence.RestPlaybackTime<.2,"Cloud reveal holds the first video frame instead of skipping the start");
+            var restVideo=sequence.transform.Find("Intermission video").GetComponent<VideoPlayer>();
+            Check(!restVideo.isLooping,"Intermission VideoPlayer is explicitly configured for one-shot playback");
+            // Reproduce a delayed/missing EOF event. The old per-frame Play retry would restart
+            // the entire clip indefinitely; the last decoded frame must now advance the flow.
+            var endedMethod=typeof(FirstFlightSequence).GetMethod("OnEnded",BindingFlags.Instance|BindingFlags.NonPublic);
+            var endedHandler=(VideoPlayer.EventHandler)Delegate.CreateDelegate(typeof(VideoPlayer.EventHandler),sequence,endedMethod);
+            restVideo.loopPointReached-=endedHandler;
             manager.SetPaused(false);while(!sequence.HasDecodedIntermission){Check(sequence.PlaybackError==null,"Intermission prepares without decoder errors");yield return null;}
             until=EditorApplication.timeSinceStartup+1;while(EditorApplication.timeSinceStartup<until)yield return null;
-            Check(sequence.RestAlpha>.8f&&Math.Abs(manager.Session.PlayTime-50)<.001,"Fullscreen intermission fades in while gameplay stays frozen at 50 seconds");Capture("Intermission");
+            Check(sequence.RestAlpha>.8f&&Math.Abs(manager.Session.PlayTime-50)<.001,"Fullscreen intermission is visible while gameplay stays frozen at 50 seconds");Capture("Intermission");
             manager.SetPaused(true);videoTime=sequence.RestPlaybackTime;until=EditorApplication.timeSinceStartup+.35;
             while(EditorApplication.timeSinceStartup<until)yield return null;
             Check(Math.Abs(sequence.RestPlaybackTime-videoTime)<.1&&Math.Abs(manager.Session.PlayTime-50)<.001,"Pause freezes the intermission video too");manager.SetPaused(false);
             bool sawFadeOut=false;
+            double maximumPlayback=sequence.RestPlaybackTime,restDeadline=EditorApplication.timeSinceStartup+sequence.intermission.length+5;
             while(sequence.Stage==LevelPresentationStage.Intermission){
+                Check(EditorApplication.timeSinceStartup<restDeadline,"Intermission leaves within a single source-video duration");
+                Check(sequence.RestPlaybackTime+.2>=maximumPlayback,"Intermission playback never jumps backward to the beginning");
+                maximumPlayback=Math.Max(maximumPlayback,sequence.RestPlaybackTime);
                 if(sequence.RestPlaybackTime>sequence.intermission.length-.6&&sequence.RestAlpha<.8f)sawFadeOut=true;
                 Check(sequence.PlaybackError==null,"Intermission continues without decoder errors");yield return null;
             }
-            Check(sawFadeOut&&manager.Session.PlayTime>=50&&manager.Session.PlayTime<51,"Full source video fades out and seamlessly resumes loop 2");
+            restVideo.loopPointReached+=endedHandler;
+            Check(maximumPlayback>sequence.intermission.length-.3,"The full video reaches its last frames without relying on the EOF callback");
+            if(hasCloud){
+                Check(sequence.Stage==LevelPresentationStage.CloudToGameplayTwo&&sequence.IsBlocking,"The full video ends before the second cloud transition starts");
+                bool covered=false;
+                while(sequence.Stage==LevelPresentationStage.CloudToGameplayTwo){
+                    Check(sequence.PlaybackError==null,"Cloud return continues without video errors");
+                    if(!sequence.cloudTransition.Released)Check(Math.Abs(manager.Session.PlayTime-50)<.001,"Loop 2 does not advance before cloud cover");
+                    if(!covered&&sequence.cloudTransition.CoverAlpha>.99f){covered=true;Capture("CloudToGameplay");}
+                    yield return null;
+                }
+                Check(covered&&!sequence.cloudTransition.IsPlaying&&manager.Session.PlayTime>=50&&manager.Session.PlayTime<53,"Clouds conceal the video exit and reveal continuous loop-2 movement");
+            }else Check(sawFadeOut&&manager.Session.PlayTime>=50&&manager.Session.PlayTime<51,"Full source video fades out and seamlessly resumes loop 2");
             Check(flow.CurrentResult==null&&manager.Session.CollectedCount==firstScore,"Intermission does not settle or alter accumulated score");
             if(SessionState.GetBool(Key+"Full",false)){
                 while(manager.Session.PlayTime<99){
@@ -169,8 +219,56 @@ namespace WingSinger.Editor {
             manager.SwitchLevel(1);yield return null;
             Check(manager.Sequence==null&&!manager.Session.Pattern.Segmented&&manager.Session.Pattern.Inhale==4&&manager.Session.Pattern.Exhale==6,"Level 2 retains its original single-loop configuration");
             manager.SwitchLevel(0);yield return null;Check(manager.Sequence.Stage==LevelPresentationStage.Opening&&manager.Session.Elapsed==0,"Restarting Level 1 resets opening and route clocks");
+            if(hasCloud){manager.Sequence.cloudTransition.Play();manager.Restart();Check(!manager.Sequence.cloudTransition.IsPlaying&&manager.Sequence.cloudTransition.Elapsed==0,"Restart clears an in-progress cloud overlay and its clock");}
             flow.ExitSession();yield return null;
             Check(manager.Session==null&&manager.levels.All(l=>!l.gameObject.activeSelf)&&!manager.player.HoldPresentation,"Exit cleans both video players, arrow and player presentation override");
+        }
+        // Exercises real sequence/lifecycle code with simulated decoder events. This does
+        // not claim native playback coverage when Windows' video clock is stalled.
+        static IEnumerator PlaybackStateChecks(BreathUIFlowController flow,BreathLevelManager manager){
+            flow.router.Route(UIRouteAction.SelectLevel,level:1);flow.router.Route(UIRouteAction.StartFlight);
+            var sequence=manager.Sequence;
+            var rest=sequence.transform.Find("Intermission video").GetComponent<VideoPlayer>();
+            var intro=sequence.transform.Find("Opening video").GetComponent<VideoPlayer>();
+            var flags=BindingFlags.Instance|BindingFlags.NonPublic;
+            var ended=typeof(FirstFlightSequence).GetMethod("OnEnded",flags);
+            var frame=typeof(FirstFlightSequence).GetMethod("OnFrame",flags);
+            var startedField=typeof(FirstFlightSequence).GetField("restPlaybackStarted",flags);
+            var endedField=typeof(FirstFlightSequence).GetField("restEnded",flags);
+            double deadline=EditorApplication.timeSinceStartup+15;
+            while(!rest.isPrepared){Check(EditorApplication.timeSinceStartup<deadline,"Intermission clip prepares for state regression");yield return null;}
+            Check(!rest.isLooping,"Intermission native loop flag is disabled");
+            ended.Invoke(sequence,new object[]{rest});
+            Check(!(bool)endedField.GetValue(sequence),"An EOF callback before intermission starts is ignored");
+            ended.Invoke(sequence,new object[]{intro});sequence.Tick(0);sequence.Tick(sequence.zoomSeconds+.01f);
+            manager.SetPaused(true);
+            manager.Session.Advance(manager.Session.Pattern.Lead+50-manager.Session.Elapsed,BreathLane.Middle);
+            manager.player.Present(manager.Session,manager.CurrentLevel.settings);manager.CurrentLevel.Present(manager.Session);sequence.AfterRouteAdvance();
+            Check(sequence.Stage==LevelPresentationStage.CloudToIntermission,"Loop boundary starts the first cloud transition");
+            manager.SetPaused(false);sequence.Tick(3.3f);
+            frame.Invoke(sequence,new object[]{rest,0L});sequence.Tick(.01f);sequence.Tick(3);
+            Check(sequence.Stage==LevelPresentationStage.Intermission&&(bool)startedField.GetValue(sequence),"Cloud reveal starts the intermission once");
+            rest.Pause();sequence.Tick(.01f);
+            Check(rest.isPaused&&sequence.Stage==LevelPresentationStage.Intermission,"A stopped or paused native player is not automatically replayed by Tick");
+            manager.SetPaused(true);manager.SetPaused(false);
+            Check((bool)startedField.GetValue(sequence)&&Math.Abs(manager.Session.PlayTime-50)<.001,"Explicit pause recovery retains the same playback session and route boundary");
+            frame.Invoke(sequence,new object[]{rest,(long)rest.frameCount-2});sequence.Tick(0);
+            Check(sequence.Stage==LevelPresentationStage.Intermission,"The penultimate frame does not end the film early");
+            frame.Invoke(sequence,new object[]{rest,(long)rest.frameCount-1});sequence.Tick(0);
+            Check(sequence.Stage==LevelPresentationStage.CloudToGameplayTwo,"The final decoded frame starts cloud return without an EOF callback");
+            sequence.Tick(3.3f);sequence.Tick(3);
+            Check(sequence.Stage==LevelPresentationStage.GameplayTwo&&!sequence.cloudTransition.IsPlaying,"Cloud return releases loop 2 and completes");
+            ended.Invoke(sequence,new object[]{rest});sequence.Tick(0);
+            Check(sequence.Stage==LevelPresentationStage.GameplayTwo,"A late EOF callback cannot repeat the cloud transition or film");
+            manager.Restart();
+            Check(!(bool)startedField.GetValue(sequence)&&!(bool)endedField.GetValue(sequence)&&sequence.Stage==LevelPresentationStage.Opening,"Restart clears playback completion and one-shot state");
+            // Verify the ordinary EOF route independently of last-frame fallback.
+            typeof(FirstFlightSequence).GetMethod("SetStage",flags).Invoke(sequence,new object[]{LevelPresentationStage.Intermission});
+            startedField.SetValue(sequence,true);ended.Invoke(sequence,new object[]{rest});sequence.Tick(0);
+            Check(sequence.Stage==LevelPresentationStage.CloudToGameplayTwo,"The ordinary EOF callback also exits intermission exactly once");
+            flow.ExitSession();ended.Invoke(sequence,new object[]{rest});frame.Invoke(sequence,new object[]{rest,(long)rest.frameCount-1});
+            Check(sequence.Stage==LevelPresentationStage.Idle&&!sequence.IsActive&&!sequence.cloudTransition.IsPlaying,"Exit clears clouds and ignores stale decoder callbacks");
+            Check(manager.Session==null&&manager.levels.All(l=>!l.gameObject.activeSelf),"State regression leaves no active level or running session");
         }
         static void Capture(string label){
             Directory.CreateDirectory("Docs/Images/BSequence");
@@ -199,7 +297,7 @@ namespace WingSinger.Editor {
         static void Finish(string error){
             var flow=Object.FindObjectOfType<BreathUIFlowController>();if(flow!=null)flow.ExitSession();
             Time.timeScale=1;Application.runInBackground=SessionState.GetBool(Key+"Background",false);
-            Directory.CreateDirectory("Docs/Validation");File.WriteAllText(SessionState.GetBool(Key+"GuideOnly",false)?"Docs/Validation/GuideContinuation.txt":"Docs/Validation/FirstFlightSequence.txt",string.Join("\n",checks)+"\n"+(error??"SUCCESS"));
+            Directory.CreateDirectory("Docs/Validation");File.WriteAllText(SessionState.GetBool(Key+"PlaybackStateOnly",false)?"Docs/Validation/IntermissionPlaybackState.txt":SessionState.GetBool(Key+"GuideOnly",false)?"Docs/Validation/GuideContinuation.txt":"Docs/Validation/FirstFlightSequence.txt",string.Join("\n",checks)+"\n"+(error??"SUCCESS"));
             if(error!=null)Debug.LogError(error);routine=null;SessionState.SetBool(Key+"Restore",true);EditorApplication.isPlaying=false;
         }
     }

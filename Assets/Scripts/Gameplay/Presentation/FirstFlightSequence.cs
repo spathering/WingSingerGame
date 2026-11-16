@@ -4,17 +4,18 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 
 namespace WingSinger {
-    public enum LevelPresentationStage { Idle, Opening, ZoomIn, GameplayOne, Intermission, GameplayTwo, ReturningToMiddle, Complete, Failed }
+    public enum LevelPresentationStage { Idle, Opening, ZoomIn, GameplayOne, Intermission, GameplayTwo, ReturningToMiddle, Complete, Failed, CloudToIntermission, CloudToGameplayTwo }
 
     // Owns presentation time only; the manager remains the sole owner of route time and level activation.
     public sealed class FirstFlightSequence : MonoBehaviour {
         public VideoClip opening, intermission;
         public Material openingMaterial;
+        public CloudTransitionOverlay cloudTransition;
         [Min(.1f)] public float zoomSeconds = 1.8f, fadeSeconds = .8f;
         [Min(1)] public float overviewSize = 12.3f;
         public LevelPresentationStage Stage { get; private set; }
         public event Action<LevelPresentationStage> StageChanged;
-        public bool IsBlocking => active && (Stage == LevelPresentationStage.Opening || Stage == LevelPresentationStage.ZoomIn || Stage == LevelPresentationStage.Intermission);
+        public bool IsBlocking => active && (Stage == LevelPresentationStage.Opening || Stage == LevelPresentationStage.ZoomIn || Stage == LevelPresentationStage.Intermission || Stage==LevelPresentationStage.CloudToIntermission || Stage==LevelPresentationStage.CloudToGameplayTwo&&!transitionSwitched);
         public float OverviewBlend => Stage == LevelPresentationStage.Opening ? 1 : Stage == LevelPresentationStage.ZoomIn ? 1-Mathf.SmoothStep(0,1,stageSeconds/zoomSeconds) : 0;
         public double StageTime => Stage == LevelPresentationStage.Opening ? introPlayer.time : Stage == LevelPresentationStage.Intermission ? restPlayer.time : stageSeconds;
         public string PlaybackError { get; private set; }
@@ -35,6 +36,9 @@ namespace WingSinger {
         AudioSource introAudio, restAudio;
         bool active, introEnded, restEnded, introFrame, restFrame, restPlayed;
         float stageSeconds, prepareSeconds;
+        bool transitionSwitched;
+        bool restPlaybackStarted;
+        bool HasCloud=>cloudTransition!=null&&cloudTransition.IsConfigured;
 
         void SetStage(LevelPresentationStage value) {
             if(Stage==value)return;Stage=value;stageSeconds=0;StageChanged?.Invoke(value);
@@ -43,6 +47,8 @@ namespace WingSinger {
             End();manager=owner;Ensure();active=true;restPlayed=false;
             manager.player.HoldPresentation=true;
             introEnded=restEnded=introFrame=restFrame=false;PlaybackError=null;prepareSeconds=0;
+            restPlaybackStarted=false;
+            restPlayer.isLooping=false;
             introPlayer.clip=opening;restPlayer.clip=intermission;
             SetStage(LevelPresentationStage.Opening);
             introPlayer.Prepare();restPlayer.Prepare();
@@ -52,6 +58,7 @@ namespace WingSinger {
             introTexture=new RenderTexture(1280,1280,0,RenderTextureFormat.ARGB32);introTexture.Create();
             restTexture=new RenderTexture(1112,834,0,RenderTextureFormat.ARGB32);restTexture.Create();
             introPlayer=CreatePlayer("Opening video",introTexture,out introAudio);
+            introPlayer.audioOutputMode=VideoAudioOutputMode.None;
             restPlayer=CreatePlayer("Intermission video",restTexture,out restAudio);
             introPlayer.prepareCompleted+=OnPrepared;restPlayer.prepareCompleted+=OnPrepared;
             introPlayer.frameReady+=OnFrame;restPlayer.frameReady+=OnFrame;
@@ -69,6 +76,7 @@ namespace WingSinger {
             var image=black.GetComponent<Image>();image.color=Color.black;image.raycastTarget=false;
             var view=new GameObject("Video",typeof(RectTransform),typeof(RawImage));view.transform.SetParent(canvasGo.transform,false);
             restImage=view.GetComponent<RawImage>();restImage.texture=restTexture;restImage.raycastTarget=false;restRect=view.GetComponent<RectTransform>();
+            restImage.material=Resources.Load<Material>("WingSingerUIArt");
             restCanvas.enabled=false;
         }
         VideoPlayer CreatePlayer(string label,RenderTexture texture,out AudioSource audio) {
@@ -79,9 +87,26 @@ namespace WingSinger {
             v.audioOutputMode=VideoAudioOutputMode.AudioSource;v.controlledAudioTrackCount=1;v.SetTargetAudioSource(0,audio);
             return v;
         }
+        void StartIntermissionOnce() {
+            if(restPlaybackStarted||restEnded||!restPlayer.isPrepared||manager.IsPaused)return;
+            restPlaybackStarted=true;restPlayer.Play();
+        }
+        static bool AtLastFrame(VideoPlayer video) => AtLastFrame(video,video.frame);
+        static bool AtLastFrame(VideoPlayer video,long frame) {
+            ulong count=video.frameCount;if(count<=1&&video.clip!=null)count=video.clip.frameCount;
+            return count>1&&frame>=0&&(ulong)frame>=count-1;
+        }
         void OnPrepared(VideoPlayer video) { if(active && video==introPlayer && Stage==LevelPresentationStage.Opening && !manager.IsPaused)video.Play(); }
-        void OnFrame(VideoPlayer video,long frame) {if(video==introPlayer)introFrame=true;else restFrame=true;}
-        void OnEnded(VideoPlayer video) { if(!active)return;if(video==introPlayer)introEnded=true;else restEnded=true; }
+        void OnFrame(VideoPlayer video,long frame) {
+            if(!active)return;
+            if(video==introPlayer)introFrame=true;
+            else {
+                restFrame=true;
+                if(restPlaybackStarted&&AtLastFrame(video,frame))restEnded=true;
+                if(Stage==LevelPresentationStage.CloudToIntermission)restPlayer.Pause();
+            }
+        }
+        void OnEnded(VideoPlayer video) { if(!active)return;if(video==introPlayer)introEnded=true;else if(video==restPlayer&&restPlaybackStarted)restEnded=true; }
         void OnError(VideoPlayer video,string error) {if(!active)return;PlaybackError=error;Debug.LogError("WingSinger video: "+error,this);SetStage(LevelPresentationStage.Failed);}
 
         // Returns true only when route time is allowed to advance.
@@ -90,6 +115,25 @@ namespace WingSinger {
             if(manager.IsPaused)return false;
             stageSeconds+=Mathf.Max(0,dt);
             if(Stage==LevelPresentationStage.Failed)return false;
+            if(Stage==LevelPresentationStage.CloudToIntermission) {
+                bool done=cloudTransition.Advance(dt);
+                if(cloudTransition.AtSwitch&&!transitionSwitched){
+                    if(restPlayer.isPrepared){transitionSwitched=true;prepareSeconds=0;restPlayer.Play();}
+                    else {prepareSeconds+=dt;if(prepareSeconds>20)OnError(restPlayer,"Intermission did not prepare beneath cloud cover.");}
+                }
+                if(transitionSwitched) {
+                    if(!restFrame){prepareSeconds+=dt;if(prepareSeconds>20)OnError(restPlayer,"Intermission did not decode beneath cloud cover.");}
+                    else {restGroup.alpha=1;restAudio.volume=0;cloudTransition.Release();}
+                }
+                if(!done)return false;
+                SetStage(LevelPresentationStage.Intermission);StartIntermissionOnce();return false;
+            }
+            if(Stage==LevelPresentationStage.CloudToGameplayTwo) {
+                bool done=cloudTransition.Advance(dt);
+                if(cloudTransition.AtSwitch&&!transitionSwitched){transitionSwitched=true;restCanvas.enabled=false;restGroup.alpha=0;manager.player.HoldPresentation=false;cloudTransition.Release();}
+                if(done)SetStage(LevelPresentationStage.GameplayTwo);
+                return transitionSwitched;
+            }
             if(Stage==LevelPresentationStage.Opening){
                 if(!introFrame){prepareSeconds+=dt;if(prepareSeconds>20)OnError(introPlayer,"Opening video did not decode within 20 seconds.");}
                 if(introPlayer.isPrepared&&!introPlayer.isPlaying&&!introEnded)introPlayer.Play();
@@ -108,13 +152,18 @@ namespace WingSinger {
                 if(!restPlayer.isPrepared || !restFrame){
                     prepareSeconds+=dt;if(prepareSeconds>20)OnError(restPlayer,"Intermission video did not decode within 20 seconds.");
                 }
-                if(restPlayer.isPrepared&&!restPlayer.isPlaying&&!restEnded)restPlayer.Play();
+                // A stopped player can be at EOF before loopPointReached is dispatched.
+                // Never interpret that temporary state as a request to play from the start.
+                StartIntermissionOnce();
+                if(restPlaybackStarted&&AtLastFrame(restPlayer))restEnded=true;
                 if(restFrame){
                     float t=(float)restPlayer.time;float length=(float)intermission.length;
-                    restGroup.alpha=Mathf.Min(Mathf.Clamp01(t/fadeSeconds),Mathf.Clamp01((length-t)/fadeSeconds));
-                    restAudio.volume=restGroup.alpha;
+                    float fade=Mathf.Min(Mathf.Clamp01(t/fadeSeconds),Mathf.Clamp01((length-t)/fadeSeconds));
+                    restGroup.alpha=HasCloud?1:fade;
+                    restAudio.volume=fade;
                 }
                 if(!restEnded)return false;
+                if(HasCloud){transitionSwitched=false;cloudTransition.Play();SetStage(LevelPresentationStage.CloudToGameplayTwo);return false;}
                 restGroup.alpha=0;restCanvas.enabled=false;manager.player.HoldPresentation=false;SetStage(LevelPresentationStage.GameplayTwo);
             }
             return true;
@@ -125,10 +174,12 @@ namespace WingSinger {
         }
         public void AfterRouteAdvance() {
             if(!active)return;
+            if(Stage==LevelPresentationStage.CloudToGameplayTwo&&cloudTransition.IsPlaying)return;
             var s=manager.Session;
             if(!restPlayed && s.PlayTime>=s.Pattern.LoopSeconds-.00001){
-                restPlayed=true;prepareSeconds=0;manager.player.StopAnimation();manager.player.HoldPresentation=true;SetStage(LevelPresentationStage.Intermission);
-                if(restPlayer.isPrepared)restPlayer.Play();return;
+                restPlayed=true;prepareSeconds=0;manager.player.StopAnimation();manager.player.HoldPresentation=true;
+                if(HasCloud){transitionSwitched=false;cloudTransition.Play();SetStage(LevelPresentationStage.CloudToIntermission);}
+                else {SetStage(LevelPresentationStage.Intermission);StartIntermissionOnce();}return;
             }
             if(s.Phase==BreathPhase.Finished){SetStage(LevelPresentationStage.Complete);return;}
             if(s.Pattern.IsPreparing(s.PlayTime)&&s.Pattern.LocalTime(s.PlayTime)>=s.Pattern.ReturnStart)
@@ -137,9 +188,13 @@ namespace WingSinger {
         }
         public void SetPaused(bool value) {
             if(!active)return;
+            if(HasCloud)cloudTransition.SetPaused(value);
             if(value){introPlayer.Pause();restPlayer.Pause();}
             else if(Stage==LevelPresentationStage.Opening&&introPlayer.isPrepared&&!introEnded)introPlayer.Play();
-            else if(Stage==LevelPresentationStage.Intermission&&restPlayer.isPrepared&&!restEnded)restPlayer.Play();
+            else if(Stage==LevelPresentationStage.Intermission&&restPlayer.isPrepared&&!restEnded) {
+                if(AtLastFrame(restPlayer))restEnded=true;
+                else if(restPlaybackStarted)restPlayer.Play();else StartIntermissionOnce();
+            }
         }
         void LateUpdate() {
             if(!active||manager==null)return;
@@ -152,12 +207,15 @@ namespace WingSinger {
                 introQuad.transform.position=new Vector3(bounds.center.x,bounds.min.y+height*.5f,-1);
                 introQuad.transform.localScale=Vector3.one*height;
             }
-            restCanvas.enabled=Stage==LevelPresentationStage.Intermission&&restFrame&&!manager.IsPaused;
+            bool showRest=Stage==LevelPresentationStage.Intermission || Stage==LevelPresentationStage.CloudToIntermission&&transitionSwitched || Stage==LevelPresentationStage.CloudToGameplayTwo&&!transitionSwitched;
+            restCanvas.enabled=showRest&&restFrame&&!manager.IsPaused;
             float aspect=intermission!=null?(float)intermission.width/intermission.height:4f/3;
             float width=Mathf.Min(Screen.width,Screen.height*aspect);restRect.sizeDelta=new Vector2(width,width/aspect);
         }
         public void End() {
             active=false;
+            restPlaybackStarted=false;
+            if(cloudTransition!=null)cloudTransition.Stop();transitionSwitched=false;
             if(introPlayer!=null){introPlayer.Stop();restPlayer.Stop();introQuad.enabled=false;restCanvas.enabled=false;restGroup.alpha=0;}
             if(manager!=null&&manager.player!=null){manager.player.characterAnimation.target.enabled=true;manager.player.HoldPresentation=false;}
             manager=null;SetStage(LevelPresentationStage.Idle);

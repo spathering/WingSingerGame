@@ -61,7 +61,7 @@ namespace WingSinger.Editor {
             var one = new BreathSession(new BreathPattern(3, 4, 15, 10, 0, 0)); one.Advance(15, BreathLane.Upper);
             var many = new BreathSession(one.Pattern); for (int i = 0; i < 150; i++) many.Advance(0.1, BreathLane.Upper);
             Near(one.Score, many.Score, "Frame rate independent scoring");
-            Check(KeyboardBreathInput.Resolve(true, false) == BreathLane.Upper && KeyboardBreathInput.Resolve(false, true) == BreathLane.Lower
+            Check(KeyboardBreathInput.Resolve(true, false) == BreathLane.Lower && KeyboardBreathInput.Resolve(false, true) == BreathLane.Upper
                 && KeyboardBreathInput.Resolve(true, true) == BreathLane.Middle && KeyboardBreathInput.Resolve(false, false) == BreathLane.Middle, "Keyboard mapping");
             bool invalid = false; try { new BreathPattern(0, 1, 1, 1, 0, 0); } catch (ArgumentException) { invalid = true; }
             Check(invalid, "Reject invalid durations");

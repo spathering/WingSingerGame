@@ -1,0 +1,16 @@
+PASS: Intermission clip prepares for state regression
+PASS: Intermission native loop flag is disabled
+PASS: An EOF callback before intermission starts is ignored
+PASS: Loop boundary starts the first cloud transition
+PASS: Cloud reveal starts the intermission once
+PASS: A stopped or paused native player is not automatically replayed by Tick
+PASS: Explicit pause recovery retains the same playback session and route boundary
+PASS: The penultimate frame does not end the film early
+PASS: The final decoded frame starts cloud return without an EOF callback
+PASS: Cloud return releases loop 2 and completes
+PASS: A late EOF callback cannot repeat the cloud transition or film
+PASS: Restart clears playback completion and one-shot state
+PASS: The ordinary EOF callback also exits intermission exactly once
+PASS: Exit clears clouds and ignores stale decoder callbacks
+PASS: State regression leaves no active level or running session
+SUCCESS
