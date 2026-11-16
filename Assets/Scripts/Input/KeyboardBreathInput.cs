@@ -7,6 +7,6 @@ namespace WingSinger {
         public KeyCode exhaleKey = KeyCode.S;
         public override BreathLane ReadLane() => Resolve(Input.GetKey(inhaleKey), Input.GetKey(exhaleKey));
         public static BreathLane Resolve(bool inhale, bool exhale) => inhale == exhale ? BreathLane.Middle
-            : inhale ? BreathLane.Upper : BreathLane.Lower;
+            : inhale ? BreathLane.Lower : BreathLane.Upper;
     }
 }

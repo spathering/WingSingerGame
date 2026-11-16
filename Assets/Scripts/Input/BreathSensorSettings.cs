@@ -30,10 +30,10 @@ namespace WingSinger {
         [Tooltip("Leave empty to scan serial ports and identify the sensor with the WingSinger handshake.")]
         public string portOverride = "";
         [Header("USB / 旧 BLE UART 阈值（实时生效）")]
-        [InspectorName("吸气阈值（≤，上轨）")]
+        [InspectorName("吸气阈值（≤，下轨）")]
         [Tooltip("ADC 毫伏值小于或等于此值时判定吸气。必须小于呼气阈值；运行时调整立即生效，无需重新烧录。")]
         public float inhaleMaximum = 400;
-        [InspectorName("呼气阈值（≥，下轨）")]
+        [InspectorName("呼气阈值（≥，上轨）")]
         [Tooltip("ADC 毫伏值大于或等于此值时判定呼气。两阈值之间为静息/中轨；无效阈值配置保持中轨。")]
         public float exhaleMinimum = 1000;
         [InspectorName("开启 Console 调试")]

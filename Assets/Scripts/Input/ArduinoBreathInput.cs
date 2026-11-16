@@ -80,7 +80,7 @@ namespace WingSinger {
             get {
                 var state = ReceiverSnapshot;
                 var lane = state.IsFresh(sampleTimeoutSeconds) && ThresholdsValid ? Resolve(state) : BreathLane.Middle;
-                return lane == BreathLane.Upper ? "吸气" : lane == BreathLane.Lower ? "呼气" : "默认";
+                return lane == BreathLane.Lower ? "吸气" : lane == BreathLane.Upper ? "呼气" : "默认";
             }
         }
         BreathLane Resolve(BreathSensorSnapshot state) => UsesCsv
@@ -140,7 +140,7 @@ namespace WingSinger {
             bool validThresholds = ThresholdsValid;
             BreathLane lane = Resolve(state);
             breathState = !validThresholds ? "阈值无效（保持中轨）"
-                : freshSample ? lane == BreathLane.Upper ? "吸气 / 上轨" : lane == BreathLane.Lower ? "呼气 / 下轨" : "静息 / 中轨"
+                : freshSample ? lane == BreathLane.Lower ? "吸气 / 下轨" : lane == BreathLane.Upper ? "呼气 / 上轨" : "静息 / 中轨"
                 : state.Connected ? "等待有效数据 / 中轨" : "未连接";
 
             if (!debugLogging) {

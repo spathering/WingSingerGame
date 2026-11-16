@@ -32,7 +32,7 @@ namespace WingSinger {
         public static BreathLane ResolveCentered(double value, double center, double deviation) {
             if (double.IsNaN(value) || double.IsInfinity(value) || !AreCenteredThresholdsValid(center, deviation)) return BreathLane.Middle;
             // Match the supplied web tester: equality remains in the neutral dead zone.
-            return value < center - deviation ? BreathLane.Upper : value > center + deviation ? BreathLane.Lower : BreathLane.Middle;
+            return value < center - deviation ? BreathLane.Lower : value > center + deviation ? BreathLane.Upper : BreathLane.Middle;
         }
 
         public static bool AreThresholdsValid(double inhaleMaximum, double exhaleMinimum) =>
@@ -43,7 +43,7 @@ namespace WingSinger {
         public static BreathLane Resolve(double value, double inhaleMaximum = 400, double exhaleMinimum = 1000) {
             if (double.IsNaN(value) || double.IsInfinity(value) || !AreThresholdsValid(inhaleMaximum, exhaleMinimum))
                 return BreathLane.Middle;
-            return value <= inhaleMaximum ? BreathLane.Upper : value >= exhaleMinimum ? BreathLane.Lower : BreathLane.Middle;
+            return value <= inhaleMaximum ? BreathLane.Lower : value >= exhaleMinimum ? BreathLane.Upper : BreathLane.Middle;
         }
     }
 

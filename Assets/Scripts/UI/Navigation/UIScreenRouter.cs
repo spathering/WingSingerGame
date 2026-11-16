@@ -60,7 +60,8 @@ namespace WingSinger.UI {
                 case UIRouteAction.Navigate: Show(destination); break;
                 case UIRouteAction.Back:
                 case UIRouteAction.Resume: Back(); break;
-                case UIRouteAction.SelectLevel: SelectedLevel = Mathf.Clamp(level, 1, 12); Show(UIScreenId.ReadyForTakeoff); break;
+                case UIRouteAction.SelectLevel: SelectedLevel = Mathf.Clamp(level, 1, 12); break;
+                case UIRouteAction.ContinueSelection: Show(UIScreenId.ReadyForTakeoff); break;
                 case UIRouteAction.TryRhythm: practicing = true; Show(UIScreenId.PracticeInhale); break;
                 case UIRouteAction.StartFlight:
                     practicing = false; gameplayRequested.Invoke(SelectedLevel);

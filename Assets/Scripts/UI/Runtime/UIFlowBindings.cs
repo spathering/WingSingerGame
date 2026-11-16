@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,7 @@ namespace WingSinger.UI {
         public Image[] levelStatus, weekTiles;
         public GameObject[] weekChecks;
         public Sprite completedIcon, unlockedIcon, lockedIcon;
+        public bool useFigmaArtwork;
         UIRuntimeLabel[] labels;
         UIRuntimeProgress[] fills;
         UIRouteButton[] routes;
@@ -19,6 +21,7 @@ namespace WingSinger.UI {
         Color[] originalColors;
         UIInteractionTween[] interactions;
         Image[] thumbnails;
+        FigmaSurface[] selectionBorders;
         BreathUIFlowController flow;
         bool settingsDirty;
         float saveAfter;
@@ -28,7 +31,8 @@ namespace WingSinger.UI {
             routes = GetComponentsInChildren<UIRouteButton>(true);
             interactions = GetComponentsInChildren<UIInteractionTween>(true);
             thumbnails = new Image[levelCards.Length];
-            for (int i = 0; i < levelCards.Length; i++) thumbnails[i] = levelCards[i].transform.Find("Thumbnail").GetComponent<Image>();
+            for (int i = 0; i < levelCards.Length; i++) thumbnails[i] = levelCards[i].GetComponentsInChildren<Image>(true).FirstOrDefault(image => image.name == "Thumbnail");
+            selectionBorders=levelCards.Select(card=>card.GetComponentsInChildren<FigmaSurface>(true).FirstOrDefault(s=>s.name=="Thumbnail border")).ToArray();
             if (texts == null) {
                 texts = GetComponentsInChildren<TMP_Text>(true);
                 originalColors = new Color[texts.Length]; for (int i = 0; i < texts.Length; i++) originalColors[i] = texts[i].color;
@@ -36,6 +40,8 @@ namespace WingSinger.UI {
             var d = flow.Progress.Data;
             music.SetValueWithoutNotify(d.musicVolume); sound.SetValueWithoutNotify(d.soundVolume);
             reduceMotion.SetIsOnWithoutNotify(d.reduceMotion); highContrast.SetIsOnWithoutNotify(d.highContrast);
+            music.GetComponent<UISliderValue>()?.Present(d.musicVolume); sound.GetComponent<UISliderValue>()?.Present(d.soundVolume);
+            reduceMotion.GetComponent<UIToggleValue>()?.Present(d.reduceMotion); highContrast.GetComponent<UIToggleValue>()?.Present(d.highContrast);
             music.onValueChanged.AddListener(Music); sound.onValueChanged.AddListener(Sound);
             reduceMotion.onValueChanged.AddListener(Motion); highContrast.onValueChanged.AddListener(Contrast);
             ApplyAudio(); ApplyContrast(); SetReduceMotion(d.reduceMotion);
@@ -75,8 +81,13 @@ namespace WingSinger.UI {
                 levelCards[i].interactable = selectable;
                 var definition = owner.levelManager.DefinitionAt(i);
                 bool complete = definition == null ? owner.Progress.Completed(i + 1) : owner.Progress.Completed(definition.levelId, i + 1);
-                levelStatus[i].sprite = complete ? completedIcon : selectable ? unlockedIcon : lockedIcon;
-                if (definition != null && definition.thumbnail != null) thumbnails[i].sprite = definition.thumbnail;
+                levelStatus[i].sprite = selectable && complete ? completedIcon : selectable ? unlockedIcon : lockedIcon;
+                if(useFigmaArtwork && selectionBorders[i]!=null) {
+                    bool selected=selectable && owner.router.SelectedLevel==i+1;
+                    selectionBorders[i].borderColor=selected?new Color(.91f,.57f,.16f):new Color(.65f,.66f,.59f);
+                    selectionBorders[i].borderWidth=selected?5:3.2f;selectionBorders[i].SetVerticesDirty();
+                }
+                if (!useFigmaArtwork && thumbnails[i] != null && definition != null && definition.thumbnail != null) thumbnails[i].sprite = definition.thumbnail;
             }
             var recent = owner.Progress.RecentFlights;
             for (int i = 0; i < recentRows.Length; i++) {
@@ -92,6 +103,7 @@ namespace WingSinger.UI {
                 var button = route.GetComponent<Button>();
                 switch (route.action) {
                     case UIRouteAction.StartFlight: button.interactable = owner.CanSelect(owner.router.SelectedLevel) && owner.InputReady; break;
+                    case UIRouteAction.ContinueSelection: button.interactable = owner.CanSelect(owner.router.SelectedLevel); break;
                     case UIRouteAction.NextLevel: button.interactable = owner.ResultLevelNumber > 0 && owner.CanSelect(owner.ResultLevelNumber + 1); break;
                     case UIRouteAction.Restart: button.interactable = owner.ResultLevelNumber > 0 && owner.CanSelect(owner.ResultLevelNumber); break;
                     case UIRouteAction.Resume: button.interactable = owner.IsSessionActive; break;

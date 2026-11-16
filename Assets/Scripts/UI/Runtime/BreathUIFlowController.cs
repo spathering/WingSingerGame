@@ -60,7 +60,7 @@ namespace WingSinger.UI {
             if (Input.GetKeyDown(KeyCode.Escape)) {
                 if (IsSessionActive && !IsPaused) Pause();
                 else if (router.CurrentScreen == UIScreenId.FlightPaused) Resume();
-                else if (router.CurrentScreen == UIScreenId.Settings || router.CurrentScreen == UIScreenId.ControllerConnection || router.CurrentScreen == UIScreenId.HardwareSettings) router.Back();
+                else if (router.CurrentScreen == UIScreenId.Settings || router.CurrentScreen == UIScreenId.ControllerConnection || router.CurrentScreen == UIScreenId.HardwareSettings || router.CurrentScreen == UIScreenId.Tutorial) router.Back();
             }
             if (Time.unscaledTime >= refreshAt) { Refresh(); refreshAt = Time.unscaledTime + .1f; }
         }
@@ -73,7 +73,10 @@ namespace WingSinger.UI {
             if (Progress == null) return true;
             switch (action) {
                 case UIRouteAction.SelectLevel:
-                    if (CanSelect(value)) { router.SetSelectedLevel(value); router.Show(UIScreenId.ReadyForTakeoff); }
+                    if (CanSelect(value)) router.SetSelectedLevel(value);
+                    break;
+                case UIRouteAction.ContinueSelection:
+                    if (CanSelect(router.SelectedLevel)) { ExitSession(); router.Show(UIScreenId.ReadyForTakeoff); }
                     break;
                 case UIRouteAction.StartFlight: StartSession(false); break;
                 case UIRouteAction.TryRhythm: StartSession(true); break;
@@ -105,7 +108,7 @@ namespace WingSinger.UI {
         }
         void Navigate(UIScreenId target) {
             if (target == UIScreenId.HomeDashboard || target == UIScreenId.HomeClean) { ExitSession(); ShowHome(); return; }
-            if (target == UIScreenId.Settings || target == UIScreenId.ControllerConnection || target == UIScreenId.HardwareSettings) {
+            if (target == UIScreenId.Settings || target == UIScreenId.ControllerConnection || target == UIScreenId.HardwareSettings || target == UIScreenId.Tutorial) {
                 if (IsSessionActive && !IsPaused) Pause();
                 router.Show(target); return;
             }
@@ -118,7 +121,7 @@ namespace WingSinger.UI {
             router.Show(Progress.Data.records.Count > 0 ? UIScreenId.HomeDashboard : UIScreenId.HomeClean, false);
         }
         public bool CanSelect(int level) {
-            if (level < 1 || level > AvailableLevels || Progress == null || levelManager.levels == null
+            if (level != 1 || level > AvailableLevels || Progress == null || levelManager.levels == null
                 || level > levelManager.levels.Length || levelManager.levels[level - 1] == null || !levelManager.isActiveAndEnabled) return false;
             var definition = levelManager.DefinitionAt(level - 1);
             return (definition != null && definition.availableFromStart) || level <= Progress.Data.unlockedLevels;
@@ -164,9 +167,9 @@ namespace WingSinger.UI {
             var session = levelManager.Session;
             if (session.Phase != BreathPhase.Running || session.Pattern.IsPreparing(session.PlayTime)) return;
             if (practiceStage < 2) {
-                var required = practiceStage == 0 ? BreathLane.Upper : BreathLane.Lower;
+                var required = practiceStage == 0 ? BreathLane.Lower : BreathLane.Upper;
                 heldSeconds = levelManager.input.ReadLane() == required ? heldSeconds + dt : 0;
-                double target = practiceStage == 0 ? session.Pattern.Inhale : session.Pattern.Exhale;
+                double target = practiceStage == 0 ? session.Pattern.Exhale : session.Pattern.Inhale;
                 if (heldSeconds < target) return;
                 practiceStage++; heldSeconds = 0;
                 if (practiceStage == 2) followStartCount = session.CollectedCount;
@@ -222,9 +225,10 @@ namespace WingSinger.UI {
                 case UIValueKind.LevelTitle: return ViewingHistory && CurrentResult != null ? "Level " + CurrentResult.levelNumber + " - " + CurrentResult.levelTitle
                     : "Level " + router.SelectedLevel + " - " + (SelectedDefinition != null ? SelectedDefinition.title : settings != null ? settings.displayName : "Unavailable");
                 case UIValueKind.LevelDescription: return SelectedDefinition != null ? SelectedDefinition.description : "";
-                case UIValueKind.WorldLevels: return AvailableLevels + " levels";
-                case UIValueKind.InhaleSeconds: return settings == null ? "--" : settings.inhaleSeconds.ToString("0.#") + " s";
-                case UIValueKind.ExhaleSeconds: return settings == null ? "--" : settings.exhaleSeconds.ToString("0.#") + " s";
+                case UIValueKind.WorldLevels: return "1 available";
+                // Legacy route field names describe upper/lower dwell; input direction is now reversed.
+                case UIValueKind.InhaleSeconds: return settings == null ? "--" : settings.exhaleSeconds.ToString("0.#") + " s";
+                case UIValueKind.ExhaleSeconds: return settings == null ? "--" : settings.inhaleSeconds.ToString("0.#") + " s";
                 case UIValueKind.TodayPractice: return Progress.TodaySessions + " / 6";
                 case UIValueKind.Streak: return Progress.Streak + "-day streak";
                 case UIValueKind.StreakDays: return Progress.Streak + "-day";
@@ -245,10 +249,10 @@ namespace WingSinger.UI {
                 case UIValueKind.WeeklyMinutes: return Progress.WeeklyMinutes.ToString("0.#") + " min";
                 case UIValueKind.RecentTitle: return index < recent.Length ? "Level " + recent[index].levelNumber + " - " + recent[index].levelTitle : index == 0 ? "No completed flights yet" : "";
                 case UIValueKind.RecentDetail: return index < recent.Length ? "Completed - " + Duration(recent[index].seconds) + " - " + recent[index].LocalDate.ToString("MMM d", CultureInfo.InvariantCulture) : "";
-                case UIValueKind.InhaleHint: return "Breathe in to fly UP (W)";
-                case UIValueKind.ExhaleHint: return "Breathe out to fly DOWN (S)";
-                case UIValueKind.InstructionTitle: return practiceStage == 0 ? "Breathe in to fly UP" : practiceStage == 1 ? "Breathe out to fly DOWN" : "Follow the guide and collect 3 stars";
-                case UIValueKind.InstructionDetail: return practiceStage < 2 ? "Hold " + (practiceStage == 0 ? "inhale / W" : "exhale / S") + " for " + (settings == null ? "--" : (practiceStage == 0 ? settings.inhaleSeconds : settings.exhaleSeconds).ToString("0.#")) + " s  (" + heldSeconds.ToString("0.0") + ")" : "Collected " + Math.Max(0, (s?.CollectedCount ?? 0) - followStartCount) + " / 3";
+                case UIValueKind.InhaleHint: return "Breathe in to fly DOWN (W)";
+                case UIValueKind.ExhaleHint: return "Breathe out to fly UP (S)";
+                case UIValueKind.InstructionTitle: return practiceStage == 0 ? "Breathe in to fly DOWN" : practiceStage == 1 ? "Breathe out to fly UP" : "Follow the guide and collect 3 stars";
+                case UIValueKind.InstructionDetail: return practiceStage < 2 ? "Hold " + (practiceStage == 0 ? "inhale / W" : "exhale / S") + " for " + (settings == null ? "--" : (practiceStage == 0 ? settings.exhaleSeconds : settings.inhaleSeconds).ToString("0.#")) + " s  (" + heldSeconds.ToString("0.0") + ")" : "Collected " + Math.Max(0, (s?.CollectedCount ?? 0) - followStartCount) + " / 3";
                 default: return "";
             }
         }

@@ -6,8 +6,8 @@ namespace WingSinger {
     public sealed class BreathLevelSettings : ScriptableObject {
         public string displayName = "First Flight";
         [Header("Breathing pattern (seconds)")]
-        [Min(0.1f)] public float inhaleSeconds = 3;
-        [Min(0.1f)] public float exhaleSeconds = 4;
+        [InspectorName("上轨停留（呼气，秒）"), Min(0.1f)] public float inhaleSeconds = 3;
+        [InspectorName("下轨停留（吸气，秒）"), Min(0.1f)] public float exhaleSeconds = 4;
         [Header("Segmented route (optional)")]
         [Min(1)] public int loopCount = 1;
         [Min(1)] public float loopSeconds = 50;
@@ -23,7 +23,7 @@ namespace WingSinger {
         [Tooltip("Optional route visualization. Paper objects show the route by default.")]
         public bool showGuideLine;
         [Min(0)] public float guideLeadSeconds = 2;
-        [Tooltip("Route time spent on the middle lane before the first inhale. Included in the game duration.")]
+        [Tooltip("Route time spent on the middle lane before the first upper-lane segment. Included in the game duration.")]
         [Min(0)] public float preparationSeconds = 3;
         [Tooltip("Time taken by the guide to travel between lanes. Added between inhale/exhale dwell periods.")]
         [Min(0.01f)] public float guideTransitionSeconds = 0.65f;

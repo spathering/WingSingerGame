@@ -94,12 +94,12 @@ namespace WingSinger.Editor {
             sensor.enabled = true; sensor.Connect(client);
             double until = EditorApplication.timeSinceStartup + 3;
             while (!flow.SensorFresh && EditorApplication.timeSinceStartup < until) yield return null;
-            Check(flow.SensorFresh && sensor.ReadLane() == BreathLane.Upper, "CSV notification without newline or handshake controls upper lane");
+            Check(flow.SensorFresh && sensor.ReadLane() == BreathLane.Lower, "CSV notification without newline or handshake controls lower lane");
             Check(flow.Text(UIValueKind.Connection) == "BLE connected" && flow.Text(UIValueKind.Signal) == "BLE"
                 && flow.Text(UIValueKind.Battery) == "--", "UI shows real BLE transport without fabricated battery telemetry");
             port.Value = 1700; until = EditorApplication.timeSinceStartup + 2;
-            while (sensor.ReadLane() != BreathLane.Lower && EditorApplication.timeSinceStartup < until) yield return null;
-            Check(sensor.ReadLane() == BreathLane.Lower, "1700 BLE sample controls lower lane");
+            while (sensor.ReadLane() != BreathLane.Upper && EditorApplication.timeSinceStartup < until) yield return null;
+            Check(sensor.ReadLane() == BreathLane.Upper, "1700 BLE sample controls upper lane");
             port.Value = 1300; until = EditorApplication.timeSinceStartup + 2;
             while (sensor.ReadLane() != BreathLane.Middle && EditorApplication.timeSinceStartup < until) yield return null;
             Check(flow.SensorFresh && sensor.ReadLane() == BreathLane.Middle, "1300 BLE sample controls middle lane");
@@ -123,7 +123,7 @@ namespace WingSinger.Editor {
             Check(manager.levels.All(level => !level.gameObject.activeSelf) && sensor.Receiver == client,
                 "Leaving gameplay disables level roots while shared BLE input remains available");
             port.Value = 400; until = EditorApplication.timeSinceStartup + 2;
-            while (sensor.ReadLane() != BreathLane.Upper && EditorApplication.timeSinceStartup < until) yield return null;
+            while (sensor.ReadLane() != BreathLane.Lower && EditorApplication.timeSinceStartup < until) yield return null;
             port.Withhold = true; until = EditorApplication.timeSinceStartup + .3;
             while (sensor.ReceiverSnapshot.IsFresh(.1) && EditorApplication.timeSinceStartup < until) yield return null;
             Check(sensor.ReceiverSnapshot.Connected && sensor.ReadLane() == BreathLane.Middle, "Stale BLE sample returns to middle before disconnect");

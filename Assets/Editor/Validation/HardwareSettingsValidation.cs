@@ -14,9 +14,9 @@ namespace WingSinger.Editor {
             var sensor = flow.sensorInput; var router = flow.router; var manager = flow.levelManager;
             string defaults = JsonUtility.ToJson(sensor.settings);
             var receiver = sensor.Receiver;
-            check(sensor.settings != null && router.pages.Length == 14, "Independent hardware SO and 14th page are installed");
+            check(sensor.settings != null && router.Page(UIScreenId.HardwareSettings) != null, "Independent hardware SO and hardware page are installed");
             flow.router.Route(UIRouteAction.Navigate, UIScreenId.Settings);
-            var entry = router.Page(UIScreenId.Settings).transform.Find("Content/SettingsPanel/SupportSection/Language").GetComponent<UIRouteButton>();
+            var entry = router.Page(UIScreenId.Settings).GetComponentsInChildren<UIRouteButton>(true).Single(r=>r.action==UIRouteAction.Navigate && r.destination==UIScreenId.HardwareSettings);
             entry.Trigger(); yield return null;
             var panel = router.Page(UIScreenId.HardwareSettings).GetComponent<HardwareSettingsPanel>();
             check(router.CurrentScreen == UIScreenId.HardwareSettings && panel.gameObject.activeInHierarchy, "Settings hardware entry opens editable in-game page");
@@ -56,10 +56,24 @@ namespace WingSinger.Editor {
             while (sensor.DecisionLabel != "吸气" && UnityEditor.EditorApplication.timeSinceStartup < until) yield return null;
             flow.Refresh();
             check(flow.Text(UIValueKind.SensorReading).Contains("ADC 900") && flow.Text(UIValueKind.SensorReading).Contains("吸气"), "Gameplay HUD displays raw ADC and inhale decision");
-            var header = router.Page(UIScreenId.PracticeFollow).transform.Find("Header/PracticeHUD");
-            var hud = (header.Find("ConnectionBadge/Label") ?? header.Find("Connection/Label")).GetComponent<TMP_Text>();
-            check(hud.text.Contains("ADC 900") && hud.text.Contains("吸气") && !hud.text.Contains("connected"), "Actual rendered HUD binding shows ADC and decision, with no connection-label override");
+            var liveHud=router.Page(UIScreenId.PracticeFollow).GetComponent<FigmaGameplayHud>();
+            yield return null;
+            check(liveHud!=null && liveHud.meterStatus.text=="INHALE", "New airflow HUD shows the real inhale decision; raw ADC remains available on the hardware page");
+            check(liveHud.MeterReading.Available && liveHud.MeterReading.TargetReached && liveHud.meterGroup.alpha==1,"Fresh active hardware enables the meter and marks a successful inhale");
             Capture(flow, "LiveHardwareInhale", 1280, 720, false, check);
+            feed(1250);until=UnityEditor.EditorApplication.timeSinceStartup+2;
+            while((!liveHud.MeterReading.Available || Math.Abs(liveHud.MeterReading.ValueMv-1250)>.01) && UnityEditor.EditorApplication.timeSinceStartup<until)yield return null;
+            check(liveHud.MeterReading.Available && !liveHud.MeterReading.TargetReached && Math.Abs(liveHud.MeterReading.Strength-.5)<.001
+                && Math.Abs(liveHud.meter.rectTransform.rect.height-liveHud.meterTrack.rect.height*.25)<.01,"1250 mV renders half of the 100 mV target, below the baseline marker");
+            Capture(flow,"BreathMeterBelowTarget",1280,720,false,check);
+            feed(1190);until=UnityEditor.EditorApplication.timeSinceStartup+2;
+            while((!liveHud.MeterReading.Available || Math.Abs(liveHud.MeterReading.ValueMv-1190)>.01) && UnityEditor.EditorApplication.timeSinceStartup<until)yield return null;
+            check(liveHud.MeterReading.Available && liveHud.MeterReading.TargetReached && liveHud.MeterReading.Lane==BreathLane.Lower
+                && Math.Abs(liveHud.meter.rectTransform.rect.height-liveHud.meterTrack.rect.height*.55)<.01,"1190 mV crosses the baseline as a real inhale and fills proportionally to 110 percent target");
+            Capture(flow,"BreathMeterTargetReached",1280,720,false,check);
+            feed(1300);until=UnityEditor.EditorApplication.timeSinceStartup+2;
+            while((!liveHud.MeterReading.Available || Math.Abs(liveHud.MeterReading.ValueMv-1300)>.01) && UnityEditor.EditorApplication.timeSinceStartup<until)yield return null;
+            check(liveHud.MeterReading.Available && !liveHud.MeterReading.TargetReached && liveHud.meter.rectTransform.rect.height==0 && liveHud.meterStatus.text=="REST","Returning to the 1300 mV resting center clears the meter and target state");
             feed(1700); until = UnityEditor.EditorApplication.timeSinceStartup + 2;
             while (sensor.DecisionLabel != "呼气" && UnityEditor.EditorApplication.timeSinceStartup < until) yield return null;
             check(flow.Text(UIValueKind.SensorReading).Contains("呼气"), "Gameplay HUD displays exhale decision");

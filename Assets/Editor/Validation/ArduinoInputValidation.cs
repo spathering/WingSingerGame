@@ -80,16 +80,16 @@ namespace WingSinger.Editor {
                         manager.Restart(); manager.Session.Advance(manager.Session.Pattern.Lead + 0.1, BreathLane.Middle);
                         NextStage(1); break;
                     case 1:
-                        if (!sensor.ReceiverSnapshot.IsFresh(sensor.sampleTimeoutSeconds) || !AtLane(BreathLane.Upper)) return;
+                        if (!sensor.ReceiverSnapshot.IsFresh(sensor.sampleTimeoutSeconds) || !AtLane(BreathLane.Lower)) return;
                         Check(lastBaud == 115200 && port.LastHello == BreathSensorProtocol.Hello, "Receiver uses the agreed baud and handshake");
-                        Check(sensor.ReceiverSnapshot.Port == "COM99" && sensor.ReadLane() == BreathLane.Upper,
+                        Check(sensor.ReceiverSnapshot.Port == "COM99" && sensor.ReadLane() == BreathLane.Lower,
                             "Value 400 maps to inhale through the actual receiver");
-                        Check(AtLane(BreathLane.Upper), "Sensor inhale moves the actual player to the upper lane");
+                        Check(AtLane(BreathLane.Lower), "Sensor inhale moves the actual player to the lower lane");
                         port.RepeatingValue = "1000"; NextStage(2); break;
                     case 2:
-                        if (sensor.ReceiverSnapshot.Value != 1000 || !AtLane(BreathLane.Lower)) return;
-                        Check(sensor.ReadLane() == BreathLane.Lower, "Value 1000 maps to exhale, including the boundary");
-                        Check(AtLane(BreathLane.Lower), "Sensor exhale moves the actual player to the lower lane");
+                        if (sensor.ReceiverSnapshot.Value != 1000 || !AtLane(BreathLane.Upper)) return;
+                        Check(sensor.ReadLane() == BreathLane.Upper, "Value 1000 maps to exhale, including the boundary");
+                        Check(AtLane(BreathLane.Upper), "Sensor exhale moves the actual player to the upper lane");
                         port.RepeatingValue = "700"; NextStage(3); break;
                     case 3:
                         if (sensor.ReceiverSnapshot.Value != 700 || !AtLane(BreathLane.Middle)) return;
@@ -123,8 +123,8 @@ namespace WingSinger.Editor {
                         manager.Restart(); manager.Session.Advance(manager.Session.Pattern.Lead + 0.1, BreathLane.Middle);
                         NextStage(6); break;
                     case 6:
-                        if (!sensor.ReceiverSnapshot.IsFresh(sensor.sampleTimeoutSeconds) || !AtLane(BreathLane.Lower)) return;
-                        Check(sensor.ReceiverSnapshot.Port == "COM100" && sensor.ReadLane() == BreathLane.Lower,
+                        if (!sensor.ReceiverSnapshot.IsFresh(sensor.sampleTimeoutSeconds) || !AtLane(BreathLane.Upper)) return;
+                        Check(sensor.ReceiverSnapshot.Port == "COM100" && sensor.ReadLane() == BreathLane.Upper,
                             "A replacement receiver can use a changed COM number");
                         sensor.Disconnect();
                         Check(!client.IsRunning && port.Disposed && sensor.ReadLane() == BreathLane.Middle,
