@@ -1774,6 +1774,8 @@ GameObject:
   - component: {fileID: 2841210496078698754}
   - component: {fileID: 6181883327052004120}
   - component: {fileID: 7616283236067288497}
+  - component: {fileID: 8011409311555748746}
+  - component: {fileID: 9170767010469403009}
   m_Layer: 0
   m_Name: Level_001_FirstFlight
   m_TagString: Untagged
@@ -1811,8 +1813,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68aa7b84aff3ab246ad43628ee21d715, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   settings: {fileID: 11400000, guid: 329b2cf8bc038cd469d67ea919593401, type: 2}
   spawnPoint: {fileID: 4594431632624796681}
   guide: {fileID: 1306538581825655979}
@@ -1825,6 +1827,7 @@ MonoBehaviour:
     type: 3}
   foreground: {fileID: 1288846389274854883}
   reduceMotion: 0
+  sequence: {fileID: 9170767010469403009}
 --- !u!114 &6181883327052004120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2006,6 +2009,37 @@ MonoBehaviour:
   - {fileID: 21300000, guid: adeda974df714254e82f6215ee97da5b, type: 3}
   - {fileID: 21300000, guid: f4fbfea7afe23794cb4e6dbc949a2153, type: 3}
   spriteMaterial: {fileID: 2100000, guid: 4e3e21d4a8994034caf1b58d8385b9cb, type: 2}
+--- !u!114 &8011409311555748746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4984914326229971697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0c8157716160d54085da201f4a695da, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  edgeMargin: 0.065
+--- !u!114 &9170767010469403009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4984914326229971697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da22f56134c92fc4c96ebe8bde9a9fde, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  opening: {fileID: 32900000, guid: fb9d9b115ed50bb4485b87fb37b85495, type: 3}
+  intermission: {fileID: 32900000, guid: 2172ec69b20c99c499d3bde35b4f3437, type: 3}
+  openingMaterial: {fileID: 2100000, guid: 911882a774577724f84eb476e15d3b99, type: 2}
+  zoomSeconds: 1.8
+  fadeSeconds: 0.8
+  overviewSize: 12.3
 --- !u!1 &5058929082318361714
 GameObject:
   m_ObjectHideFlags: 0

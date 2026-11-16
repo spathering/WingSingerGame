@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: Level_001_FirstFlight
   m_EditorClassIdentifier: 
   displayName: 01  /  FIRST FLIGHT
-  inhaleSeconds: 3
-  exhaleSeconds: 4
-  durationSeconds: 45
+  inhaleSeconds: 2
+  exhaleSeconds: 3
+  loopCount: 2
+  loopSeconds: 50
+  middleTailSeconds: 2
+  durationSeconds: 100
   pointsPerCollectible: 10
   collectibleIntervalSeconds: 0.5
   collectionRadius: 0.55
@@ -30,4 +33,4 @@ MonoBehaviour:
   upperLaneSpacing: 0
   lowerLaneSpacing: 0
   laneTransitionSeconds: 0.38
-  playerEntranceSeconds: 1.25
+  playerEntranceSeconds: 0

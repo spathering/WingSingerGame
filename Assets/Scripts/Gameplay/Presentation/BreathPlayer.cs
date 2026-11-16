@@ -15,6 +15,7 @@ namespace WingSinger {
         float entranceStartX, entranceDuration;
         public bool IsEntering { get; private set; }
         public bool ReduceMotion { get; private set; }
+        public bool HoldPresentation { get; set; }
         public void SetReduceMotion(bool reduce) {
             ReduceMotion = reduce;
             if (!reduce) return;
@@ -74,7 +75,7 @@ namespace WingSinger {
 
         // PrimeTween updates the body first; arrival begins the tilt-to-cruise transition.
         void LateUpdate() {
-            if (characterAnimation != null)
+            if (characterAnimation != null && !HoldPresentation)
                 characterAnimation.Present(Time.deltaTime,
                     !ReduceMotion && animationMovingAllowed && laneTween.isAlive ? destinationY - body.localPosition.y : 0, ReduceMotion);
         }

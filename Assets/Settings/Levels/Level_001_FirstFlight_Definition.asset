@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelId: first-flight
   title: First Flight
-  description: 'Find your rhythm: inhale 3 s, exhale 4 s. A 45-second forest flight.'
+  description: 'Two 50-second flights: inhale 2 s, exhale 3 s, with a film intermission.
+    Relax on the middle lane at both ends.'
   thumbnail: {fileID: 21300000, guid: ae12f0790a2c97f469055dc561e7532f, type: 3}
   prefab: {fileID: 2841210496078698754, guid: 8facbbbd00ac36e4c89160206f927d25, type: 3}
   settings: {fileID: 11400000, guid: 329b2cf8bc038cd469d67ea919593401, type: 2}

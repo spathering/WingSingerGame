@@ -397,6 +397,7 @@ GameObject:
   - component: {fileID: 1859265617997825646}
   - component: {fileID: 1853516458366737839}
   - component: {fileID: 5683832948899412316}
+  - component: {fileID: 6986275759339494470}
   m_Layer: 0
   m_Name: Level_002_SlowBreath
   m_TagString: Untagged
@@ -433,8 +434,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68aa7b84aff3ab246ad43628ee21d715, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   settings: {fileID: 11400000, guid: 747371fa81c4ab24886477bf286cf18c, type: 2}
   spawnPoint: {fileID: 5045111990632628472}
   guide: {fileID: 2503048077343991641}
@@ -447,6 +448,7 @@ MonoBehaviour:
     type: 3}
   foreground: {fileID: 0}
   reduceMotion: 0
+  sequence: {fileID: 0}
 --- !u!114 &1853516458366737839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -628,6 +630,19 @@ MonoBehaviour:
   - {fileID: 21300000, guid: adeda974df714254e82f6215ee97da5b, type: 3}
   - {fileID: 21300000, guid: f4fbfea7afe23794cb4e6dbc949a2153, type: 3}
   spriteMaterial: {fileID: 2100000, guid: 4e3e21d4a8994034caf1b58d8385b9cb, type: 2}
+--- !u!114 &6986275759339494470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4775832549357036936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0c8157716160d54085da201f4a695da, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  edgeMargin: 0.065
 --- !u!1 &5007690948272794797
 GameObject:
   m_ObjectHideFlags: 0

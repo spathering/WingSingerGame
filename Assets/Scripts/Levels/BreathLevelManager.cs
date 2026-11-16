@@ -19,6 +19,8 @@ namespace WingSinger {
         public BreathSession Session { get; private set; }
         public int CurrentIndex { get; private set; } = -1;
         public BreathLevel CurrentLevel => CurrentIndex >= 0 && levels != null ? levels[CurrentIndex] : null;
+        public FirstFlightSequence Sequence => CurrentLevel != null ? CurrentLevel.sequence : null;
+        public bool IsPresentationBlocking => Sequence != null && Sequence.IsBlocking;
         bool switching;
         Vector3 previousBodyPosition;
 
@@ -41,7 +43,7 @@ namespace WingSinger {
         }
 
         void LateUpdate() {
-            if (IsPaused || switching || Session == null || CurrentLevel == null) return;
+            if (IsPaused || IsPresentationBlocking || switching || Session == null || CurrentLevel == null) return;
             Vector3 current = player.body.position;
             if (!player.IsEntering) CurrentLevel.CollectBetween(Session, previousBodyPosition, current, player.body);
             previousBodyPosition = current;
@@ -56,17 +58,22 @@ namespace WingSinger {
                 else if (Input.GetKeyDown(KeyCode.Alpha2)) SwitchLevel(1);
             }
             if (switching || Session == null || CurrentLevel == null) return;
+            if (Sequence != null && !Sequence.Tick(Time.deltaTime)) return;
             bool finished = Session.Phase == BreathPhase.Finished;
-            Session.Advance(Time.deltaTime, finished ? Session.PlayerLane : Session.Phase == BreathPhase.Preview ? BreathLane.Middle : input.ReadLane());
+            float dt = Sequence != null ? Sequence.LimitDelta(Time.deltaTime) : Time.deltaTime;
+            var requested = finished ? Session.PlayerLane : Session.Phase == BreathPhase.Preview ? BreathLane.Middle : input.ReadLane();
+            if (Session.Pattern.Segmented && Session.Pattern.IsPreparing(Session.PlayTime)) requested = BreathLane.Middle;
+            Session.Advance(dt, requested);
             player.Present(Session, CurrentLevel.settings);
             CurrentLevel.Present(Session);
+            if (Sequence != null) Sequence.AfterRouteAdvance();
             if (hud != null) hud.Present(Session);
             if (!finished && Session.Phase == BreathPhase.Finished) player.StopAnimation();
         }
 
         public void Restart() { if (CurrentIndex >= 0) SwitchLevel(CurrentIndex); }
         public void Next() { if (levels != null && levels.Length > 0) SwitchLevel((CurrentIndex + 1) % levels.Length); }
-        public void SetPaused(bool paused) { IsPaused = paused; }
+        public void SetPaused(bool paused) { IsPaused = paused; if (Sequence != null) Sequence.SetPaused(paused); }
         public void ValidateCatalog() {
             if (catalog == null) return;
             catalog.Validate();
@@ -80,6 +87,7 @@ namespace WingSinger {
         }
         public void StopSession() {
             if (player != null) player.StopAnimation();
+            if (Sequence != null) Sequence.End();
             if (CurrentLevel != null) CurrentLevel.Exit();
             if (levels != null) foreach (var level in levels) if (level != null) level.gameObject.SetActive(false);
             Session = null; CurrentIndex = -1; IsPaused = false;
@@ -99,6 +107,7 @@ namespace WingSinger {
             switching = true;
             try {
                 player.StopAnimation();
+                if (Sequence != null) Sequence.End();
                 if (CurrentLevel != null) { CurrentLevel.Exit(); CurrentLevel.gameObject.SetActive(false); }
                 Session = null; CurrentIndex = -1;
                 target.Prepare();
@@ -112,7 +121,7 @@ namespace WingSinger {
                 var framing = virtualCamera.GetComponent<BreathCameraFraming>();
                 float entranceLeft = framing != null ? framing.EntranceLeftEdge(target, aspect)
                     : cameraPosition.x - virtualCamera.m_Lens.OrthographicSize * aspect;
-                player.BeginEntrance(entranceLeft, target.settings.playerEntranceSeconds);
+                if(target.sequence == null) player.BeginEntrance(entranceLeft, target.settings.playerEntranceSeconds);
                 target.gameObject.SetActive(true);
                 CurrentIndex = index;
                 Session = new BreathSession(target.settings.CreatePattern());
@@ -122,6 +131,8 @@ namespace WingSinger {
                 virtualCamera.ForceCameraPosition(player.cameraTarget.position + new Vector3(cameraHorizontalOffset, 0, -10), Quaternion.identity);
                 if (target.foreground != null) target.foreground.BeginSession(outputCamera, this, player.cameraTarget.position.x + cameraHorizontalOffset);
                 target.Present(Session);
+                var uiFlow = FindObjectOfType<WingSinger.UI.BreathUIFlowController>();
+                if(target.sequence != null && (uiFlow == null || !uiFlow.IsPracticing)) target.sequence.Begin(this);
                 if (hud != null) hud.Present(Session);
                 return true;
             } catch (System.Exception error) {

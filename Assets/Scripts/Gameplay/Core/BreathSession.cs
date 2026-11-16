@@ -8,11 +8,17 @@ namespace WingSinger {
     // Pure time/score model: the guide and player sample the same route at the same world X.
     public readonly struct BreathPattern {
         public readonly double Inhale, Exhale, Duration, PointsPerCollectible, Lead, Transition, Preparation, GuideTransition;
+        public readonly double LoopSeconds, MiddleTail;
+        public readonly int LoopCount;
+        public bool Segmented => LoopCount > 1;
+        public double ReturnStart => Preparation + GuideTransition + Math.Floor((LoopSeconds - Preparation - GuideTransition - MiddleTail) / Cycle) * Cycle - GuideTransition;
+        public double LocalTime(double time) => Segmented ? Math.Min(LoopSeconds, Math.Max(0, time) - Math.Min(LoopCount - 1, (int)(Math.Max(0, time) / LoopSeconds)) * LoopSeconds) : Math.Max(0, time);
         public double Cycle => Inhale + Exhale + 2 * GuideTransition;
         double FirstArrival => Preparation + GuideTransition;
 
         public BreathPattern(double inhale, double exhale, double duration, double pointsPerCollectible,
-            double lead, double transition, double preparation = 0, double guideTransition = 0) {
+            double lead, double transition, double preparation = 0, double guideTransition = 0,
+            int loopCount = 1, double loopSeconds = 0, double middleTail = 2) {
             if (!Positive(inhale) || !Positive(exhale) || !Positive(duration)
                 || !Nonnegative(pointsPerCollectible) || !Nonnegative(lead) || !Nonnegative(transition)
                 || !Nonnegative(preparation) || !Nonnegative(guideTransition))
@@ -20,17 +26,25 @@ namespace WingSinger {
             Inhale = inhale; Exhale = exhale; Duration = duration;
             PointsPerCollectible = pointsPerCollectible; Lead = lead; Transition = transition;
             Preparation = preparation; GuideTransition = guideTransition;
+            LoopCount = loopCount; LoopSeconds = loopCount > 1 ? loopSeconds : duration; MiddleTail = middleTail;
+            if (loopCount < 1 || !Positive(LoopSeconds) || !Nonnegative(middleTail)
+                || (Segmented && (Math.Abs(duration - loopCount * loopSeconds) > .001 || ReturnStart <= FirstArrival)))
+                throw new ArgumentException("Invalid segmented breathing route.");
         }
 
         static bool Nonnegative(double value) => !double.IsNaN(value) && !double.IsInfinity(value) && value >= 0;
         static bool Positive(double value) => Nonnegative(value) && value > 0;
 
-        public bool IsPreparing(double routeTime) => routeTime < Preparation;
+        public bool IsPreparing(double routeTime) => Segmented
+            ? LocalTime(routeTime) < Preparation || LocalTime(routeTime) >= ReturnStart
+            : routeTime < Preparation;
+        public bool IsReturning(double routeTime) => Segmented && LocalTime(routeTime) >= ReturnStart
+            && LocalTime(routeTime) < ReturnStart + GuideTransition;
 
         // During a curve the requested lane is the destination, so the prompt can guide input early.
         public BreathLane LaneAt(double routeTime) {
-            routeTime = Math.Max(0, routeTime);
-            if (routeTime < Preparation) return BreathLane.Middle;
+            routeTime = LocalTime(routeTime);
+            if (routeTime < Preparation || (Segmented && routeTime >= ReturnStart)) return BreathLane.Middle;
             if (routeTime < FirstArrival) return BreathLane.Upper;
             double cycleTime = (routeTime - FirstArrival) % Cycle;
             if (cycleTime < Inhale) return BreathLane.Upper;
@@ -39,8 +53,9 @@ namespace WingSinger {
         }
 
         public bool IsGuideTransition(double routeTime) {
-            routeTime = Math.Max(0, routeTime);
+            routeTime = LocalTime(routeTime);
             if (routeTime < Preparation || GuideTransition == 0) return false;
+            if (Segmented && routeTime >= ReturnStart) return routeTime < ReturnStart + GuideTransition;
             if (routeTime < FirstArrival) return true;
             double cycleTime = (routeTime - FirstArrival) % Cycle;
             return (cycleTime >= Inhale && cycleTime < Inhale + GuideTransition)
@@ -49,8 +64,10 @@ namespace WingSinger {
 
         // Continuous route height in units of lane spacing; shared by the guide and its trail.
         public double HeightAt(double routeTime) {
-            routeTime = Math.Max(0, routeTime);
+            routeTime = LocalTime(routeTime);
             if (routeTime < Preparation) return 0;
+            if (Segmented && routeTime >= ReturnStart) return routeTime < ReturnStart + GuideTransition
+                ? -1 + Smooth((routeTime - ReturnStart) / GuideTransition) : 0;
             if (routeTime < FirstArrival) return Smooth((routeTime - Preparation) / GuideTransition);
             double cycleTime = (routeTime - FirstArrival) % Cycle;
             if (cycleTime < Inhale) return 1;
@@ -74,7 +91,14 @@ namespace WingSinger {
             if (lane == BreathLane.Middle) return 0;
             double start = lane == BreathLane.Upper ? 0 : Inhale + GuideTransition;
             double duration = lane == BreathLane.Upper ? Inhale : Exhale;
-            return DwellTime(to, start, duration) - DwellTime(from, start, duration);
+            if (!Segmented) return DwellTime(to, start, duration) - DwellTime(from, start, duration);
+            double total = 0;
+            for (int i = 0; i < LoopCount; i++) {
+                double a = Math.Max(0, Math.Min(ReturnStart, from - i * LoopSeconds));
+                double b = Math.Max(0, Math.Min(ReturnStart, to - i * LoopSeconds));
+                total += DwellTime(b, start, duration) - DwellTime(a, start, duration);
+            }
+            return total;
         }
     }
 
